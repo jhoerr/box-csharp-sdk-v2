@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.SDK", "SDK\BoxApi.V2.SDK.csproj", "{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.Samples", "Samples\BoxApi.V2.Samples.csproj", "{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

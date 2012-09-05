@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BoxApi.V2.SDK</RootNamespace>
+    <AssemblyName>BoxApi.V2.SDK</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\BoxApi.V2.SDK.XML</DocumentationFile>
+    <LangVersion>default</LangVersion>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\BoxApi.V2.SDK.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuthenticateUserResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BoxManager.cs" />
+    <Compile Include="EventHandlers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="File.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GetAuthenticationTokenResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GetTicketResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="JSONDataTypes.cs" />
+    <Compile Include="ResponseBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServiceReference\boxnetService.cs">
+      <SubType>code</SubType>
+    </Compile>
+    <Compile Include="Statuses\AuthenticationStatus.cs" />
+    <Compile Include="Statuses\GetAuthenticationTokenStatus.cs" />
+    <Compile Include="Statuses\GetTicketStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BoxWebRequest.cs" />
+    <Compile Include="StatusMessageParser.cs" />
+    <Compile Include="TagPrimitive.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="User.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserPermissionFlags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
