@@ -1,4 +1,5 @@
-﻿using BoxApi.V2.Statuses;
+﻿using BoxApi.V2.SDK.Model;
+using BoxApi.V2.Statuses;
 
 namespace BoxApi.V2
 {

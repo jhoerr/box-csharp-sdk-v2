@@ -75,7 +75,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="JSONDataTypes.cs" />
-    <Compile Include="Model\File.cs" />
+    <Compile Include="Model\Comment.cs" />
+    <Compile Include="Model\CommentingUser.cs" />
+    <Compile Include="Model\FileInfo.cs" />
+    <Compile Include="Model\Folder.cs" />
+    <Compile Include="Model\FolderIdAndName.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ItemList.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserIdAndName.cs" />
+    <Compile Include="Model\UserPermissionFlags.cs" />
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,12 +96,6 @@
     <Compile Include="BoxWebRequest.cs" />
     <Compile Include="StatusMessageParser.cs" />
     <Compile Include="TagPrimitive.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="User.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserPermissionFlags.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

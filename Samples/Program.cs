@@ -1,5 +1,6 @@
 ﻿using System;
 using BoxApi.V2;
+using BoxApi.V2.SDK.Model;
 
 namespace BoxApi.V2.Samples
 {

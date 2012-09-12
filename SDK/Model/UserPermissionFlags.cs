@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace BoxApi.V2
+namespace BoxApi.V2.SDK.Model
 {
 	/// <summary>
 	/// Specifies type of user access for specific object

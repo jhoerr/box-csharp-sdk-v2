@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-
+using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
-
-using File = BoxApi.V2.SDK.Model.File;
+using RestSharp;
+using RestSharp.Deserializers;
+using FileInfo = BoxApi.V2.SDK.Model.FileInfo;
 
 namespace BoxApi.V2
 {
@@ -20,15 +21,16 @@ namespace BoxApi.V2
 	/// </summary>
 	public sealed partial class BoxManager
 	{
-		private string _serviceUrl = "https://www.box.com/api/2.0";
-        private string _authServiceUrl = "http://box.net/api/soap";
+	    private const string ApiVersion2 = "2.0";
+	    private string _serviceUrl = "https://www.box.com/api/{version}";
         private string _http_Authorization_Header;
 
 		private readonly boxnetService _service;
 		private readonly string _apiKey;
 		private string _token;
+	    private RestClient _restClient;
 
-		/// <summary>
+	    /// <summary>
 		/// Instantiates BoxManager
 		/// </summary>
 		/// <param name="applicationApiKey">The unique API key which is assigned to application</param>
@@ -52,15 +54,15 @@ namespace BoxApi.V2
 			string authorizationToken)
 		{
 			_apiKey = applicationApiKey;
+            _token = authorizationToken;
 			
 			_service = new boxnetService();
 
-            _service.Url = _authServiceUrl;
-			_service.Proxy = proxy;
+		    _restClient = new RestClient(_serviceUrl){Proxy = proxy};
+            _restClient.ClearHandlers();
+            _restClient.AddHandler("*", new JsonDeserializer());
 
-			_token = authorizationToken;
-
-            // Set HTTP auth header
+		    // Set HTTP auth header
             _http_Authorization_Header = "BoxAuth api_key=" + _apiKey + "&auth_token=" + _token;
 		}
 
@@ -80,87 +82,6 @@ namespace BoxApi.V2
 				_token = value;
 			}
 		}
-        
-		#region AuthenticateUser
-
-		/// <summary>
-		/// Authenticates user
-		/// </summary>
-		/// <param name="login">Account login</param>
-		/// <param name="password">Account password</param>
-		/// <param name="method"></param>
-		/// <param name="authenticationToken">Authentication token</param>
-		/// <param name="authenticatedUser">Authenticated user information</param>
-		/// <returns>Operation result</returns>
-		/// <exception cref="NotSupportedException">The exception is thrown every time you call the method</exception>
-		[Obsolete("This method is no longer supported by Box.NET API")]
-		public AuthenticationStatus AuthenticateUser(
-			string login, 
-			string password, 
-			string method, 
-			out string authenticationToken, 
-			out User authenticatedUser)
-		{
-			throw new NotSupportedException("This method is no longer supported by Box.NET API");
-		}
-
-		/// <summary>
-		/// Authenticates user
-		/// </summary>
-		/// <param name="login">Account login</param>
-		/// <param name="password">Account password</param>
-		/// <param name="method"></param>
-		/// <returns>Operation result</returns>
-		/// <exception cref="NotSupportedException">The exception is thrown every time you call the method</exception>
-		[Obsolete("This method is no longer supported by Box.NET API")]
-		public AuthenticateUserResponse AuthenticateUser(
-			string login,
-			string password,
-			string method)
-		{
-			throw new NotSupportedException("This method is no longer supported by Box.NET API");
-		}
-
-		/// <summary>
-		/// Authenticates user
-		/// </summary>
-		/// <param name="login">Account login</param>
-		/// <param name="password">Account password</param>
-		/// <param name="method"></param>
-		/// <param name="authenticateUserCompleted">Callback method which will be invoked when operation completes</param>
-		/// <exception cref="NotSupportedException">The exception is thrown every time you call the method</exception>
-		[Obsolete("This method is no longer supported by Box.NET API")]
-		public void AuthenticateUser(
-			string login,
-			string password,
-			string method,
-			OperationFinished<AuthenticateUserResponse> authenticateUserCompleted)
-		{
-			AuthenticateUser(login, password, method, authenticateUserCompleted, null);
-		}
-
-		/// <summary>
-		/// Authenticates user
-		/// </summary>
-		/// <param name="login">Account login</param>
-		/// <param name="password">Account password</param>
-		/// <param name="method"></param>
-		/// <param name="authenticateUserCompleted">Callback method which will be invoked when operation completes</param>
-		/// <param name="userState">A user-defined object containing state information. 
-		/// This object is passed to the <paramref name="authenticateUserCompleted"/> delegate as a part of response when the operation is completed</param>
-		/// <exception cref="NotSupportedException">The exception is thrown every time you call the method</exception>
-		[Obsolete("This method is no longer supported by Box.NET API")]
-		public void AuthenticateUser(
-			string login,
-			string password,
-			string method,
-			OperationFinished<AuthenticateUserResponse> authenticateUserCompleted,
-			object userState)
-		{
-			throw new NotSupportedException("This method is no longer supported by Box.NET API");
-		}
-
-		#endregion
 
 		#region GetAuthenticationToken
 
@@ -362,21 +283,13 @@ namespace BoxApi.V2
 
         #region V2_Folders
 
-        public void GetFolderInfo(int folder_id)
+        public Folder GetFolderInfo(int folder_id)
         {
-            string actionString = "/folders/";
-            string url = _serviceUrl + actionString + folder_id.ToString();
-
-            using (Stream stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFolderInfo));
-                    JSONFolderInfo folderInfo = (JSONFolderInfo)ser.ReadObject(stream);
-
-                    Console.WriteLine(folderInfo.ToString());
-                }
-            }
+            var restRequest = new RestRequest("/folders/{id}");
+            restRequest.AddUrlSegment("version", ApiVersion2);
+            restRequest.AddParameter("id", folder_id);
+            IRestResponse<Folder> restResponse = _restClient.Execute<Folder>(restRequest);
+            return restResponse.Data;
         }
 
         public int CreateFolder(int parent_folder_id, string name)
@@ -395,11 +308,11 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFolderInfo));
-                    JSONFolderInfo folderInfo = (JSONFolderInfo)ser.ReadObject(stream);
-                    new_folder_id = folderInfo.id;
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Folder));
+                    Folder folder = (Folder)ser.ReadObject(stream);
+                    new_folder_id = folder.id;
 
-                    Console.WriteLine(folderInfo.ToString());
+                    Console.WriteLine(folder.ToString());
                 }
             }
 
@@ -420,10 +333,10 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFolderInfo));
-                    JSONFolderInfo folderInfo = (JSONFolderInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Folder));
+                    Folder folder = (Folder)ser.ReadObject(stream);
 
-                    Console.WriteLine(folderInfo.ToString());
+                    Console.WriteLine(folder.ToString());
                 }
             }
         }
@@ -455,8 +368,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo fileInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo fileInfo = (FileInfo)ser.ReadObject(stream);
 
                     Console.WriteLine("FILE INFO - ");
                     Console.WriteLine(fileInfo.ToString());
@@ -480,8 +393,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo folderInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo folderInfo = (FileInfo)ser.ReadObject(stream);
                     new_file_id = folderInfo.id;
                     Console.WriteLine(folderInfo.ToString());
                 }
@@ -504,8 +417,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo fileInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo fileInfo = (FileInfo)ser.ReadObject(stream);
                     Console.WriteLine(fileInfo.ToString());
                 }
             }
@@ -525,8 +438,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo fileInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo fileInfo = (FileInfo)ser.ReadObject(stream);
                     Console.WriteLine(fileInfo.ToString());
                 }
             }
@@ -585,8 +498,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo fileInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo fileInfo = (FileInfo)ser.ReadObject(stream);
                     new_file_id = fileInfo.id;
                     Console.WriteLine(fileInfo.ToString());
                 }
@@ -606,8 +519,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONFileInfo));
-                    JSONFileInfo fileInfo = (JSONFileInfo)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(FileInfo));
+                    FileInfo fileInfo = (FileInfo)ser.ReadObject(stream);
                     Console.WriteLine(fileInfo.ToString());
                 }
             }
@@ -642,10 +555,10 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONComment[]));
-                    JSONComment[] comments = (JSONComment[])ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Comment[]));
+                    Comment[] comments = (Comment[])ser.ReadObject(stream);
 
-                    foreach (JSONComment comment in comments)
+                    foreach (Comment comment in comments)
                     {
                         Console.WriteLine(comment.ToString());
                     }
@@ -662,8 +575,8 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONComment));
-                    JSONComment comment = (JSONComment)ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Comment));
+                    Comment comment = (Comment)ser.ReadObject(stream);
 
                     if (comment != null)
                     {
@@ -711,10 +624,10 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONItem[]));
-                    JSONItem[] discussions = (JSONItem[])ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Item[]));
+                    Item[] discussions = (Item[])ser.ReadObject(stream);
 
-                    foreach (JSONItem disc in discussions)
+                    foreach (Item disc in discussions)
                     {
                         Console.WriteLine(disc.ToString());
                     }
@@ -741,10 +654,10 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(JSONComment[]));
-                    JSONComment[] comments = (JSONComment[])ser.ReadObject(stream);
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Comment[]));
+                    Comment[] comments = (Comment[])ser.ReadObject(stream);
 
-                    foreach (JSONComment comment in comments)
+                    foreach (Comment comment in comments)
                     {
                         Console.WriteLine(comment.ToString());
                     }

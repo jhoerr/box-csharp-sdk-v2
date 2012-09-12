@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
-
 using BoxApi.V2.ServiceReference;
 
-namespace BoxApi.V2
+namespace BoxApi.V2.SDK.Model
 {
 	/// <summary>
 	/// Represents Box.NET user entity

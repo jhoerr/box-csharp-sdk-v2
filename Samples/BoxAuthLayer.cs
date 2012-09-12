@@ -1,5 +1,5 @@
 ﻿using System;
-
+using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 
