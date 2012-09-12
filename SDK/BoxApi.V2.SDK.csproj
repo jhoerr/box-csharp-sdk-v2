@@ -18,6 +18,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +44,9 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.1\lib\net35-client\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -63,9 +68,6 @@
     <Compile Include="EventHandlers.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="File.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GetAuthenticationTokenResponse.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -73,12 +75,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="JSONDataTypes.cs" />
+    <Compile Include="Model\File.cs" />
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ServiceReference\boxnetService.cs">
-      <SubType>code</SubType>
-    </Compile>
+    <Compile Include="ServiceReference\boxnetService.cs" />
     <Compile Include="Statuses\AuthenticationStatus.cs" />
     <Compile Include="Statuses\GetAuthenticationTokenStatus.cs" />
     <Compile Include="Statuses\GetTicketStatus.cs" />
@@ -96,7 +97,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="ServiceReference\box.wsdl" />
+    <None Include="ServiceReference\GenerateCS.bat" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

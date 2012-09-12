@@ -11,7 +11,7 @@ using System.Runtime.Serialization.Json;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 
-using File = BoxApi.V2.File;
+using File = BoxApi.V2.SDK.Model.File;
 
 namespace BoxApi.V2
 {

@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-
-namespace BoxApi.V2
+namespace BoxApi.V2.SDK.Model
 {
 	/// <summary>
 	/// Represents the Box.NET file entity
