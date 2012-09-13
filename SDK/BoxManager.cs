@@ -9,6 +9,7 @@ using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 using RestSharp;
 using RestSharp.Deserializers;
+using RestSharp.Serializers;
 using FileInfo = BoxApi.V2.SDK.Model.FileInfo;
 
 namespace BoxApi.V2
@@ -49,14 +50,13 @@ namespace BoxApi.V2
             IWebProxy proxy,
             string authorizationToken)
         {
-            _restAuthorizationClient = new RestClient(){Proxy = proxy};
+            _restAuthorizationClient = new RestClient {Proxy = proxy};
             _restAuthorizationClient.ClearHandlers();
             _restAuthorizationClient.AddHandler("*", new XmlDeserializer());
 
-            _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy};
+            _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy, Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken)};
             _restContentClient.ClearHandlers();
             _restContentClient.AddHandler("*", new JsonDeserializer());
-            _restContentClient.Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken);
         }
 
         #region GetAuthenticationToken
@@ -269,25 +269,57 @@ namespace BoxApi.V2
 
         #region V2_Folders
 
-        public Folder GetFolder(int id)
+        public Folder GetFolder(string id)
         {
             var restRequest = GetFolderRequest(id);
             var restResponse = _restContentClient.Execute<Folder>(restRequest);
             return restResponse.Data;
         }
 
-        public void GetFolderAsync(int id, Action<Folder> callback)
+        public void GetFolderAsync(string id, Action<Folder> callback)
         {
             var restRequest = GetFolderRequest(id);
             _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
         }
 
-        private RestRequest GetFolderRequest(int id)
+        private RestRequest GetFolderRequest(string id)
         {
             var restRequest = new RestRequest("{version}/folders/{id}");
             restRequest.AddUrlSegment("version", ApiVersion2);
-            restRequest.AddUrlSegment("id", id.ToString());
+            restRequest.AddUrlSegment("id", id);
             return restRequest;
+        }
+
+        public Folder CreateFolder(string parentId, string name)
+        {
+            var restRequest = CreateFolderRequest(parentId, name);
+            var restResponse = _restContentClient.Execute<Folder>(restRequest);
+            return restResponse.Data;
+        }
+
+        public void CreateFolderAsync(string parentId, string name, Action<Folder> callback)
+        {
+            var restRequest = CreateFolderRequest(parentId, name);
+            _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
+        }
+
+        private RestRequest CreateFolderRequest(string parentId, string name)
+        {
+            var restRequest = new RestRequest("{version}/folders/{parentId}", Method.POST){RequestFormat = DataFormat.Json};
+            restRequest.AddUrlSegment("version", ApiVersion2);
+            restRequest.AddUrlSegment("parentId", parentId);
+            restRequest.AddBody(new { name });
+            return restRequest;
+        }
+
+        private class NameBody
+        {
+            public NameBody(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; set; }
         }
 
         public int CreateFolder(int parent_folder_id, string name)

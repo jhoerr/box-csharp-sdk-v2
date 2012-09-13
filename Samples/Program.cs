@@ -33,7 +33,7 @@ namespace BoxApi.V2.Samples
            # region Folder API
             
             // GET /folders/0
-            _boxAuthLayer._manager.GetFolder(0);
+            _boxAuthLayer._manager.GetFolder("0");
 
             // POST /folders/0
             int new_folder_id = _boxAuthLayer._manager.CreateFolder(0, "MyNewFolder");
