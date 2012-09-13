@@ -16,13 +16,13 @@ namespace BoxApi.V2.SDK.Model
         int? created_at;
 
         [DataMember]
-        UserIdAndName modified_by;
+        Entity modified_by;
 
         [DataMember]
         int? modified_at;
 
         [DataMember]
-        UserIdAndName owned_by;
+        Entity owned_by;
 
         [DataMember]
         public string name;
@@ -37,7 +37,7 @@ namespace BoxApi.V2.SDK.Model
         public int? trashed;
 
         [DataMember]
-        public Item parent_folder;
+        public Entity parent_folder;
 
         [DataMember]
         public string sha1;

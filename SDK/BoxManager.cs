@@ -308,7 +308,7 @@ namespace BoxApi.V2
                 {
                     var ser = new DataContractJsonSerializer(typeof (Folder));
                     var folder = (Folder) ser.ReadObject(stream);
-                    new_folder_id = folder.id;
+                    new_folder_id = folder.Id;
 
                     Console.WriteLine(folder.ToString());
                 }
@@ -621,10 +621,10 @@ namespace BoxApi.V2
             {
                 if (stream != null)
                 {
-                    var ser = new DataContractJsonSerializer(typeof (Item[]));
-                    var discussions = (Item[]) ser.ReadObject(stream);
+                    var ser = new DataContractJsonSerializer(typeof (Entity[]));
+                    var discussions = (Entity[]) ser.ReadObject(stream);
 
-                    foreach (Item disc in discussions)
+                    foreach (Entity disc in discussions)
                     {
                         Console.WriteLine(disc.ToString());
                     }
