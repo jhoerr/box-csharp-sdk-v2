@@ -4,22 +4,12 @@ using System.Text;
 
 namespace BoxApi.V2.SDK.Model
 {
-    public class Folder
+    public class Folder : Entity
     {
-        /// <summary>
-        /// Type of entity.  One of: File, Folder, Comment, Discussion, Event, Token
-        /// </summary>
-        public string Type { get; set; }
-
-        /// <summary>
-        /// The entity's id
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// The user who created this item
         /// </summary>
-        Entity CreatedBy { get; set; }
+        UserEntity CreatedBy { get; set; }
 
         /// <summary>
         /// The time this item was created
@@ -29,7 +19,7 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         /// The this this item (or its contents) were last modified
         /// </summary>
-        Entity ModifedBy { get; set; }
+        UserEntity ModifedBy { get; set; }
 
         /// <summary>
         /// The user who last modified this item
@@ -39,13 +29,8 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         /// The user who owns this item
         /// </summary>
-        Entity OwnedBy { get; set; }
+        UserEntity OwnedBy { get; set; }
         
-        /// <summary>
-        /// The name of the item
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// The description of the item
         /// </summary>

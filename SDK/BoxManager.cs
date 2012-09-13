@@ -308,7 +308,7 @@ namespace BoxApi.V2
                 {
                     var ser = new DataContractJsonSerializer(typeof (Folder));
                     var folder = (Folder) ser.ReadObject(stream);
-                    new_folder_id = folder.Id;
+                    new_folder_id = int.Parse(folder.Id);
 
                     Console.WriteLine(folder.ToString());
                 }

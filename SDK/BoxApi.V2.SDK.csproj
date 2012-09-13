@@ -83,6 +83,7 @@
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ItemCollection.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserEntity.cs" />
     <Compile Include="Model\UserPermissionFlags.cs" />
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
