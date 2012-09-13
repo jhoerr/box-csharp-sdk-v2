@@ -80,6 +80,12 @@ namespace BoxApi.V2.SDK.Tests
             _client.DeleteFolder(folder.Id, true);
         }
 
+        [Test, ExpectedException(typeof(BoxException))]
+        public void CreateFolderWithIllegalName()
+        {
+            _client.CreateFolder("0", "\\bad name:");
+        }
+
         [Test]
         public void CreateFolderAsync()
         {
@@ -98,6 +104,24 @@ namespace BoxApi.V2.SDK.Tests
             {
                 Thread.Sleep(1000);
             } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void CreateFolderWithIllegalNameAsync()
+        {
+            var failureOccured = false;
+
+            _client.CreateFolderAsync("0", "\\bad name:", folder => { }, () => failureOccured = true);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!failureOccured && --MaxWaitInSeconds > 0);
 
             if (MaxWaitInSeconds.Equals(0))
             {
