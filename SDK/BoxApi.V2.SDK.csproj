@@ -64,6 +64,7 @@
     <Compile Include="AuthenticateUserResponse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BoxAuthenticator.cs" />
     <Compile Include="BoxManager.cs" />
     <Compile Include="EventHandlers.cs">
       <SubType>Code</SubType>
