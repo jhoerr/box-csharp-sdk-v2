@@ -53,6 +53,23 @@ namespace BoxApi.V2.SDK.Tests
             Client.DeleteFolder(folder.Id, true);
         }
 
+        [Test, ExpectedException(typeof(BoxException))]
+        public void DeleteNonEmptyFolderWithoutRecursiveBitSet()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder("0", folderName);
+            var subFolder = Client.CreateFolder(folder.Id, "subfolder");
+            try
+            {
+                // Should barf.
+                Client.DeleteFolder(folder.Id, false);
+            }
+            finally
+            {
+                // clean up.
+                Client.DeleteFolder(folder.Id, true);
+            }
+        }
 
         [Test, ExpectedException(typeof (BoxException))]
         public void DeleteNonExistentFolder()

@@ -313,6 +313,12 @@ namespace BoxApi.V2
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
+        public void CopyFolderAsync(string folderId, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
+        {
+            RestRequest request = _requestHelper.CopyFolder(folderId, newParentId, newName);
+            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
+        }
+
         private void Execute(RestRequest restRequest, HttpStatusCode expectedStatusCode)
         {
             var restResponse = _restContentClient.Execute(restRequest);

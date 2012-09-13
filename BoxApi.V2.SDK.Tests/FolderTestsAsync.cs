@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using NUnit.Framework;
 
@@ -6,6 +7,8 @@ namespace BoxApi.V2.SDK.Tests
     [TestFixture]
     public class FolderTestsAsync : BoxApiTestHarness
     {
+        private Action _abortOnFailure = () => Assert.Fail("operation failed");
+
         [Test]
         public void GetFolderAsync()
         {
@@ -126,6 +129,33 @@ namespace BoxApi.V2.SDK.Tests
             {
                 Thread.Sleep(1000);
             } while (!failureOccured && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void CopyFolderAsync()
+        {
+            var callbackHit = false;
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder("0", folderName);
+            var subfolder = Client.CreateFolder(folder.Id, "subfolder");
+            var copyName = TestItemName();
+            Client.CopyFolderAsync(folder.Id, "0", copiedFolder =>
+                {
+                    callbackHit = true;
+                    Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
+                    Client.DeleteFolder(folder.Id, true);
+                    Client.DeleteFolder(copiedFolder.Id, true);
+                }, _abortOnFailure, copyName );
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             if (MaxWaitInSeconds.Equals(0))
             {
