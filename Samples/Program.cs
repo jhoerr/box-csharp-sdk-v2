@@ -42,9 +42,6 @@ namespace BoxApi.V2.Samples
             // PUT /folders/1234
             _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
 
-            // DELETE /folders/1234
-            _boxAuthLayer._manager.DeleteFolder(id);
-                         
             #endregion
 
             # region Files API

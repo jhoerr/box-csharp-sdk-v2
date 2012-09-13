@@ -274,59 +274,101 @@ namespace BoxApi.V2
         public Folder GetFolder(string id)
         {
             var restRequest = _requestHelper.GetFolder(id);
-            var restResponse = Execute<Folder>(restRequest);
-            return restResponse.Data;
+            return Execute<Folder>(restRequest, HttpStatusCode.OK);
         }
 
-        public void GetFolderAsync(string id, Action<Folder> callback)
+        public void GetFolderAsync(string id, Action<Folder> onSuccess, Action onFailure)
         {
             var restRequest = _requestHelper.GetFolder(id);
-            ExecuteAsync(restRequest, callback);
+            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public Folder CreateFolder(string parentId, string name)
         {
             var restRequest = _requestHelper.CreateFolder(parentId, name);
-            var restResponse = _restContentClient.Execute<Folder>(restRequest);
-            return restResponse.Data;
+            return Execute<Folder>(restRequest, HttpStatusCode.Created);
         }
 
-        public void CreateFolderAsync(string parentId, string name, Action<Folder> callback)
+        public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
         {
             var restRequest = _requestHelper.CreateFolder(parentId, name);
-            _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
+            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
         public void DeleteFolder(string id, bool recursive)
         {
             var restRequest = _requestHelper.DeleteFolder(id, recursive);
-            Execute(restRequest);
+            Execute(restRequest, HttpStatusCode.OK);
         }
 
-        public void DeleteFolderAsync(string id, bool recursive)
+        public void DeleteFolderAsync(string id, bool recursive, Action onSuccess, Action onFailure)
         {
             var restRequest = _requestHelper.DeleteFolder(id, recursive);
-            ExecuteAsync(restRequest);
+            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
-        private void Execute(RestRequest restRequest)
+        private void Execute(RestRequest restRequest, HttpStatusCode expectedStatusCode)
         {
-            _restContentClient.Execute(restRequest);
+            var restResponse = _restContentClient.Execute(restRequest);
+            if (!WasSuccessful(restResponse, expectedStatusCode))
+            {
+                throw new BoxException(restResponse);
+            }
         }
 
-        private IRestResponse<T> Execute<T>(RestRequest restRequest) where T : class, new()
+        private T Execute<T>(RestRequest restRequest, HttpStatusCode expectedStatusCode) where T : class, new()
         {
-            return _restContentClient.Execute<T>(restRequest);
+            var restResponse = _restContentClient.Execute<T>(restRequest);
+            if (!WasSuccessful(restResponse, expectedStatusCode))
+            {
+                throw new BoxException(restResponse);
+            }
+            return restResponse.Data;
         }
 
-        private void ExecuteAsync<T>(RestRequest restRequest, Action<T> callback) where T : class, new()
+        private void ExecuteAsync<T>(RestRequest restRequest, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
         {
-            _restContentClient.ExecuteAsync<T>(restRequest, response => callback(response.Data));
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("onSuccess can not be null");
+            }
+
+            _restContentClient.ExecuteAsync<T>(restRequest, response =>
+                {
+                    if (WasSuccessful(response, expectedStatusCode))
+                    {
+                        onSuccess(response.Data);
+                    }
+                    else if (onFailure != null)
+                    {
+                        onFailure();
+                    }
+                });
         }
 
-        private void ExecuteAsync(RestRequest restRequest)
+        private void ExecuteAsync(RestRequest restRequest, Action onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
         {
-            _restContentClient.ExecuteAsync(restRequest, null);
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("callback can not be null");
+            }
+
+            _restContentClient.ExecuteAsync(restRequest, response =>
+                {
+                    if (WasSuccessful(response, expectedStatusCode))
+                    {
+                        onSuccess();
+                    }
+                    else if (onFailure != null)
+                    {
+                        onFailure();
+                    }
+                });
+        }
+
+        private static bool WasSuccessful(IRestResponse restResponse, HttpStatusCode expectedStatusCode)
+        {
+            return restResponse != null && restResponse.StatusCode.Equals(expectedStatusCode);
         }
 
         public void UpdateFolder(int folder_id, string new_name)
@@ -348,16 +390,6 @@ namespace BoxApi.V2
 
                     Console.WriteLine(folder.ToString());
                 }
-            }
-        }
-
-        public void DeleteFolder(int folder_id)
-        {
-            var actionString = "/folders/";
-            var url = _serviceUrl + actionString + folder_id.ToString();
-
-            using (var stream = BoxWebRequest.ExecuteDELETE(url, _http_Authorization_Header))
-            {
             }
         }
 
@@ -720,5 +752,17 @@ namespace BoxApi.V2
         }
 
         #endregion
+    }
+
+    public class BoxException : Exception
+    {
+        public HttpStatusCode StatusCode { get; private set; }
+        public string Message { get; private set; }
+
+        public BoxException(IRestResponse restResponse)
+        {
+            StatusCode = restResponse.StatusCode;
+            Message = restResponse.StatusDescription;
+        }
     }
 }

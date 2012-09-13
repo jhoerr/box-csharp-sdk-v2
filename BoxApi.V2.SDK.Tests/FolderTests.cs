@@ -17,11 +17,10 @@ namespace BoxApi.V2.SDK.Tests
             AssertGetFolderConstraints(folder);
         }
 
-        [Test]
+        [Test, ExpectedException(typeof(BoxException)) ]
         public void GetNonExistentFolder()
         {
-            var folder = _client.GetFolder("abc");
-            Assert.That(folder, Is.Null);
+            _client.GetFolder("abc");
         }
 
         [Test]
@@ -33,12 +32,29 @@ namespace BoxApi.V2.SDK.Tests
                 {
                     callbackHit = true;
                     AssertGetFolderConstraints(folder);
-                });
+                }, null);
 
             do
             {
                 Thread.Sleep(1000);
             } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void GetNonExistentFolderAsync()
+        {
+            bool failureOccured = false;
+            _client.GetFolderAsync("abc", folder => { }, () => { failureOccured = true; });
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!failureOccured && --MaxWaitInSeconds > 0);
 
             if (MaxWaitInSeconds.Equals(0))
             {
@@ -64,7 +80,6 @@ namespace BoxApi.V2.SDK.Tests
             _client.DeleteFolder(folder.Id, true);
         }
 
-
         [Test]
         public void CreateFolderAsync()
         {
@@ -77,7 +92,7 @@ namespace BoxApi.V2.SDK.Tests
                     AssertCreateFolderConstraints(folder, folderName);
                     // clean up 
                     _client.DeleteFolder(folder.Id, true);
-                });
+                }, null);
 
             do
             {
@@ -102,10 +117,58 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folderName = TestItemName();
             var folder = _client.CreateFolder("0", folderName);
-            AssertCreateFolderConstraints(folder, folderName);
             _client.DeleteFolder(folder.Id, true);
-            folder = _client.GetFolder(folder.Id);
-            Assert.That(folder, Is.Null);
+        }
+
+        [Test]
+        public void DeleteFolderAsync()
+        {
+            var callbackHit = false;
+            var folderName = TestItemName();
+            var folder = _client.CreateFolder("0", folderName);
+            _client.DeleteFolderAsync(folder.Id, true, () => callbackHit = true, null);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+
+            try
+            {
+                _client.GetFolder(folder.Id);
+                Assert.Fail("Should not be able to fetch the deleted folder.");
+            }
+            catch (BoxException e)
+            {
+            }
+        }
+
+        [Test, ExpectedException(typeof(BoxException))]
+        public void DeleteNonExistentFolder()
+        {
+            _client.DeleteFolder("1234123", true);
+        }
+
+        [Test]
+        public void DeleteNonExistentFolderAsync()
+        {
+            bool failureOccured = false;
+            _client.DeleteFolderAsync("abc", true, () => { }, () => { failureOccured = true; });
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!failureOccured && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
         }
 
         private static string TestItemName()
