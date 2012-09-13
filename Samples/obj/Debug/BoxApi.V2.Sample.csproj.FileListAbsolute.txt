@@ -1,8 +1,0 @@
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\bin\Debug\BoxSync.Sample.GetFolderStructureApp.exe
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\bin\Debug\BoxSync.Sample.GetFolderStructureApp.pdb
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\bin\Debug\BoxSync.Core.dll
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\bin\Debug\BoxSync.Core.pdb
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\bin\Debug\BoxSync.Core.xml
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\obj\Debug\BoxApi.V2.Sample.csprojResolveAssemblyReference.cache
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\obj\Debug\BoxSync.Sample.GetFolderStructureApp.exe
-C:\Users\snarayanan\Documents\Visual Studio 11\Projects\CSharpSDKv2\dev\BoxSync.Sample.GetFolderStructureApp\obj\Debug\BoxSync.Sample.GetFolderStructureApp.pdb
