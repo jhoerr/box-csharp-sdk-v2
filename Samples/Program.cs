@@ -36,13 +36,14 @@ namespace BoxApi.V2.Samples
             _boxAuthLayer._manager.GetFolder("0");
 
             // POST /folders/0
-            int new_folder_id = _boxAuthLayer._manager.CreateFolder(0, "MyNewFolder");
+            var newFolder = _boxAuthLayer._manager.CreateFolder("0", "MyNewFolder");
+		    int id = int.Parse(newFolder.Id);
 
             // PUT /folders/1234
-            _boxAuthLayer._manager.UpdateFolder(new_folder_id, "MyUpdatedFolder");
+            _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
 
             // DELETE /folders/1234
-            _boxAuthLayer._manager.DeleteFolder(new_folder_id);
+            _boxAuthLayer._manager.DeleteFolder(id);
                          
             #endregion
 

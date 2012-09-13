@@ -8,12 +8,20 @@ namespace BoxApi.V2.SDK.Tests
     [TestFixture]
     public class FolderTests : BoxApiTestHarness
     {
+        private readonly BoxManager _client = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
+
         [Test]
         public void GetFolder()
         {
-            var boxManager = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
-            var folder = boxManager.GetFolder("0");
+            var folder = _client.GetFolder("0");
             AssertGetFolderConstraints(folder);
+        }
+
+        [Test]
+        public void GetNonExistentFolder()
+        {
+            var folder = _client.GetFolder("abc");
+            Assert.That(folder, Is.Null);
         }
 
         [Test]
@@ -21,8 +29,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var callbackHit = false;
 
-            var boxManager = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
-            boxManager.GetFolderAsync("0", folder =>
+            _client.GetFolderAsync("0", folder =>
                 {
                     callbackHit = true;
                     AssertGetFolderConstraints(folder);
@@ -50,23 +57,26 @@ namespace BoxApi.V2.SDK.Tests
         [Test]
         public void CreateFolder()
         {
-            string folderName = string.Format("test_{0}", DateTime.UtcNow.Ticks.ToString());
-            var boxManager = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
-            var folder = boxManager.CreateFolder("0", folderName);
+            var folderName = TestItemName();
+            var folder = _client.CreateFolder("0", folderName);
             AssertCreateFolderConstraints(folder, folderName);
+            // clean up 
+            _client.DeleteFolder(folder.Id, true);
         }
+
 
         [Test]
         public void CreateFolderAsync()
         {
-            string folderName = string.Format("test_{0}", DateTime.UtcNow.Ticks.ToString());
+            var folderName = TestItemName();
             var callbackHit = false;
 
-            var boxManager = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
-            boxManager.CreateFolderAsync("0", folderName, folder =>
+            _client.CreateFolderAsync("0", folderName, folder =>
                 {
                     callbackHit = true;
                     AssertCreateFolderConstraints(folder, folderName);
+                    // clean up 
+                    _client.DeleteFolder(folder.Id, true);
                 });
 
             do
@@ -86,5 +96,23 @@ namespace BoxApi.V2.SDK.Tests
             Assert.That(folder.Name, Is.EqualTo(folderName));
             Assert.That(folder.Type, Is.EqualTo("folder"));
         }
+
+        [Test]
+        public void DeleteFolder()
+        {
+            var folderName = TestItemName();
+            var folder = _client.CreateFolder("0", folderName);
+            AssertCreateFolderConstraints(folder, folderName);
+            _client.DeleteFolder(folder.Id, true);
+            folder = _client.GetFolder(folder.Id);
+            Assert.That(folder, Is.Null);
+        }
+
+        private static string TestItemName()
+        {
+            return string.Format("test_{0}", DateTime.UtcNow.Ticks.ToString());
+        }
+
+        //Todo: Verify that DeleteFolder fails if 'recursive' is false and the folder has content.
     }
 }

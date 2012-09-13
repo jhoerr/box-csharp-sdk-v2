@@ -85,6 +85,7 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserEntity.cs" />
     <Compile Include="Model\UserPermissionFlags.cs" />
+    <Compile Include="RequestHelper.cs" />
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
     </Compile>

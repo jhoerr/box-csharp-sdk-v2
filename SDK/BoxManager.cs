@@ -9,7 +9,6 @@ using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 using RestSharp;
 using RestSharp.Deserializers;
-using RestSharp.Serializers;
 using FileInfo = BoxApi.V2.SDK.Model.FileInfo;
 
 namespace BoxApi.V2
@@ -28,6 +27,7 @@ namespace BoxApi.V2
         private string _token;
         private readonly RestClient _restContentClient;
         private readonly RestClient _restAuthorizationClient;
+        private readonly RequestHelper _requestHelper;
 
         /// <summary>
         ///   Instantiates BoxManager
@@ -57,6 +57,8 @@ namespace BoxApi.V2
             _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy, Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken)};
             _restContentClient.ClearHandlers();
             _restContentClient.AddHandler("*", new JsonDeserializer());
+
+            _requestHelper = new RequestHelper("1.0", "2.0");
         }
 
         #region GetAuthenticationToken
@@ -271,82 +273,60 @@ namespace BoxApi.V2
 
         public Folder GetFolder(string id)
         {
-            var restRequest = GetFolderRequest(id);
-            var restResponse = _restContentClient.Execute<Folder>(restRequest);
+            var restRequest = _requestHelper.GetFolder(id);
+            var restResponse = Execute<Folder>(restRequest);
             return restResponse.Data;
         }
 
         public void GetFolderAsync(string id, Action<Folder> callback)
         {
-            var restRequest = GetFolderRequest(id);
-            _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
-        }
-
-        private RestRequest GetFolderRequest(string id)
-        {
-            var restRequest = new RestRequest("{version}/folders/{id}");
-            restRequest.AddUrlSegment("version", ApiVersion2);
-            restRequest.AddUrlSegment("id", id);
-            return restRequest;
+            var restRequest = _requestHelper.GetFolder(id);
+            ExecuteAsync(restRequest, callback);
         }
 
         public Folder CreateFolder(string parentId, string name)
         {
-            var restRequest = CreateFolderRequest(parentId, name);
+            var restRequest = _requestHelper.CreateFolder(parentId, name);
             var restResponse = _restContentClient.Execute<Folder>(restRequest);
             return restResponse.Data;
         }
 
         public void CreateFolderAsync(string parentId, string name, Action<Folder> callback)
         {
-            var restRequest = CreateFolderRequest(parentId, name);
+            var restRequest = _requestHelper.CreateFolder(parentId, name);
             _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
         }
 
-        private RestRequest CreateFolderRequest(string parentId, string name)
+        public void DeleteFolder(string id, bool recursive)
         {
-            var restRequest = new RestRequest("{version}/folders/{parentId}", Method.POST){RequestFormat = DataFormat.Json};
-            restRequest.AddUrlSegment("version", ApiVersion2);
-            restRequest.AddUrlSegment("parentId", parentId);
-            restRequest.AddBody(new { name });
-            return restRequest;
+            var restRequest = _requestHelper.DeleteFolder(id, recursive);
+            Execute(restRequest);
         }
 
-        private class NameBody
+        public void DeleteFolderAsync(string id, bool recursive)
         {
-            public NameBody(string name)
-            {
-                Name = name;
-            }
-
-            public string Name { get; set; }
+            var restRequest = _requestHelper.DeleteFolder(id, recursive);
+            ExecuteAsync(restRequest);
         }
 
-        public int CreateFolder(int parent_folder_id, string name)
+        private void Execute(RestRequest restRequest)
         {
-            var new_folder_id = 0;
+            _restContentClient.Execute(restRequest);
+        }
 
-            var actionString = "/folders/";
-            var url = _serviceUrl + actionString + parent_folder_id.ToString();
+        private IRestResponse<T> Execute<T>(RestRequest restRequest) where T : class, new()
+        {
+            return _restContentClient.Execute<T>(restRequest);
+        }
 
-            var requestBody = "{ \"name\" : \"" +
-                              name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
+        private void ExecuteAsync<T>(RestRequest restRequest, Action<T> callback) where T : class, new()
+        {
+            _restContentClient.ExecuteAsync<T>(restRequest, response => callback(response.Data));
+        }
 
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Folder));
-                    var folder = (Folder) ser.ReadObject(stream);
-                    new_folder_id = int.Parse(folder.Id);
-
-                    Console.WriteLine(folder.ToString());
-                }
-            }
-
-            return new_folder_id;
+        private void ExecuteAsync(RestRequest restRequest)
+        {
+            _restContentClient.ExecuteAsync(restRequest, null);
         }
 
         public void UpdateFolder(int folder_id, string new_name)
