@@ -19,7 +19,7 @@ namespace BoxApi.V2
     public sealed class BoxManager
     {
         private const string ApiVersion2 = "2.0";
-        private string _serviceUrl = "https://www.box.com/api/{version}";
+        private string _serviceUrl = "https://www.box.com/api/";
         private string _http_Authorization_Header;
 
         private readonly boxnetService _service;
@@ -49,14 +49,9 @@ namespace BoxApi.V2
             IWebProxy proxy,
             string authorizationToken)
         {
-            _apiKey = applicationApiKey;
-            _token = authorizationToken;
-
-            _service = new boxnetService();
-
             _restAuthorizationClient = new RestClient(){Proxy = proxy};
-            _restContentClient.ClearHandlers();
-            _restContentClient.AddHandler("*", new XmlDeserializer());
+            _restAuthorizationClient.ClearHandlers();
+            _restAuthorizationClient.AddHandler("*", new XmlDeserializer());
 
             _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy};
             _restContentClient.ClearHandlers();
@@ -276,21 +271,23 @@ namespace BoxApi.V2
 
         public Folder GetFolder(int id)
         {
-            var restRequest = new RestRequest("/folders/{id}");
-            restRequest.AddUrlSegment("version", ApiVersion2);
-            restRequest.AddParameter("id", id);
-
+            var restRequest = GetFolderRequest(id);
             var restResponse = _restContentClient.Execute<Folder>(restRequest);
             return restResponse.Data;
         }
 
         public void GetFolderAsync(int id, Action<Folder> callback)
         {
-            var restRequest = new RestRequest("/folders/{id}");
-            restRequest.AddUrlSegment("version", ApiVersion2);
-            restRequest.AddParameter("id", id);
-
+            var restRequest = GetFolderRequest(id);
             _restContentClient.ExecuteAsync<Folder>(restRequest, response => callback(response.Data));
+        }
+
+        private RestRequest GetFolderRequest(int id)
+        {
+            var restRequest = new RestRequest("{version}/folders/{id}");
+            restRequest.AddUrlSegment("version", ApiVersion2);
+            restRequest.AddUrlSegment("id", id.ToString());
+            return restRequest;
         }
 
         public int CreateFolder(int parent_folder_id, string name)
