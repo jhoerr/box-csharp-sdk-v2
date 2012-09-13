@@ -35,8 +35,18 @@ namespace BoxApi.V2
             var restRequest = new RestRequest("{version}/folders/{id}", Method.DELETE);
             restRequest.AddUrlSegment("version", _contentApiVersion);
             restRequest.AddUrlSegment("id", id);
-            restRequest.AddParameter("recursive", recursive);
+            restRequest.AddParameter("recursive", recursive.ToString().ToLower());
             return restRequest;
+        }
+
+        public RestRequest CopyFolder(string id, string newParentId, string name)
+        {
+            var restRequest = new RestRequest("{version}/folders/{id}/copy", Method.POST) { RequestFormat = DataFormat.Json };
+            restRequest.AddUrlSegment("version", _contentApiVersion);
+            restRequest.AddUrlSegment("id", id);
+            restRequest.AddBody(new { parent = new { id = newParentId }, name});
+            return restRequest;
+
         }
     }
 }

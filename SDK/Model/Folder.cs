@@ -44,7 +44,7 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         /// The folder that contains this item
         /// </summary>
-        public Entity ParentFolder { get; set; }
+        public Entity Parent { get; set; }
 
         /// <summary>
         /// An array of file or folder objects contained in this folder

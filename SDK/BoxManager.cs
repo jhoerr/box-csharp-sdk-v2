@@ -307,6 +307,12 @@ namespace BoxApi.V2
             ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
+        public Folder CopyFolder(string folderId, string newParentId, string newName = null)
+        {
+            RestRequest request = _requestHelper.CopyFolder(folderId, newParentId, newName);
+            return Execute<Folder>(request, HttpStatusCode.Created);
+        }
+
         private void Execute(RestRequest restRequest, HttpStatusCode expectedStatusCode)
         {
             var restResponse = _restContentClient.Execute(restRequest);
@@ -316,7 +322,7 @@ namespace BoxApi.V2
             }
         }
 
-        private T Execute<T>(RestRequest restRequest, HttpStatusCode expectedStatusCode) where T : class, new()
+        private T Execute<T>(IRestRequest restRequest, HttpStatusCode expectedStatusCode) where T : class, new()
         {
             var restResponse = _restContentClient.Execute<T>(restRequest);
             if (!WasSuccessful(restResponse, expectedStatusCode))
@@ -568,9 +574,9 @@ namespace BoxApi.V2
             }
         }
 
-        #endregion
-
         #region V2_Comments
+
+        #endregion
 
         public void PostComment(int file_id, string comment)
         {
@@ -652,9 +658,9 @@ namespace BoxApi.V2
             }
         }
 
-        #endregion
-
         #region V2 Discussions API
+
+        #endregion
 
         public void GetDiscussions(int folder_id)
         {
@@ -736,9 +742,9 @@ namespace BoxApi.V2
             }
         }
 
-        #endregion
-
         #region V2 Events API
+
+        #endregion
 
         public void GetEvents()
         {
@@ -750,6 +756,7 @@ namespace BoxApi.V2
                 // Parse event info from stream
             }
         }
+
 
         #endregion
     }
