@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{78E2F2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.SDK.Tests", "BoxApi.V2.SDK.Tests\BoxApi.V2.SDK.Tests.csproj", "{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
