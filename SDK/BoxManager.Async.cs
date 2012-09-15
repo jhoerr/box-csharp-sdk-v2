@@ -13,6 +13,12 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
+        public void GetFolderItemsAsync(string id, Action<ItemCollection> onSuccess, Action onFailure)
+        {
+            RestRequest folderItems = _requestHelper.GetFolderItems(id);
+            ExecuteAsync(folderItems, onSuccess, onFailure, HttpStatusCode.OK);
+        }
+
         public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
         {
             var request = _requestHelper.CreateFolder(parentId, name);

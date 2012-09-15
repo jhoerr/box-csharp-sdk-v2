@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
@@ -243,6 +244,37 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
+
+        [Test]
+        public void GetFolderItemsAsync()
+        {
+            var callbackHit = false;
+
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
+            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
+       
+            Client.GetFolderItemsAsync(testFolder.Id, contents =>
+            {
+                callbackHit = true;
+                Assert.That(contents, Is.Not.Null);
+                Assert.That(contents.TotalCount, Is.EqualTo("2"));
+                Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+                Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
+                Client.DeleteFolder(testFolder.Id, true);
+            }, _abortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
 
     }
 }

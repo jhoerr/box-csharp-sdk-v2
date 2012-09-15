@@ -12,6 +12,12 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
+        public ItemCollection GetFolderItems(string id)
+        {
+            var request = _requestHelper.GetFolderItems(id);
+            return Execute<ItemCollection>(request, HttpStatusCode.OK);
+        }
+
         public Folder CreateFolder(string parentId, string name)
         {
             var request = _requestHelper.CreateFolder(parentId, name);

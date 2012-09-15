@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
 
@@ -12,6 +13,20 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folder = Client.GetFolder(RootId);
             AssertFolderConstraints(folder, "All Files", null, RootId);
+        }
+
+        [Test]
+        public void GetFolderItems()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
+            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
+            var items = Client.GetFolderItems(testFolder.Id);
+            Assert.That(items, Is.Not.Null);
+            Assert.That(items.TotalCount, Is.EqualTo("2"));
+            Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+            Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
+            Client.DeleteFolder(testFolder.Id, true);
         }
 
         [Test, ExpectedException(typeof (BoxException))]

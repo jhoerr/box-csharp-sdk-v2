@@ -22,6 +22,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public RestRequest GetFolderItems(string id)
+        {
+            var request = JsonRequest("folders/{id}/items");
+            request.AddUrlSegment("id", id);
+            return request;
+        }
+
         public RestRequest CreateFolder(string parentId, string name)
         {
             var request = JsonRequest("folders/{parentId}", Method.POST);
