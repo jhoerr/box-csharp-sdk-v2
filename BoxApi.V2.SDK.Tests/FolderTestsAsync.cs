@@ -191,5 +191,58 @@ namespace BoxApi.V2.SDK.Tests
             }
         }
 
+        [Test]
+        public void MoveFolderAsync()
+        {
+            var callbackHit = false;
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            var targetFolderName = TestItemName();
+            Folder targetFolder = Client.CreateFolder(RootId, targetFolderName);
+
+            Client.MoveFolderAsync(folder.Id, targetFolder.Id, movedFolder =>
+            {
+                callbackHit = true;
+                AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
+                Client.DeleteFolder(targetFolder.Id, true);
+            }, _abortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void RenameFolderAsync()
+        {
+            var callbackHit = false;
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            var newName = TestItemName();
+
+            Client.RenameFolderAsync(folder.Id, newName, renamedFolder =>
+            {
+                callbackHit = true;
+                AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
+                Client.DeleteFolder(renamedFolder.Id, true);
+            }, _abortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
     }
 }

@@ -8,14 +8,14 @@ namespace BoxApi.V2.SDK
     {
         public Folder GetFolder(string id)
         {
-            var restRequest = _requestHelper.GetFolder(id);
-            return Execute<Folder>(restRequest, HttpStatusCode.OK);
+            var request = _requestHelper.GetFolder(id);
+            return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
         public Folder CreateFolder(string parentId, string name)
         {
-            var restRequest = _requestHelper.CreateFolder(parentId, name);
-            return Execute<Folder>(restRequest, HttpStatusCode.Created);
+            var request = _requestHelper.CreateFolder(parentId, name);
+            return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
         public void DeleteFolder(Folder folder, bool recursive)
@@ -25,8 +25,8 @@ namespace BoxApi.V2.SDK
 
         public void DeleteFolder(string id, bool recursive)
         {
-            var restRequest = _requestHelper.DeleteFolder(id, recursive);
-            Execute(restRequest, HttpStatusCode.OK);
+            var request = _requestHelper.DeleteFolder(id, recursive);
+            Execute(request, HttpStatusCode.OK);
         }
 
         public Folder CopyFolder(Folder folder, string newParentId, string newName = null)
@@ -46,18 +46,30 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
-        private void Execute(RestRequest restRequest, HttpStatusCode expectedStatusCode)
+        public Folder MoveFolder(string folderId, string newParentId)
         {
-            var restResponse = _restContentClient.Execute(restRequest);
+            RestRequest request = _requestHelper.MoveFolder(folderId, newParentId);
+            return Execute<Folder>(request, HttpStatusCode.OK);
+        }
+
+        public Folder RenameFolder(string folderId, string newName)
+        {
+            RestRequest request = _requestHelper.RenameFolder(folderId, newName);
+            return Execute<Folder>(request, HttpStatusCode.OK);
+        }
+        
+        private void Execute(RestRequest request, HttpStatusCode expectedStatusCode)
+        {
+            var restResponse = _restContentClient.Execute(request);
             if (!WasSuccessful(restResponse, expectedStatusCode))
             {
                 throw new BoxException(restResponse);
             }
         }
 
-        private T Execute<T>(IRestRequest restRequest, HttpStatusCode expectedStatusCode) where T : class, new()
+        private T Execute<T>(IRestRequest request, HttpStatusCode expectedStatusCode) where T : class, new()
         {
-            var restResponse = _restContentClient.Execute<T>(restRequest);
+            var restResponse = _restContentClient.Execute<T>(request);
             if (!WasSuccessful(restResponse, expectedStatusCode))
             {
                 throw new BoxException(restResponse);

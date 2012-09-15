@@ -157,5 +157,49 @@ namespace BoxApi.V2.SDK.Tests
             AssertSharedLink(update.SharedLink, sharedLink);
             Client.DeleteFolder(update, true);
         }
+
+        [Test]
+        public void MoveFolder()
+        {
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            var targetFolderName = TestItemName();
+            Folder targetFolder = Client.CreateFolder(RootId, targetFolderName);
+            Folder moved = Client.MoveFolder(folder.Id, targetFolder.Id);
+            AssertFolderConstraints(moved, folderName, targetFolder.Id, folder.Id);
+            Client.DeleteFolder(targetFolder.Id, true);
+        }
+
+        [Test, Ignore("This fails, but probably shouldn't.  http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
+        public void MoveFolderToSameParent()
+        {
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            Folder moved = Client.MoveFolder(folder.Id, RootId);
+            AssertFolderConstraints(moved, folderName, RootId, folder.Id);
+            Client.DeleteFolder(folder.Id, true);
+        }
+
+        [Test]
+        public void RenameFolder()
+        {
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            var newName = TestItemName();
+            Folder moved = Client.RenameFolder(folder.Id, newName);
+            AssertFolderConstraints(moved, newName, RootId, folder.Id);
+            Client.DeleteFolder(folder.Id, true);
+        }
+
+        [Test]
+        public void RenameFolderToSameName()
+        {
+            var folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            Folder moved = Client.RenameFolder(folder.Id, folderName);
+            AssertFolderConstraints(moved, folderName, RootId, folder.Id);
+            Client.DeleteFolder(folder.Id, true);
+        }
+
     }
 }

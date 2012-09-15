@@ -1,7 +1,6 @@
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.SDK.Serialization;
 using RestSharp;
-using RestSharp.Serializers;
 
 namespace BoxApi.V2
 {
@@ -18,46 +17,69 @@ namespace BoxApi.V2
 
         public RestRequest GetFolder(string id)
         {
-            var restRequest = new RestRequest("{version}/folders/{id}");
-            restRequest.AddUrlSegment("version", _contentApiVersion);
-            restRequest.AddUrlSegment("id", id);
-            return restRequest;
+            var request = JsonRequest("folders/{id}");
+            request.AddUrlSegment("id", id);
+            return request;
         }
 
         public RestRequest CreateFolder(string parentId, string name)
         {
-            var restRequest = new RestRequest("{version}/folders/{parentId}", Method.POST) { RequestFormat = DataFormat.Json };
-            restRequest.AddUrlSegment("version", _contentApiVersion);
-            restRequest.AddUrlSegment("parentId", parentId);
-            restRequest.AddBody(new { name });
-            return restRequest;
+            var request = JsonRequest("folders/{parentId}", Method.POST);
+            request.AddUrlSegment("parentId", parentId);
+            request.AddBody(new {name});
+            return request;
         }
 
         public RestRequest DeleteFolder(string id, bool recursive)
         {
-            var restRequest = new RestRequest("{version}/folders/{id}", Method.DELETE);
-            restRequest.AddUrlSegment("version", _contentApiVersion);
-            restRequest.AddUrlSegment("id", id);
-            restRequest.AddParameter("recursive", recursive.ToString().ToLower());
-            return restRequest;
+            var request = JsonRequest("folders/{id}", Method.DELETE);
+            request.AddUrlSegment("id", id);
+            request.AddParameter("recursive", recursive.ToString().ToLower());
+            return request;
         }
 
         public RestRequest CopyFolder(string id, string newParentId, string name)
         {
-            var restRequest = new RestRequest("{version}/folders/{id}/copy", Method.POST) { RequestFormat = DataFormat.Json };
-            restRequest.AddUrlSegment("version", _contentApiVersion);
-            restRequest.AddUrlSegment("id", id);
-            restRequest.AddBody(new { parent = new { id = newParentId }, name});
-            return restRequest;
+            var request = JsonRequest("folders/{id}/copy", Method.POST);
+            request.AddUrlSegment("id", id);
+            request.AddBody(new {parent = new {id = newParentId}, name});
+            return request;
         }
 
         public RestRequest ShareFolderLink(string id, SharedLink sharedLink)
         {
-            var restRequest = new RestRequest("{version}/folders/{id}", Method.PUT) { JsonSerializer = new AttributableJsonSerializer(), RequestFormat = DataFormat.Json };
-            restRequest.AddUrlSegment("version", _contentApiVersion);
-            restRequest.AddUrlSegment("id", id);
-            restRequest.AddBody(new{shared_link = sharedLink});
-            return restRequest;
+            var request = JsonRequest("folders/{id}", Method.PUT);
+            request.AddUrlSegment("id", id);
+            request.AddBody(new {shared_link = sharedLink});
+            return request;
+        }
+
+        public RestRequest MoveFolder(string id, string newParentId)
+        {
+            var request = JsonRequest("folders/{id}", Method.PUT);
+            request.AddUrlSegment("id", id);
+            request.AddBody(new {parent = new {id = newParentId}});
+            return request;
+        }
+
+        public RestRequest RenameFolder(string id, string newName)
+        {
+            var request = JsonRequest("folders/{id}", Method.PUT);
+            request.AddUrlSegment("id", id);
+            request.AddBody(new {name = newName});
+            return request;
+        }
+
+
+        private RestRequest JsonRequest(string resource, Method method = Method.GET)
+        {
+            var jsonRequest = new RestRequest("{version}/" + resource, method)
+                {
+                    RequestFormat = DataFormat.Json, 
+                    JsonSerializer = new AttributableJsonSerializer()
+                };
+            jsonRequest.AddUrlSegment("version", _contentApiVersion);
+            return jsonRequest;
         }
     }
 }
