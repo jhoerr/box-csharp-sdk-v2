@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
 
 namespace BoxApi.V2.SDK.Tests
@@ -14,10 +15,10 @@ namespace BoxApi.V2.SDK.Tests
         {
             var callbackHit = false;
 
-            Client.GetFolderAsync("0", folder =>
+            Client.GetFolderAsync(RootId, folder =>
                 {
                     callbackHit = true;
-                    AssertFolderConstraints(folder, "All Files", "0");
+                    AssertFolderConstraints(folder, "All Files", null, RootId);
                 }, null);
 
             do
@@ -54,10 +55,10 @@ namespace BoxApi.V2.SDK.Tests
             var folderName = TestItemName();
             var callbackHit = false;
 
-            Client.CreateFolderAsync("0", folderName, folder =>
+            Client.CreateFolderAsync(RootId, folderName, folder =>
                 {
                     callbackHit = true;
-                    AssertFolderConstraints(folder, folderName);
+                    AssertFolderConstraints(folder, folderName, RootId);
                     // clean up 
                     Client.DeleteFolder(folder.Id, true);
                 }, null);
@@ -78,7 +79,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var failureOccured = false;
 
-            Client.CreateFolderAsync("0", "\\bad name:", folder => { }, () => failureOccured = true);
+            Client.CreateFolderAsync(RootId, "\\bad name:", folder => { }, () => failureOccured = true);
 
             do
             {
@@ -96,7 +97,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             Client.DeleteFolderAsync(folder.Id, true, () => callbackHit = true, null);
 
             do
@@ -141,10 +142,10 @@ namespace BoxApi.V2.SDK.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var subfolder = Client.CreateFolder(folder.Id, "subfolder");
             var copyName = TestItemName();
-            Client.CopyFolderAsync(folder.Id, "0", copiedFolder =>
+            Client.CopyFolderAsync(folder.Id, RootId, copiedFolder =>
                 {
                     callbackHit = true;
                     Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
@@ -162,5 +163,33 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
+
+        [Test]
+        public void ShareFolderLinkAsync()
+        {
+            var callbackHit = false;
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName);
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { Preview = true, Download = true });
+
+            Client.ShareFolderLinkAsync(folder.Id, sharedLink, copiedFolder =>
+            {
+                callbackHit = true;
+                AssertFolderConstraints(folder, folderName, RootId);
+                AssertSharedLink(folder.SharedLink, sharedLink);
+                Client.DeleteFolder(folder.Id, true);
+            }, _abortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
     }
 }

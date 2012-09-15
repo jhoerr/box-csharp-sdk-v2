@@ -31,6 +31,12 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
+        public void ShareFolderLinkAsync(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
+        {
+            RestRequest request = _requestHelper.ShareFolderLink(id, sharedLink);
+            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
+        }
+
         private void ExecuteAsync<T>(RestRequest restRequest, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
         {
             if (onSuccess == null)

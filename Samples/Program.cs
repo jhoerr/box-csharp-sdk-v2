@@ -40,7 +40,7 @@ namespace BoxApi.V2.Samples
 		    int id = int.Parse(newFolder.Id);
 
             // PUT /folders/1234
-            _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
+//            _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
 
             #endregion
 

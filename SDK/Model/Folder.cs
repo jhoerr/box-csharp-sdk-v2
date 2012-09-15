@@ -1,9 +1,11 @@
 using System;
 using System.Runtime.Serialization;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace BoxApi.V2.SDK.Model
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Folder : Entity
     {
         /// <summary>
@@ -45,6 +47,9 @@ namespace BoxApi.V2.SDK.Model
         /// The folder that contains this item
         /// </summary>
         public Entity Parent { get; set; }
+
+        [JsonProperty(PropertyName = "shared_link")]
+        public SharedLink SharedLink { get; set; }
 
         /// <summary>
         /// An array of file or folder objects contained in this folder

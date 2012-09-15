@@ -1,4 +1,7 @@
+using BoxApi.V2.SDK.Model;
+using BoxApi.V2.SDK.Serialization;
 using RestSharp;
+using RestSharp.Serializers;
 
 namespace BoxApi.V2
 {
@@ -46,7 +49,15 @@ namespace BoxApi.V2
             restRequest.AddUrlSegment("id", id);
             restRequest.AddBody(new { parent = new { id = newParentId }, name});
             return restRequest;
+        }
 
+        public RestRequest ShareFolderLink(string id, SharedLink sharedLink)
+        {
+            var restRequest = new RestRequest("{version}/folders/{id}", Method.PUT) { JsonSerializer = new AttributableJsonSerializer(), RequestFormat = DataFormat.Json };
+            restRequest.AddUrlSegment("version", _contentApiVersion);
+            restRequest.AddUrlSegment("id", id);
+            restRequest.AddBody(new{shared_link = sharedLink});
+            return restRequest;
         }
     }
 }

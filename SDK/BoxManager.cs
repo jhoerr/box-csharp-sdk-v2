@@ -274,28 +274,6 @@ namespace BoxApi.V2.SDK
             return restResponse != null && restResponse.StatusCode.Equals(expectedStatusCode);
         }
 
-        public void UpdateFolder(int folder_id, string new_name)
-        {
-            var actionString = "/folders/";
-            var url = _serviceUrl + actionString + folder_id.ToString();
-
-            var requestBody = "{ \"name\" : \"" +
-                              new_name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Folder));
-                    var folder = (Folder) ser.ReadObject(stream);
-
-                    Console.WriteLine(folder.ToString());
-                }
-            }
-        }
-
         #endregion
 
         #region V2_Files

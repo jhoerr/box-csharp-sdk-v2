@@ -1,4 +1,5 @@
 ﻿using System;
+using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
 
 namespace BoxApi.V2.SDK.Tests
@@ -6,12 +7,11 @@ namespace BoxApi.V2.SDK.Tests
     [TestFixture]
     public class FolderTestsSync : BoxApiTestHarness
     {
-        
         [Test]
         public void GetFolder()
         {
-            var folder = Client.GetFolder("0");
-            AssertFolderConstraints(folder, "All Files", "0");
+            var folder = Client.GetFolder(RootId);
+            AssertFolderConstraints(folder, "All Files", null, RootId);
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -24,8 +24,8 @@ namespace BoxApi.V2.SDK.Tests
         public void CreateFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
-            AssertFolderConstraints(folder, folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
+            AssertFolderConstraints(folder, folderName, RootId);
             // clean up 
             Client.DeleteFolder(folder.Id, true);
         }
@@ -33,14 +33,14 @@ namespace BoxApi.V2.SDK.Tests
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFolderWithIllegalName()
         {
-            Client.CreateFolder("0", "\\bad name:");
+            Client.CreateFolder(RootId, "\\bad name:");
         }
 
         [Test]
         public void DeleteFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             Client.DeleteFolder(folder.Id, true);
         }
 
@@ -48,16 +48,16 @@ namespace BoxApi.V2.SDK.Tests
         public void DeleteFolderRecursive()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var subFolder = Client.CreateFolder(folder.Id, "subfolder");
             Client.DeleteFolder(folder.Id, true);
         }
 
-        [Test, ExpectedException(typeof(BoxException))]
+        [Test, ExpectedException(typeof (BoxException))]
         public void DeleteNonEmptyFolderWithoutRecursiveBitSet()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var subFolder = Client.CreateFolder(folder.Id, "subfolder");
             try
             {
@@ -81,11 +81,11 @@ namespace BoxApi.V2.SDK.Tests
         public void CopyFolderToSameParentWithDifferentName()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var copyName = TestItemName();
-            var copy = Client.CopyFolder(folder.Id, "0", copyName);
-            AssertFolderConstraints(copy, copyName);
-            Assert.That(copy.Parent.Id, Is.EqualTo("0"));
+            var copy = Client.CopyFolder(folder.Id, RootId, copyName);
+            AssertFolderConstraints(copy, copyName, RootId);
+            Assert.That(copy.Parent.Id, Is.EqualTo(RootId));
             Client.DeleteFolder(folder.Id, true);
             Client.DeleteFolder(copy.Id, true);
         }
@@ -94,12 +94,12 @@ namespace BoxApi.V2.SDK.Tests
         public void CopyFolderToDifferentParentWithSameName()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var destinationName = TestItemName();
-            var destination = Client.CreateFolder("0", destinationName);
-            
+            var destination = Client.CreateFolder(RootId, destinationName);
+
             var copy = Client.CopyFolder(folder.Id, destination.Id);
-            AssertFolderConstraints(copy, folderName);
+            AssertFolderConstraints(copy, folderName, destination.Id);
             Assert.That(copy.Parent.Id, Is.EqualTo(destination.Id));
             Client.DeleteFolder(folder.Id, true);
             Client.DeleteFolder(destination.Id, true);
@@ -109,21 +109,21 @@ namespace BoxApi.V2.SDK.Tests
         public void CopyRecursive()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             var subfolder = Client.CreateFolder(folder.Id, "subfolder");
             var copyName = TestItemName();
-            var copy = Client.CopyFolder(folder.Id, "0", copyName);
+            var copy = Client.CopyFolder(folder.Id, RootId, copyName);
             Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
         }
 
-        [Test, ExpectedException(typeof(BoxException))]
+        [Test, ExpectedException(typeof (BoxException))]
         public void CopyFolderFailsWhenSameParentAndNewNameNotProvided()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             try
             {
-                Client.CopyFolder(folder.Id, "0");
+                Client.CopyFolder(folder.Id, RootId);
             }
             finally
             {
@@ -131,14 +131,14 @@ namespace BoxApi.V2.SDK.Tests
             }
         }
 
-        [Test, ExpectedException(typeof(BoxException))]
+        [Test, ExpectedException(typeof (BoxException))]
         public void CopyFolderFailsWhenSameParentAndNewNameIsSame()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder("0", folderName);
+            var folder = Client.CreateFolder(RootId, folderName);
             try
             {
-                Client.CopyFolder(folder.Id, "0", folder.Name);
+                Client.CopyFolder(folder.Id, RootId, folder.Name);
             }
             finally
             {
@@ -146,6 +146,16 @@ namespace BoxApi.V2.SDK.Tests
             }
         }
 
-        //Todo: Verify that DeleteFolder fails if 'recursive' is false and the folder has content.
+        [Test]
+        public void CreateSharedLink()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName);
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
+            Folder update = Client.ShareFolderLink(folder.Id, sharedLink);
+            AssertFolderConstraints(update, folderName, RootId, folder.Id);
+            AssertSharedLink(update.SharedLink, sharedLink);
+            Client.DeleteFolder(update, true);
+        }
     }
 }

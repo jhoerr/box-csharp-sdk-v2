@@ -44,7 +44,11 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RestSharp">
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RestSharp.104.1\lib\net35-client\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -80,10 +84,13 @@
     <Compile Include="JSONDataTypes.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\CommentingUser.cs" />
+    <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\FileInfo.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ItemCollection.cs" />
+    <Compile Include="Model\Permissions.cs" />
+    <Compile Include="Model\SharedLink.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserEntity.cs" />
     <Compile Include="Model\UserPermissionFlags.cs" />
@@ -91,6 +98,7 @@
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\AttributableJsonSerializer.cs" />
     <Compile Include="ServiceReference\boxnetService.cs" />
     <Compile Include="Statuses\AuthenticationStatus.cs" />
     <Compile Include="Statuses\GetAuthenticationTokenStatus.cs" />
@@ -102,7 +110,6 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="ServiceReference\box.wsdl" />
