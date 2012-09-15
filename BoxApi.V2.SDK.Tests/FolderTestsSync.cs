@@ -11,7 +11,7 @@ namespace BoxApi.V2.SDK.Tests
         public void GetFolder()
         {
             var folder = Client.GetFolder("0");
-            AssertGetFolderConstraints(folder);
+            AssertFolderConstraints(folder, "All Files", "0");
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -25,7 +25,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folderName = TestItemName();
             var folder = Client.CreateFolder("0", folderName);
-            AssertCreateFolderConstraints(folder, folderName);
+            AssertFolderConstraints(folder, folderName);
             // clean up 
             Client.DeleteFolder(folder.Id, true);
         }
@@ -84,7 +84,7 @@ namespace BoxApi.V2.SDK.Tests
             var folder = Client.CreateFolder("0", folderName);
             var copyName = TestItemName();
             var copy = Client.CopyFolder(folder.Id, "0", copyName);
-            AssertCreateFolderConstraints(copy, copyName);
+            AssertFolderConstraints(copy, copyName);
             Assert.That(copy.Parent.Id, Is.EqualTo("0"));
             Client.DeleteFolder(folder.Id, true);
             Client.DeleteFolder(copy.Id, true);
@@ -99,7 +99,7 @@ namespace BoxApi.V2.SDK.Tests
             var destination = Client.CreateFolder("0", destinationName);
             
             var copy = Client.CopyFolder(folder.Id, destination.Id);
-            AssertCreateFolderConstraints(copy, folderName);
+            AssertFolderConstraints(copy, folderName);
             Assert.That(copy.Parent.Id, Is.EqualTo(destination.Id));
             Client.DeleteFolder(folder.Id, true);
             Client.DeleteFolder(destination.Id, true);

@@ -17,7 +17,7 @@ namespace BoxApi.V2.SDK.Tests
             Client.GetFolderAsync("0", folder =>
                 {
                     callbackHit = true;
-                    AssertGetFolderConstraints(folder);
+                    AssertFolderConstraints(folder, "All Files", "0");
                 }, null);
 
             do
@@ -57,7 +57,7 @@ namespace BoxApi.V2.SDK.Tests
             Client.CreateFolderAsync("0", folderName, folder =>
                 {
                     callbackHit = true;
-                    AssertCreateFolderConstraints(folder, folderName);
+                    AssertFolderConstraints(folder, folderName);
                     // clean up 
                     Client.DeleteFolder(folder.Id, true);
                 }, null);
