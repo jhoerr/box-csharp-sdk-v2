@@ -64,6 +64,12 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
+        public void DeleteFileAsync(string id, string etag, Action onSuccess, Action onFailure)
+        {
+            RestRequest request = _requestHelper.DeleteFile(id, etag);
+            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
+        }
+
         public void CreateFileAsync(string parentFolderId, string name, Action<File> onSuccess, Action onFailure)
         {
             RestRequest request = _requestHelper.CreateFile(parentFolderId, name, new byte[0]);
