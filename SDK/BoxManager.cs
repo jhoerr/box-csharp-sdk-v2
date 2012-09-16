@@ -267,14 +267,70 @@ namespace BoxApi.V2.SDK
 
         #endregion
 
-        #region V2_Folders
+        private void Execute(RestRequest request, HttpStatusCode expectedStatusCode)
+        {
+            var restResponse = _restContentClient.Execute(request);
+            if (!WasSuccessful(restResponse, expectedStatusCode))
+            {
+                throw new BoxException(restResponse);
+            }
+        }
+
+        private T Execute<T>(IRestRequest request, HttpStatusCode expectedStatusCode) where T : class, new()
+        {
+            var restResponse = _restContentClient.Execute<T>(request);
+            if (!WasSuccessful(restResponse, expectedStatusCode))
+            {
+                throw new BoxException(restResponse);
+            }
+            return restResponse.Data;
+        }
+
+
+        private void ExecuteAsync<T>(RestRequest request, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
+        {
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("onSuccess can not be null");
+            }
+
+            _restContentClient.ExecuteAsync<T>(request, response =>
+            {
+                if (WasSuccessful(response, expectedStatusCode))
+                {
+                    onSuccess(response.Data);
+                }
+                else if (onFailure != null)
+                {
+                    onFailure();
+                }
+            });
+        }
+
+        private void ExecuteAsync(RestRequest request, Action onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
+        {
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("callback can not be null");
+            }
+
+            _restContentClient.ExecuteAsync(request, response =>
+            {
+                if (WasSuccessful(response, expectedStatusCode))
+                {
+                    onSuccess();
+                }
+                else if (onFailure != null)
+                {
+                    onFailure();
+                }
+            });
+        }
 
         private static bool WasSuccessful(IRestResponse restResponse, HttpStatusCode expectedStatusCode)
         {
             return restResponse != null && restResponse.StatusCode.Equals(expectedStatusCode);
         }
-
-        #endregion
 
         #region V2_Files
 

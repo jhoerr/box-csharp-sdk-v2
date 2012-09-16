@@ -1,3 +1,4 @@
+using System.IO;
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.SDK.Serialization;
 using RestSharp;
@@ -15,77 +16,80 @@ namespace BoxApi.V2
             _contentApiVersion = contentApiVersion;
         }
 
-        public RestRequest GetFolder(string id)
+        public RestRequest Get(Type resourceType, string id)
         {
-            var request = JsonRequest("folders/{id}");
+
+            var request = JsonRequest(resourceType, "{id}");
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public RestRequest GetFolderItems(string id)
+        public RestRequest GetItems(string id)
         {
-            var request = JsonRequest("folders/{id}/items");
+            var request = JsonRequest(Type.Folder, "{id}/items");
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public RestRequest CreateFolder(string parentId, string name)
+        public RestRequest Create(Type resourceType, string parentId, string name)
         {
-            var request = JsonRequest("folders/{parentId}", Method.POST);
+            var request = JsonRequest(resourceType, "{parentId}", Method.POST);
             request.AddUrlSegment("parentId", parentId);
             request.AddBody(new {name});
             return request;
         }
 
-        public RestRequest DeleteFolder(string id, bool recursive)
+        public RestRequest Delete(Type resourceType, string id, bool recursive)
         {
-            var request = JsonRequest("folders/{id}", Method.DELETE);
+            var request = JsonRequest(resourceType, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id);
             request.AddParameter("recursive", recursive.ToString().ToLower());
             return request;
         }
 
-        public RestRequest CopyFolder(string id, string newParentId, string name)
+        public RestRequest Copy(Type resourceType, string id, string newParentId, string name)
         {
-            var request = JsonRequest("folders/{id}/copy", Method.POST);
+            var request = JsonRequest(resourceType, "{id}/copy", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddBody(new {parent = new {id = newParentId}, name});
             return request;
         }
 
-        public RestRequest ShareFolderLink(string id, SharedLink sharedLink)
+        public RestRequest ShareLink(Type resourceType, string id, SharedLink sharedLink)
         {
-            var request = JsonRequest("folders/{id}", Method.PUT);
+            var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
             request.AddBody(new {shared_link = sharedLink});
             return request;
         }
 
-        public RestRequest MoveFolder(string id, string newParentId)
+        public RestRequest Move(Type resourceType, string id, string newParentId)
         {
-            var request = JsonRequest("folders/{id}", Method.PUT);
+            var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
             request.AddBody(new {parent = new {id = newParentId}});
             return request;
         }
 
-        public RestRequest RenameFolder(string id, string newName)
+        public RestRequest Rename(Type resourceType, string id, string newName)
         {
-            var request = JsonRequest("folders/{id}", Method.PUT);
+            var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
             request.AddBody(new {name = newName});
             return request;
         }
 
 
-        private RestRequest JsonRequest(string resource, Method method = Method.GET)
+        private RestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
         {
-            var jsonRequest = new RestRequest("{version}/" + resource, method)
+            string path = Path.Combine("{version}/{type}", resource ?? string.Empty);
+            var jsonRequest = new RestRequest(path, method)
                 {
                     RequestFormat = DataFormat.Json, 
                     JsonSerializer = new AttributableJsonSerializer()
                 };
             jsonRequest.AddUrlSegment("version", _contentApiVersion);
+            jsonRequest.AddUrlSegment("type", resourceType.Description());
             return jsonRequest;
         }
     }
