@@ -12,67 +12,107 @@ namespace BoxApi.V2.SDK
     {
         public void GetFolderAsync(string id, Action<Folder> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             var request = _requestHelper.Get(Type.Folder, id);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void GetFolderItemsAsync(string id, Action<ItemCollection> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest folderItems = _requestHelper.GetItems(id);
             ExecuteAsync(folderItems, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(parentId, "parentId");
+            GuardFromNullOrEmpty(name, "name");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             var request = _requestHelper.CreateFolder(parentId, name);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
         public void DeleteFolderAsync(string id, bool recursive, Action onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             var request = _requestHelper.DeleteFolder(id, recursive);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
-        public void CopyFolderAsync(string folderId, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
+        public void CopyFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
         {
-            RestRequest request = _requestHelper.Copy(Type.Folder, folderId, newParentId, newName);
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(newParentId, "newParentId");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
+            RestRequest request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
         public void ShareFolderLinkAsync(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(sharedLink, "sharedLink");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void MoveFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(newParentId, "newParentId");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest request = _requestHelper.Move(Type.Folder, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void RenameFolderAsync(string id, string newName, Action<Folder> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(newName, "newName");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest request = _requestHelper.Rename(Type.Folder, id, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void GetFileAsync(string id, Action<File> onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest request = _requestHelper.Get(Type.File, id);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void DeleteFileAsync(string id, string etag, Action onSuccess, Action onFailure)
         {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(etag, "etag");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
             RestRequest request = _requestHelper.DeleteFile(id, etag);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
-        public void CreateFileAsync(string parentFolderId, string name, Action<File> onSuccess, Action onFailure)
+        public void CreateFileAsync(string parentId, string name, Action<File> onSuccess, Action onFailure)
         {
-            RestRequest request = _requestHelper.CreateFile(parentFolderId, name, new byte[0]);
+            GuardFromNullOrEmpty(parentId, "parentFolderId");
+            GuardFromNullOrEmpty(name, "name");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
+            RestRequest request = _requestHelper.CreateFile(parentId, name, new byte[0]);
 
             // TODO: There are two side effects to to deal with here:
             // 1. Box requires some non-trivial amount of time to calculate the file's etag.

@@ -268,11 +268,11 @@ namespace BoxApi.V2.SDK
         #endregion
 
 
-        private static void GuardFromNull(object arg, string argName)
+        private static void GuardFromNullOrEmpty(object arg, string argName)
         {
-            if (arg == null)
+            if (arg == null || (arg is string && string.IsNullOrEmpty((string)arg)))
             {
-                throw new ArgumentException("Argument cannot be null", argName);
+                throw new ArgumentException("Argument cannot be null or empty", argName);
             }
         }
 
