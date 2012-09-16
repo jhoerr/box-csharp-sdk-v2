@@ -267,6 +267,15 @@ namespace BoxApi.V2.SDK
 
         #endregion
 
+
+        private static void GuardFromNull(object arg, string argName)
+        {
+            if (arg == null)
+            {
+                throw new ArgumentException("Argument cannot be null", argName);
+            }
+        }
+
         private void Execute(RestRequest request, HttpStatusCode expectedStatusCode)
         {
             var restResponse = _restContentClient.Execute(request);

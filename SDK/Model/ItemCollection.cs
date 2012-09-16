@@ -15,6 +15,6 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         /// An array of file and folder objects contained in this folder
         /// </summary>
-        public List<Entity> Entries { get; set; }
+        public List<File> Entries { get; set; }
     }
 }

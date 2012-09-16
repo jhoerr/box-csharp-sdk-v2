@@ -9,6 +9,7 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         ///   An array of file or folder objects contained in this folder
         /// </summary>
+        [JsonProperty(PropertyName = "item_collection")]
         public ItemCollection ItemCollection { get; set; }
 
         public override string ToString()

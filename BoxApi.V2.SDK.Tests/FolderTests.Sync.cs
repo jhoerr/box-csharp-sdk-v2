@@ -170,7 +170,7 @@ namespace BoxApi.V2.SDK.Tests
             Folder update = Client.ShareFolderLink(folder.Id, sharedLink);
             AssertFolderConstraints(update, folderName, RootId, folder.Id);
             AssertSharedLink(update.SharedLink, sharedLink);
-            Client.DeleteFolder(update, true);
+            Client.Delete(update, true);
         }
 
         [Test]

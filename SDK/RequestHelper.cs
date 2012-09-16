@@ -31,19 +31,35 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest Create(Type resourceType, string parentId, string name)
+        public RestRequest CreateFolder(string parentId, string name)
         {
-            var request = JsonRequest(resourceType, "{parentId}", Method.POST);
+            var request = JsonRequest(Type.Folder, "{parentId}", Method.POST);
             request.AddUrlSegment("parentId", parentId);
             request.AddBody(new {name});
             return request;
         }
 
-        public RestRequest Delete(Type resourceType, string id, bool recursive)
+        public RestRequest CreateFile(string parentId, string name, byte[] content)
         {
-            var request = JsonRequest(resourceType, "{id}", Method.DELETE);
+            var request = JsonRequest(Type.File, "data", Method.POST);
+            request.AddFile("filename1", content, name);
+            request.AddParameter("folder_id", parentId);
+            return request;
+        }
+
+        public RestRequest DeleteFolder(string id, bool recursive)
+        {
+            var request = JsonRequest(Type.Folder, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id);
             request.AddParameter("recursive", recursive.ToString().ToLower());
+            return request;
+        }
+
+        public RestRequest DeleteFile(string id, string etag)
+        {
+            var request = JsonRequest(Type.File, "{id}", Method.DELETE);
+            request.AddUrlSegment("id", id);
+            request.AddHeader("If-Match", etag ?? string.Empty);
             return request;
         }
 
@@ -82,7 +98,7 @@ namespace BoxApi.V2
 
         private RestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
         {
-            string path = Path.Combine("{version}/{type}", resource ?? string.Empty);
+            string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
             var jsonRequest = new RestRequest(path, method)
                 {
                     RequestFormat = DataFormat.Json, 

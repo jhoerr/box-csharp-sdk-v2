@@ -7,7 +7,8 @@ namespace BoxApi.V2.SDK.Tests
     public class BoxApiTestHarness
     {
         protected readonly BoxManager Client = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
-        protected string RootId = "0";
+        protected const string RootId = "0";
+        protected readonly Action AbortOnFailure = () => Assert.Fail("operation failed");
 
         protected int MaxWaitInSeconds { get; set; }
 
@@ -24,22 +25,32 @@ namespace BoxApi.V2.SDK.Tests
 
         protected static void AssertFolderConstraints(Folder folder, string expectedName, string expectedParentId, string expectedId = null)
         {
-            Assert.That(folder, Is.Not.Null);
-            Assert.That(folder.Type, Is.EqualTo("folder"));
-            Assert.That(folder.Name, Is.EqualTo(expectedName));
-            
+            AssertEntityConstraints(folder, "folder", expectedName, expectedParentId, expectedId);
+        }
+
+        protected static void AssertFileConstraints(File file, string expectedName, string expectedParentId, string expectedId = null)
+        {
+            AssertEntityConstraints(file, "file", expectedName, expectedParentId, expectedId);
+        }
+
+        private static void AssertEntityConstraints(HierarchyEntity item, string expectedType, string expectedName, string expectedParentId, string expectedId)
+        {
+            Assert.That(item, Is.Not.Null);
+            Assert.That(item.Type, Is.EqualTo(expectedType));
+            Assert.That(item.Name, Is.EqualTo(expectedName));
+
             if (expectedParentId == null)
             {
-                Assert.That(folder.Parent, Is.Null);
+                Assert.That(item.Parent, Is.Null);
             }
             else
             {
-                Assert.That(folder.Parent.Id, Is.EqualTo(expectedParentId));
+                Assert.That(item.Parent.Id, Is.EqualTo(expectedParentId));
             }
 
             if (expectedId != null)
             {
-                Assert.That(folder.Id, Is.EqualTo(expectedId));
+                Assert.That(item.Id, Is.EqualTo(expectedId));
             }
         }
 

@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Net;
+using System.Threading;
 using BoxApi.V2.SDK.Model;
-using RestSharp;
+using Type = BoxApi.V2.SDK.Model.Type;
 
 namespace BoxApi.V2.SDK
 {
@@ -18,20 +21,20 @@ namespace BoxApi.V2.SDK
             return Execute<ItemCollection>(request, HttpStatusCode.OK);
         }
 
-        public Folder CreateFolder(string parentId, string name)
+        public Folder CreateFolder(string parentFolderId, string name)
         {
-            var request = _requestHelper.Create(Type.Folder, parentId, name);
+            var request = _requestHelper.CreateFolder(parentFolderId, name);
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
-        public void DeleteFolder(Folder folder, bool recursive)
+        public void Delete(Folder folder, bool recursive)
         {
             DeleteFolder(folder.Id, recursive);
         }
 
         public void DeleteFolder(string id, bool recursive)
         {
-            var request = _requestHelper.Delete(Type.Folder, id, recursive);
+            var request = _requestHelper.DeleteFolder(id, recursive);
             Execute(request, HttpStatusCode.OK);
         }
 
@@ -40,28 +43,66 @@ namespace BoxApi.V2.SDK
             return CopyFolder(folder.Id, newParentId, newName);
         }
 
-        public Folder CopyFolder(string folderId, string newParentId, string newName = null)
+        public Folder CopyFolder(string id, string newParentId, string newName = null)
         {
-            RestRequest request = _requestHelper.Copy(Type.Folder, folderId, newParentId, newName);
+            var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
-        public Folder ShareFolderLink(string folderId, SharedLink sharedLink)
+        public Folder ShareFolderLink(string id, SharedLink sharedLink)
         {
-            RestRequest request = _requestHelper.ShareLink(Type.Folder, folderId, sharedLink);
+            var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
-        public Folder MoveFolder(string folderId, string newParentId)
+        public Folder MoveFolder(string id, string newParentId)
         {
-            RestRequest request = _requestHelper.Move(Type.Folder, folderId, newParentId);
+            var request = _requestHelper.Move(Type.Folder, id, newParentId);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
-        public Folder RenameFolder(string folderId, string newName)
+        public Folder RenameFolder(string id, string newName)
         {
-            RestRequest request = _requestHelper.Rename(Type.Folder, folderId, newName);
+            var request = _requestHelper.Rename(Type.Folder, id, newName);
             return Execute<Folder>(request, HttpStatusCode.OK);
+        }
+
+        public File GetFile(string id)
+        {
+            var request = _requestHelper.Get(Type.File, id);
+            return Execute<File>(request, HttpStatusCode.OK);
+        }
+
+        public File CreateFile(string parentFolderId, string name)
+        {
+            GuardFromNull(parentFolderId, "parentFolderId");
+            GuardFromNull(name, "name");
+
+            var request = _requestHelper.CreateFile(parentFolderId, name, new byte[0]);
+            var itemCollection = Execute<ItemCollection>(request, HttpStatusCode.OK);
+            
+            // TODO: There are two side effects to to deal with here:
+            // 1. Box requires some non-trivial amount of time to calculate the file's etag.
+            // 2. This calculation is not performed before the 'upload file' request returns.
+            // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
+            // As a result we must wait a bit and then re-fetch the file from the server.
+            
+            Thread.Sleep(300);
+            return GetFile(itemCollection.Entries.Single().Id); 
+        }
+
+        public void Delete(File file)
+        {
+            GuardFromNull(file, "file");
+            DeleteFile(file.Id, file.Etag);
+        }
+
+        public void DeleteFile(string id, string etag)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(etag, "etag");
+            var request = _requestHelper.DeleteFile(id, etag);
+            Execute(request, HttpStatusCode.OK);
         }
     }
 }

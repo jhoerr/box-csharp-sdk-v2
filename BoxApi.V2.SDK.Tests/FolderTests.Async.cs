@@ -9,8 +9,6 @@ namespace BoxApi.V2.SDK.Tests
     [TestFixture]
     public class FolderTestsAsync : BoxApiTestHarness
     {
-        private Action _abortOnFailure = () => Assert.Fail("operation failed");
-
         [Test]
         public void GetFolderAsync()
         {
@@ -152,7 +150,7 @@ namespace BoxApi.V2.SDK.Tests
                     Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
                     Client.DeleteFolder(folder.Id, true);
                     Client.DeleteFolder(copiedFolder.Id, true);
-                }, _abortOnFailure, copyName );
+                }, AbortOnFailure, copyName );
 
             do
             {
@@ -179,7 +177,7 @@ namespace BoxApi.V2.SDK.Tests
                 AssertFolderConstraints(folder, folderName, RootId);
                 AssertSharedLink(folder.SharedLink, sharedLink);
                 Client.DeleteFolder(folder.Id, true);
-            }, _abortOnFailure);
+            }, AbortOnFailure);
 
             do
             {
@@ -206,7 +204,7 @@ namespace BoxApi.V2.SDK.Tests
                 callbackHit = true;
                 AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
                 Client.DeleteFolder(targetFolder.Id, true);
-            }, _abortOnFailure);
+            }, AbortOnFailure);
 
             do
             {
@@ -232,7 +230,7 @@ namespace BoxApi.V2.SDK.Tests
                 callbackHit = true;
                 AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
                 Client.DeleteFolder(renamedFolder.Id, true);
-            }, _abortOnFailure);
+            }, AbortOnFailure);
 
             do
             {
@@ -262,7 +260,7 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
                 Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
                 Client.DeleteFolder(testFolder.Id, true);
-            }, _abortOnFailure);
+            }, AbortOnFailure);
 
             do
             {
