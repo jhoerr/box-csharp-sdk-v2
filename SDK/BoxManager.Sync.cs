@@ -12,7 +12,6 @@ namespace BoxApi.V2.SDK
         public Folder GetFolder(string id)
         {
             GuardFromNullOrEmpty(id, "id");
-            
             var request = _requestHelper.Get(Type.Folder, id);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
@@ -20,7 +19,6 @@ namespace BoxApi.V2.SDK
         public ItemCollection GetFolderItems(string id)
         {
             GuardFromNullOrEmpty(id, "id");
-            
             var request = _requestHelper.GetItems(id);
             return Execute<ItemCollection>(request, HttpStatusCode.OK);
         }
@@ -29,7 +27,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(parentId, "parentFolderId");
             GuardFromNullOrEmpty(name, "name");
-            
             var request = _requestHelper.CreateFolder(parentId, name);
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
@@ -37,14 +34,12 @@ namespace BoxApi.V2.SDK
         public void Delete(Folder folder, bool recursive)
         {
             GuardFromNullOrEmpty(folder, "folder");
-            
             DeleteFolder(folder.Id, recursive);
         }
 
         public void DeleteFolder(string id, bool recursive)
         {
             GuardFromNullOrEmpty(id, "id");
-            
             var request = _requestHelper.DeleteFolder(id, recursive);
             Execute(request, HttpStatusCode.OK);
         }
@@ -52,7 +47,6 @@ namespace BoxApi.V2.SDK
         public Folder CopyFolder(Folder folder, string newParentId, string newName = null)
         {
             GuardFromNullOrEmpty(folder, "folder");
-            
             return CopyFolder(folder.Id, newParentId, newName);
         }
 
@@ -60,7 +54,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(newParentId, "newParentId");
-            
             var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
@@ -69,7 +62,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(sharedLink, "sharedLink");
-            
             var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
@@ -78,7 +70,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(newParentId, "newParentId");
-            
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
@@ -87,7 +78,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(newName, "newName");
-
             var request = _requestHelper.Rename(Type.Folder, id, newName);
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
@@ -103,7 +93,6 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNullOrEmpty(parentId, "parentFolderId");
             GuardFromNullOrEmpty(name, "name");
-
             var request = _requestHelper.CreateFile(parentId, name, new byte[0]);
             var itemCollection = Execute<ItemCollection>(request, HttpStatusCode.OK);
             
