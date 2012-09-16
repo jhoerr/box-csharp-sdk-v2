@@ -54,7 +54,7 @@ namespace BoxApi.V2.SDK
 
             _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy, Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken)};
             _restContentClient.ClearHandlers();
-            _restContentClient.AddHandler("*", new JsonDeserializer());
+            _restContentClient.AddHandler("application/json", new JsonDeserializer());
 
             _requestHelper = new RequestHelper("1.0", "2.0");
         }
@@ -276,13 +276,14 @@ namespace BoxApi.V2.SDK
             }
         }
 
-        private void Execute(RestRequest request, HttpStatusCode expectedStatusCode)
+        private IRestResponse Execute(IRestRequest request, HttpStatusCode expectedStatusCode)
         {
             var restResponse = _restContentClient.Execute(request);
             if (!WasSuccessful(restResponse, expectedStatusCode))
             {
                 throw new BoxException(restResponse);
             }
+            return restResponse;
         }
 
         private T Execute<T>(IRestRequest request, HttpStatusCode expectedStatusCode) where T : class, new()
@@ -296,7 +297,7 @@ namespace BoxApi.V2.SDK
         }
 
 
-        private void ExecuteAsync<T>(RestRequest request, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
+        private void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
         {
             if (onSuccess == null)
             {
@@ -316,7 +317,7 @@ namespace BoxApi.V2.SDK
             });
         }
 
-        private void ExecuteAsync(RestRequest request, Action onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
+        private void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
         {
             if (onSuccess == null)
             {
@@ -327,7 +328,7 @@ namespace BoxApi.V2.SDK
             {
                 if (WasSuccessful(response, expectedStatusCode))
                 {
-                    onSuccess();
+                    onSuccess(response);
                 }
                 else if (onFailure != null)
                 {

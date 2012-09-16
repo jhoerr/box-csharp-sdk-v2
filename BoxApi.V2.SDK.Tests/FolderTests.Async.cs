@@ -18,7 +18,7 @@ namespace BoxApi.V2.SDK.Tests
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, "All Files", null, RootId);
-                }, null);
+                }, AbortOnFailure);
 
             do
             {
@@ -60,7 +60,7 @@ namespace BoxApi.V2.SDK.Tests
                     AssertFolderConstraints(folder, folderName, RootId);
                     // clean up 
                     Client.DeleteFolder(folder.Id, true);
-                }, null);
+                }, AbortOnFailure);
 
             do
             {
@@ -97,7 +97,7 @@ namespace BoxApi.V2.SDK.Tests
             var callbackHit = false;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
-            Client.DeleteFolderAsync(folder.Id, true, () => callbackHit = true, null);
+            Client.DeleteFolderAsync(folder.Id, true, response => callbackHit = true, AbortOnFailure);
 
             do
             {
@@ -123,7 +123,7 @@ namespace BoxApi.V2.SDK.Tests
         public void DeleteNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.DeleteFolderAsync("abc", true, () => { }, () => { failureOccured = true; });
+            Client.DeleteFolderAsync("abc", true, response => { }, () => { failureOccured = true; });
 
             do
             {

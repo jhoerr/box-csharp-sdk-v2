@@ -34,5 +34,16 @@ namespace BoxApi.V2.SDK.Tests
                 Client.Delete(file);
             }
         }
+
+        [Test]
+        public void ReadFile()
+        {
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName, expected);
+            byte[] actual = Client.ReadFile(file.Id);
+            Assert.That(actual, Is.EqualTo(expected));
+            Client.Delete(file);
+        }
     }
 }

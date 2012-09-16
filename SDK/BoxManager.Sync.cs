@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -91,9 +92,14 @@ namespace BoxApi.V2.SDK
 
         public File CreateFile(string parentId, string name)
         {
+            return CreateFile(parentId, name, new byte[0]);
+        }
+
+        public File CreateFile(string parentId, string name, byte[] content)
+        {
             GuardFromNullOrEmpty(parentId, "parentFolderId");
             GuardFromNullOrEmpty(name, "name");
-            var request = _requestHelper.CreateFile(parentId, name, new byte[0]);
+            var request = _requestHelper.CreateFile(parentId, name, content);
             var itemCollection = Execute<ItemCollection>(request, HttpStatusCode.OK);
             
             // TODO: There are two side effects to to deal with here:
@@ -102,7 +108,7 @@ namespace BoxApi.V2.SDK
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
             
-            Thread.Sleep(300);
+            Thread.Sleep(500);
             return GetFile(itemCollection.Entries.Single().Id); 
         }
 
@@ -118,6 +124,13 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(etag, "etag");
             var request = _requestHelper.DeleteFile(id, etag);
             Execute(request, HttpStatusCode.OK);
+        }
+
+        public byte[] ReadFile(string id)
+        {
+            GuardFromNullOrEmpty(id, "id");
+            var request = _requestHelper.ReadFile(id);
+            return Execute(request, HttpStatusCode.OK).RawBytes;
         }
     }
 }

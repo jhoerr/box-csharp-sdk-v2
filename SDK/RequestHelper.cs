@@ -16,7 +16,7 @@ namespace BoxApi.V2
             _contentApiVersion = contentApiVersion;
         }
 
-        public RestRequest Get(Type resourceType, string id)
+        public IRestRequest Get(Type resourceType, string id)
         {
 
             var request = JsonRequest(resourceType, "{id}");
@@ -24,14 +24,14 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest GetItems(string id)
+        public IRestRequest GetItems(string id)
         {
             var request = JsonRequest(Type.Folder, "{id}/items");
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public RestRequest CreateFolder(string parentId, string name)
+        public IRestRequest CreateFolder(string parentId, string name)
         {
             var request = JsonRequest(Type.Folder, "{parentId}", Method.POST);
             request.AddUrlSegment("parentId", parentId);
@@ -39,7 +39,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest CreateFile(string parentId, string name, byte[] content)
+        public IRestRequest CreateFile(string parentId, string name, byte[] content)
         {
             var request = JsonRequest(Type.File, "data", Method.POST);
             request.AddFile("filename1", content, name);
@@ -47,7 +47,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest DeleteFolder(string id, bool recursive)
+        public IRestRequest DeleteFolder(string id, bool recursive)
         {
             var request = JsonRequest(Type.Folder, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id);
@@ -55,7 +55,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest DeleteFile(string id, string etag)
+        public IRestRequest DeleteFile(string id, string etag)
         {
             var request = JsonRequest(Type.File, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id);
@@ -63,7 +63,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest Copy(Type resourceType, string id, string newParentId, string name)
+        public IRestRequest Copy(Type resourceType, string id, string newParentId, string name)
         {
             var request = JsonRequest(resourceType, "{id}/copy", Method.POST);
             request.AddUrlSegment("id", id);
@@ -71,7 +71,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest ShareLink(Type resourceType, string id, SharedLink sharedLink)
+        public IRestRequest ShareLink(Type resourceType, string id, SharedLink sharedLink)
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
@@ -79,7 +79,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest Move(Type resourceType, string id, string newParentId)
+        public IRestRequest Move(Type resourceType, string id, string newParentId)
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
@@ -87,7 +87,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public RestRequest Rename(Type resourceType, string id, string newName)
+        public IRestRequest Rename(Type resourceType, string id, string newName)
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
@@ -96,17 +96,28 @@ namespace BoxApi.V2
         }
 
 
-        private RestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
+        public IRestRequest ReadFile(string id)
+        {
+            var request = RawRequest(Type.File, "{id}/data");
+            request.AddUrlSegment("id", id);
+            return request;
+        }
+
+        private IRestRequest RawRequest(Type resourceType, string resource, Method method = Method.GET)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
-            var jsonRequest = new RestRequest(path, method)
-                {
-                    RequestFormat = DataFormat.Json, 
-                    JsonSerializer = new AttributableJsonSerializer()
-                };
-            jsonRequest.AddUrlSegment("version", _contentApiVersion);
-            jsonRequest.AddUrlSegment("type", resourceType.Description());
-            return jsonRequest;
+            var request = new RestRequest(path, method);
+            request.AddUrlSegment("version", _contentApiVersion);
+            request.AddUrlSegment("type", resourceType.Description());
+            return request;
+        }
+
+        private IRestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
+        {
+            var request = RawRequest(resourceType, resource, method);
+            request.RequestFormat = DataFormat.Json;
+            request.JsonSerializer = new AttributableJsonSerializer();
+            return request;
         }
     }
 }

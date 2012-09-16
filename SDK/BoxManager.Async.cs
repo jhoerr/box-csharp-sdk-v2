@@ -24,7 +24,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest folderItems = _requestHelper.GetItems(id);
+            var folderItems = _requestHelper.GetItems(id);
             ExecuteAsync(folderItems, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
@@ -38,7 +38,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
-        public void DeleteFolderAsync(string id, bool recursive, Action onSuccess, Action onFailure)
+        public void DeleteFolderAsync(string id, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
@@ -53,7 +53,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(newParentId, "newParentId");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
+            var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
@@ -63,7 +63,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(sharedLink, "sharedLink");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
+            var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
@@ -73,7 +73,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(newParentId, "newParentId");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.Move(Type.Folder, id, newParentId);
+            var request = _requestHelper.Move(Type.Folder, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
@@ -83,7 +83,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(newName, "newName");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.Rename(Type.Folder, id, newName);
+            var request = _requestHelper.Rename(Type.Folder, id, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
@@ -92,27 +92,27 @@ namespace BoxApi.V2.SDK
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.Get(Type.File, id);
+            var request = _requestHelper.Get(Type.File, id);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
-        public void DeleteFileAsync(string id, string etag, Action onSuccess, Action onFailure)
+        public void DeleteFileAsync(string id, string etag, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNullOrEmpty(id, "id");
             GuardFromNullOrEmpty(etag, "etag");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.DeleteFile(id, etag);
+            var request = _requestHelper.DeleteFile(id, etag);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void CreateFileAsync(string parentId, string name, Action<File> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(parentId, "parentFolderId");
+            GuardFromNullOrEmpty(parentId, "parentId");
             GuardFromNullOrEmpty(name, "name");
             GuardFromNullOrEmpty(onSuccess, "onSuccess");
             GuardFromNullOrEmpty(onFailure, "onFailure");
-            RestRequest request = _requestHelper.CreateFile(parentId, name, new byte[0]);
+            var request = _requestHelper.CreateFile(parentId, name, new byte[0]);
 
             // TODO: There are two side effects to to deal with here:
             // 1. Box requires some non-trivial amount of time to calculate the file's etag.
@@ -125,6 +125,16 @@ namespace BoxApi.V2.SDK
                     Thread.Sleep(300);
                     GetFileAsync(items.Entries.Single().Id, onSuccess, onFailure);
                 };
+            ExecuteAsync(request, onSuccessWrapper, onFailure, HttpStatusCode.OK);
+        }
+
+        public void ReadFileAsync(string id, Action<byte[]> onSuccess, Action onFailure)
+        {
+            GuardFromNullOrEmpty(id, "id");
+            GuardFromNullOrEmpty(onSuccess, "onSuccess");
+            GuardFromNullOrEmpty(onFailure, "onFailure");
+            IRestRequest request = _requestHelper.ReadFile(id);
+            Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
             ExecuteAsync(request, onSuccessWrapper, onFailure, HttpStatusCode.OK);
         }
     }
