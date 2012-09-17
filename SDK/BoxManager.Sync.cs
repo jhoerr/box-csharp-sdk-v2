@@ -119,6 +119,20 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request);
         }
 
+        public File ShareLink(File file, SharedLink sharedLink)
+        {
+            GuardFromNull(file, "file");
+            return ShareFileLink(file.Id, sharedLink);
+        }
+
+        private File ShareFileLink(string id, SharedLink sharedLink)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(sharedLink, "sharedLink");
+            var request = _requestHelper.ShareLink(Type.File, id, sharedLink);
+            return Execute<File>(request);
+        }
+
         public Folder Move(Folder folder, string newParentId)
         {
             GuardFromNull(folder, "folder");

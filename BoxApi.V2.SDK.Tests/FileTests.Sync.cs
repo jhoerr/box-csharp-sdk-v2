@@ -116,5 +116,25 @@ namespace BoxApi.V2.SDK.Tests
                 Client.Delete(folder);
             }
         }
+
+        [Test]
+        public void ShareLink()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            // Act
+            try
+            {
+                var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
+                File linkedFile = Client.ShareLink(file, expectedLink);
+                // Assert
+                AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+                AssertSharedLink(linkedFile.SharedLink, expectedLink);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
     }
 }
