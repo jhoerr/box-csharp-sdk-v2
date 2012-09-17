@@ -252,7 +252,7 @@ namespace BoxApi.V2.SDK.Tests
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
        
-            Client.GetFolderItemsAsync(testFolder.Id, contents =>
+            Client.GetItemsAsync(testFolder.Id, contents =>
             {
                 callbackHit = true;
                 Assert.That(contents, Is.Not.Null);

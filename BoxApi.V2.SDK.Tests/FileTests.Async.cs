@@ -124,5 +124,37 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
+
+        [Test]
+        public void ShareFileLinkAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
+            
+            // Act
+            Client.ShareLinkAsync(file, expectedLink, sharedFile =>
+            {
+                // Assert
+                AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
+                AssertSharedLink(sharedFile.SharedLink, expectedLink);
+                callbackHit = true;
+            }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(Client.GetFile(file.Id));
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
     }
 }
