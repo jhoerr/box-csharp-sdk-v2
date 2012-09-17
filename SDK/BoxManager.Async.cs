@@ -80,11 +80,33 @@ namespace BoxApi.V2.SDK
 
         public void GetFileAsync(string id, Action<File> onSuccess, Action onFailure)
         {
+            GetFileAsync(id, 0, onSuccess, onFailure);
+        }
+
+        private void GetFileAsync(string id, int attempt, Action<File> onSuccess, Action onFailure)
+        {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
+
             var request = _requestHelper.Get(Type.File, id);
-            ExecuteAsync(request, onSuccess, onFailure);
+
+            Action<File> onSuccessWrapper = file =>
+                {
+                    if (String.IsNullOrEmpty(file.Etag) && attempt++ < MaxFileGetAttempts)
+                    {
+                        // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
+                        Backoff(attempt);
+                        GetFileAsync(id, attempt, onSuccess, onFailure);
+                    }
+                    else
+                    {
+                        onSuccess(file);
+                    }
+                };
+
+            ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
+
 
         public void DeleteFileAsync(string id, string etag, Action<IRestResponse> onSuccess, Action onFailure)
         {
@@ -108,12 +130,7 @@ namespace BoxApi.V2.SDK
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
 
-            Action<ItemCollection> onSuccessWrapper = items =>
-                {
-
-                    Thread.Sleep(300);
-                    GetFileAsync(items.Entries.Single().Id, onSuccess, onFailure);
-                };
+            Action<ItemCollection> onSuccessWrapper = items => GetFileAsync(items.Entries.Single().Id, onSuccess, onFailure);
             ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 

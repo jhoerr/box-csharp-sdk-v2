@@ -131,17 +131,20 @@ namespace BoxApi.V2.SDK
 
         public File GetFile(string id)
         {
+            return GetFile(id, 0);
+        }
+
+        private File GetFile(string id, int attempt)
+        {
             GuardFromNull(id, "id");
-            var retries = 0;
-            File file;
-            do
+            // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
+            if (attempt > 0)
             {
-                // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
-                Thread.Sleep((int)Math.Pow(2, retries) * 100);
-                var request = _requestHelper.Get(Type.File, id);
-                file = Execute<File>(request);
-            } while (string.IsNullOrEmpty(file.Etag) && ++retries < MaxFileGetAttempts);
-            return file;
+                Backoff(attempt);
+            }
+            var request = _requestHelper.Get(Type.File, id);
+            var file = Execute<File>(request);
+            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, attempt++) : file;
         }
 
         public File CreateFile(string parentId, string name)

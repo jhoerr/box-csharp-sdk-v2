@@ -4,6 +4,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
@@ -366,6 +367,11 @@ namespace BoxApi.V2.SDK
                 }
             }
             return success;
+        }
+
+        private static void Backoff(int attempt)
+        {
+            Thread.Sleep((int)Math.Pow(2, attempt) * 100);
         }
 
         #region V2_Files
