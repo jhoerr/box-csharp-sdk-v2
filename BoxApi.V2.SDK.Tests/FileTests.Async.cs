@@ -157,7 +157,6 @@ namespace BoxApi.V2.SDK.Tests
             }
         }
 
-
         [Test]
         public void RenameFileAsync()
         {
