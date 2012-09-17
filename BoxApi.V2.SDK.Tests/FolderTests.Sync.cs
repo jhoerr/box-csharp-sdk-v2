@@ -21,7 +21,7 @@ namespace BoxApi.V2.SDK.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
-            var items = Client.GetFolderItems(testFolder.Id);
+            var items = Client.GetItems(testFolder.Id);
             Assert.That(items, Is.Not.Null);
             Assert.That(items.TotalCount, Is.EqualTo("2"));
             Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);

@@ -11,6 +11,12 @@ namespace BoxApi.V2.SDK
     {
         private const int MaxFileGetAttempts = 4;
 
+        public Folder Get(Folder folder)
+        {
+            GuardFromNull(folder, "folder");
+            return GetFolder(folder.Id);
+        }
+
         public Folder GetFolder(string id)
         {
             GuardFromNull(id, "id");
@@ -18,7 +24,13 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request);
         }
 
-        public ItemCollection GetFolderItems(string id)
+        public ItemCollection GetItems(Folder folder)
+        {
+            GuardFromNull(folder, "folder");
+            return GetItems(folder.Id);
+        }
+
+        public ItemCollection GetItems(string id)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id);
@@ -93,6 +105,12 @@ namespace BoxApi.V2.SDK
             return Execute<File>(request);
         }
 
+        public Folder ShareLink(Folder folder, SharedLink sharedLink)
+        {
+            GuardFromNull(folder, "folder");
+            return ShareFolderLink(folder.Id, sharedLink);
+        }
+
         public Folder ShareFolderLink(string id, SharedLink sharedLink)
         {
             GuardFromNull(id, "id");
@@ -127,6 +145,12 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newName, "newName");
             var request = _requestHelper.Rename(Type.Folder, id, newName);
             return Execute<Folder>(request);
+        }
+
+        public File Get(File file)
+        {
+            GuardFromNull(file, "file");
+            return GetFile(file.Id);
         }
 
         public File GetFile(string id)
