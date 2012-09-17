@@ -1,25 +1,28 @@
+using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using BoxApi.V2.SDK.Model;
 using RestSharp;
+using Type = BoxApi.V2.SDK.Model.Type;
 
 namespace BoxApi.V2.SDK
 {
     public partial class BoxManager
     {
+        private const int MaxFileGetAttempts = 4;
+
         public Folder GetFolder(string id)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(Type.Folder, id);
-            return Execute<Folder>(request, HttpStatusCode.OK);
+            return Execute<Folder>(request);
         }
 
         public ItemCollection GetFolderItems(string id)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id);
-            return Execute<ItemCollection>(request, HttpStatusCode.OK);
+            return Execute<ItemCollection>(request);
         }
 
         public Folder CreateFolder(string parentId, string name)
@@ -27,7 +30,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(parentId, "parentFolderId");
             GuardFromNull(name, "name");
             var request = _requestHelper.CreateFolder(parentId, name);
-            return Execute<Folder>(request, HttpStatusCode.Created);
+            return Execute<Folder>(request);
         }
 
         public void Delete(Folder folder)
@@ -46,7 +49,7 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.DeleteFolder(id, recursive);
-            Execute(request, HttpStatusCode.OK);
+            Execute(request);
         }
 
         public Folder Copy(Folder folder, Folder newParent, string newName = null)
@@ -79,7 +82,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
-            return Execute<Folder>(request, HttpStatusCode.Created);
+            return Execute<Folder>(request);
         }
 
         public File CopyFile(string id, string newParentId, string newName = null)
@@ -87,7 +90,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             var request = _requestHelper.Copy(Type.File, id, newParentId, newName);
-            return Execute<File>(request, HttpStatusCode.Created);
+            return Execute<File>(request);
         }
 
         public Folder ShareFolderLink(string id, SharedLink sharedLink)
@@ -95,7 +98,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
-            return Execute<Folder>(request, HttpStatusCode.OK);
+            return Execute<Folder>(request);
         }
 
         public Folder Move(Folder folder, string newParentId)
@@ -109,7 +112,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
-            return Execute<Folder>(request, HttpStatusCode.OK);
+            return Execute<Folder>(request);
         }
 
         public Folder Rename(Folder folder, string newName)
@@ -123,14 +126,22 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             var request = _requestHelper.Rename(Type.Folder, id, newName);
-            return Execute<Folder>(request, HttpStatusCode.OK);
+            return Execute<Folder>(request);
         }
 
         public File GetFile(string id)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(Type.File, id);
-            return Execute<File>(request, HttpStatusCode.OK);
+            var retries = 0;
+            File file;
+            do
+            {
+                // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
+                Thread.Sleep((int)Math.Pow(2, retries) * 100);
+                var request = _requestHelper.Get(Type.File, id);
+                file = Execute<File>(request);
+            } while (string.IsNullOrEmpty(file.Etag) && ++retries < MaxFileGetAttempts);
+            return file;
         }
 
         public File CreateFile(string parentId, string name)
@@ -157,7 +168,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(etag, "etag");
             var request = _requestHelper.DeleteFile(id, etag);
-            Execute(request, HttpStatusCode.OK);
+            Execute(request);
         }
 
         public byte[] Read(File file)
@@ -170,7 +181,7 @@ namespace BoxApi.V2.SDK
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Read(id);
-            return Execute(request, HttpStatusCode.OK).RawBytes;
+            return Execute(request).RawBytes;
         }
 
         public File Write(File file, byte[] content)
@@ -187,7 +198,7 @@ namespace BoxApi.V2.SDK
 
         private File WriteFile(IRestRequest request)
         {
-            var itemCollection = Execute<ItemCollection>(request, HttpStatusCode.OK);
+            var itemCollection = Execute<ItemCollection>(request);
 
             // TODO: There are two side effects to to deal with here:
             // 1. Box requires some non-trivial amount of time to calculate the file's etag.
@@ -195,7 +206,6 @@ namespace BoxApi.V2.SDK
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
 
-            Thread.Sleep(500);
             return GetFile(itemCollection.Entries.Single().Id);
         }
     }

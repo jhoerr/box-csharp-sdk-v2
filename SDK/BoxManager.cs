@@ -276,7 +276,7 @@ namespace BoxApi.V2.SDK
             }
         }
 
-        private IRestResponse Execute(IRestRequest request, HttpStatusCode expectedStatusCode)
+        private IRestResponse Execute(IRestRequest request)
         {
             var restResponse = _restContentClient.Execute(request);
             Error error;
@@ -287,7 +287,7 @@ namespace BoxApi.V2.SDK
             return restResponse;
         }
 
-        private T Execute<T>(IRestRequest request, HttpStatusCode expectedStatusCode) where T : class, new()
+        private T Execute<T>(IRestRequest request) where T : class, new()
         {
 
             var restResponse = _restContentClient.Execute<T>(request);
@@ -300,7 +300,7 @@ namespace BoxApi.V2.SDK
         }
 
 
-        private void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
+        private void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action onFailure) where T : class, new()
         {
             if (onSuccess == null)
             {
@@ -321,7 +321,7 @@ namespace BoxApi.V2.SDK
                 });
         }
 
-        private void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
+        private void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure)
         {
             if (onSuccess == null)
             {
