@@ -376,27 +376,6 @@ namespace BoxApi.V2.SDK
 
         #region V2_Files
 
-        public void RenameFile(int file_id, string new_name)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-
-            var requestBody = "{ \"name\" : \"" +
-                              new_name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
         public void UpdateDescription(int file_id, string new_description)
         {
             var actionString = "/files/";

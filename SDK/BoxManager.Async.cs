@@ -91,7 +91,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
+            var request = _requestHelper.Update(Type.Folder, id, sharedLink: sharedLink);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -100,7 +100,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.ShareLink(Type.File, id, sharedLink);
+            var request = _requestHelper.Update(Type.File, id, sharedLink: sharedLink);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -121,7 +121,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Move(Type.Folder, id, newParentId);
+            var request = _requestHelper.Update(Type.Folder, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -142,7 +142,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Move(Type.File, id, newParentId);
+            var request = _requestHelper.Update(Type.File, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -163,7 +163,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Rename(Type.Folder, id, newName);
+            var request = _requestHelper.Update(Type.Folder, id, name: newName);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -172,7 +172,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Rename(Type.File, id, newName);
+            var request = _requestHelper.Update(Type.File, id, name: newName);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 

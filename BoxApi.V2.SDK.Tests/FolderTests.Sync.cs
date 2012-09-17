@@ -21,12 +21,12 @@ namespace BoxApi.V2.SDK.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
-            var items = Client.GetItems(testFolder.Id);
+            var items = Client.GetItems(testFolder);
             Assert.That(items, Is.Not.Null);
             Assert.That(items.TotalCount, Is.EqualTo("2"));
             Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
             Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-            Client.DeleteFolder(testFolder.Id, true);
+            Client.Delete(testFolder, true);
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -42,7 +42,7 @@ namespace BoxApi.V2.SDK.Tests
             var folder = Client.CreateFolder(RootId, folderName);
             AssertFolderConstraints(folder, folderName, RootId);
             // clean up 
-            Client.DeleteFolder(folder.Id, true);
+            Client.Delete(folder, true);
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -56,7 +56,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
-            Client.DeleteFolder(folder.Id, true);
+            Client.Delete(folder, true);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace BoxApi.V2.SDK.Tests
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
             var subFolder = Client.CreateFolder(folder.Id, "subfolder");
-            Client.DeleteFolder(folder.Id, true);
+            Client.Delete(folder, true);
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -77,12 +77,12 @@ namespace BoxApi.V2.SDK.Tests
             try
             {
                 // Should barf.
-                Client.DeleteFolder(folder.Id, false);
+                Client.Delete(folder, false);
             }
             finally
             {
                 // clean up.
-                Client.DeleteFolder(folder.Id, true);
+                Client.Delete(folder, true);
             }
         }
 
@@ -98,11 +98,11 @@ namespace BoxApi.V2.SDK.Tests
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
             var copyName = TestItemName();
-            var copy = Client.CopyFolder(folder.Id, RootId, copyName);
+            var copy = Client.Copy(folder, RootId, copyName);
             AssertFolderConstraints(copy, copyName, RootId);
             Assert.That(copy.Parent.Id, Is.EqualTo(RootId));
-            Client.DeleteFolder(folder.Id, true);
-            Client.DeleteFolder(copy.Id, true);
+            Client.Delete(folder, true);
+            Client.Delete(copy, true);
         }
 
         [Test]
@@ -113,11 +113,11 @@ namespace BoxApi.V2.SDK.Tests
             var destinationName = TestItemName();
             var destination = Client.CreateFolder(RootId, destinationName);
 
-            var copy = Client.CopyFolder(folder.Id, destination.Id);
+            var copy = Client.Copy(folder, destination);
             AssertFolderConstraints(copy, folderName, destination.Id);
             Assert.That(copy.Parent.Id, Is.EqualTo(destination.Id));
-            Client.DeleteFolder(folder.Id, true);
-            Client.DeleteFolder(destination.Id, true);
+            Client.Delete(folder, true);
+            Client.Delete(destination, true);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace BoxApi.V2.SDK.Tests
             var folder = Client.CreateFolder(RootId, folderName);
             var subfolder = Client.CreateFolder(folder.Id, "subfolder");
             var copyName = TestItemName();
-            var copy = Client.CopyFolder(folder.Id, RootId, copyName);
+            var copy = Client.Copy(folder, RootId, copyName);
             Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
         }
 
@@ -138,11 +138,11 @@ namespace BoxApi.V2.SDK.Tests
             var folder = Client.CreateFolder(RootId, folderName);
             try
             {
-                Client.CopyFolder(folder.Id, RootId);
+                Client.Copy(folder, RootId);
             }
             finally
             {
-                Client.DeleteFolder(folder.Id, true);
+                Client.Delete(folder, true);
             }
         }
 
@@ -153,11 +153,11 @@ namespace BoxApi.V2.SDK.Tests
             var folder = Client.CreateFolder(RootId, folderName);
             try
             {
-                Client.CopyFolder(folder.Id, RootId, folder.Name);
+                Client.Copy(folder, RootId, folder.Name);
             }
             finally
             {
-                Client.DeleteFolder(folder.Id, true);
+                Client.Delete(folder, true);
             }
         }
 
@@ -167,7 +167,7 @@ namespace BoxApi.V2.SDK.Tests
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
-            Folder update = Client.ShareFolderLink(folder.Id, sharedLink);
+            Folder update = Client.ShareLink(folder, sharedLink);
             AssertFolderConstraints(update, folderName, RootId, folder.Id);
             AssertSharedLink(update.SharedLink, sharedLink);
             Client.Delete(update, true);
@@ -180,9 +180,9 @@ namespace BoxApi.V2.SDK.Tests
             Folder folder = Client.CreateFolder(RootId, folderName);
             var targetFolderName = TestItemName();
             Folder targetFolder = Client.CreateFolder(RootId, targetFolderName);
-            Folder moved = Client.MoveFolder(folder.Id, targetFolder.Id);
+            Folder moved = Client.Move(folder, targetFolder);
             AssertFolderConstraints(moved, folderName, targetFolder.Id, folder.Id);
-            Client.DeleteFolder(targetFolder.Id, true);
+            Client.Delete(targetFolder, true);
         }
 
         [Test, Ignore("This fails, but probably shouldn't.  http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
@@ -190,7 +190,7 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName);
-            Folder moved = Client.MoveFolder(folder.Id, RootId);
+            Folder moved = Client.Move(folder, RootId);
             AssertFolderConstraints(moved, folderName, RootId, folder.Id);
             Client.DeleteFolder(folder.Id, true);
         }
@@ -201,7 +201,7 @@ namespace BoxApi.V2.SDK.Tests
             var folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName);
             var newName = TestItemName();
-            Folder moved = Client.RenameFolder(folder.Id, newName);
+            Folder moved = Client.Rename(folder, newName);
             AssertFolderConstraints(moved, newName, RootId, folder.Id);
             Client.DeleteFolder(folder.Id, true);
         }
@@ -211,9 +211,9 @@ namespace BoxApi.V2.SDK.Tests
         {
             var folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName);
-            Folder moved = Client.RenameFolder(folder.Id, folderName);
+            Folder moved = Client.Rename(folder, folderName);
             AssertFolderConstraints(moved, folderName, RootId, folder.Id);
-            Client.DeleteFolder(folder.Id, true);
+            Client.Delete(folder, true);
         }
 
     }

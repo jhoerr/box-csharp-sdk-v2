@@ -71,30 +71,28 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest ShareLink(Type resourceType, string id, SharedLink sharedLink)
+        public IRestRequest Update(Type resourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null)
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
-            request.AddBody(new {shared_link = sharedLink});
+            if (!string.IsNullOrEmpty(parentId))
+            {
+                request.AddBody(new { parent = new { id = parentId } });
+            }
+            if (!string.IsNullOrEmpty(name))
+            {
+                request.AddBody(new {name});
+            }
+            if (!string.IsNullOrEmpty(description))
+            {
+                request.AddBody(new { description });
+            }
+            if (sharedLink != null)
+            {
+                request.AddBody(new {shared_link = sharedLink});
+            }
             return request;
         }
-
-        public IRestRequest Move(Type resourceType, string id, string newParentId)
-        {
-            var request = JsonRequest(resourceType, "{id}", Method.PUT);
-            request.AddUrlSegment("id", id);
-            request.AddBody(new {parent = new {id = newParentId}});
-            return request;
-        }
-
-        public IRestRequest Rename(Type resourceType, string id, string newName)
-        {
-            var request = JsonRequest(resourceType, "{id}", Method.PUT);
-            request.AddUrlSegment("id", id);
-            request.AddBody(new {name = newName});
-            return request;
-        }
-
 
         public IRestRequest Read(string id)
         {
