@@ -173,5 +173,43 @@ namespace BoxApi.V2.SDK.Tests
                 Client.Delete(file);
             }
         }
+
+        [Test]
+        public void MoveFile()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            string newParent = TestItemName();
+            var folder = Client.CreateFolder(RootId, newParent);
+            // Act
+            try
+            {
+                File movedFile = Client.Move(file, folder);
+                // Assert
+                AssertFileConstraints(movedFile, fileName, folder.Id, file.Id);
+            }
+            finally
+            {
+                Client.Delete(folder);
+            }
+        }
+
+        [Test]
+        public void MoveFileToSameParent()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            // Act
+            try
+            {
+                File movedFile = Client.Move(file, RootId);
+                // Assert
+                AssertFileConstraints(movedFile, fileName, RootId, file.Id);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
     }
 }

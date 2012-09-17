@@ -133,10 +133,28 @@ namespace BoxApi.V2.SDK
             return Execute<File>(request);
         }
 
+        public Folder Move(Folder folder, Folder newParent)
+        {
+            GuardFromNull(newParent, "newParent");
+            return Move(folder, newParent.Id);
+        }
+
         public Folder Move(Folder folder, string newParentId)
         {
             GuardFromNull(folder, "folder");
             return MoveFolder(folder.Id, newParentId);
+        }
+
+        public File Move(File file, Folder newParent)
+        {
+            GuardFromNull(newParent, "newParent");
+            return Move(file, newParent.Id);
+        }
+
+        public File Move(File file, string newParentId)
+        {
+            GuardFromNull(file, "file");
+            return MoveFile(file.Id, newParentId);
         }
 
         public Folder MoveFolder(string id, string newParentId)
@@ -145,6 +163,14 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newParentId, "newParentId");
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
             return Execute<Folder>(request);
+        }
+
+        public File MoveFile(string id, string newParentId)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            var request = _requestHelper.Move(Type.File, id, newParentId);
+            return Execute<File>(request);
         }
 
         public Folder Rename(Folder folder, string newName)

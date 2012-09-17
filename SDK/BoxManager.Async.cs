@@ -104,12 +104,45 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public void MoveAsync(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(newParent, "newParent");
+            MoveAsync(folder, newParent.Id, onSuccess, onFailure);
+        }
+
+        public void MoveAsync(Folder folder, string newParentId, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            MoveFolderAsync(folder.Id, newParentId, onSuccess, onFailure);
+        }
+
         public void MoveFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void MoveAsync(File file, Folder newParent, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(newParent, "newParent");
+            MoveAsync(file, newParent.Id, onSuccess, onFailure);
+        }
+
+        public void MoveAsync(File file, string newParentId, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            MoveFileAsync(file.Id, newParentId, onSuccess, onFailure);
+        }
+
+        public void MoveFileAsync(string id, string newParentId, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Move(Type.File, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 

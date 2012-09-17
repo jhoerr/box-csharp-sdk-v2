@@ -187,5 +187,36 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
+
+        [Test]
+        public void MoveFileAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            string folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName);
+            // Act
+            Client.MoveAsync(file, folder, movedFile =>
+            {
+                // Assert
+                AssertFileConstraints(movedFile, testItemName, folder.Id, file.Id);
+                callbackHit = true;
+            }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(Client.GetFile(file.Id));
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
     }
 }
