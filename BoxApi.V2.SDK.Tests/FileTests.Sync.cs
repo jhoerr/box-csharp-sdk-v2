@@ -41,9 +41,26 @@ namespace BoxApi.V2.SDK.Tests
             var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName, expected);
-            byte[] actual = Client.ReadFile(file.Id);
+            byte[] actual = Client.Read(file.Id);
             Assert.That(actual, Is.EqualTo(expected));
             Client.Delete(file);
+        }
+
+        [Test]
+        public void WriteFile()
+        {
+            // Arrange
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            // Act
+            Client.Write(file, expected);
+            // Assert
+            byte[] actual = Client.Read(file.Id);
+            Assert.That(actual, Is.EqualTo(expected));
+            // Cleanup
+            string newEtag = Client.GetFile(file.Id).Etag;
+            Client.DeleteFile(file.Id, newEtag);
         }
     }
 }

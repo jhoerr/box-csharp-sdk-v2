@@ -268,7 +268,7 @@ namespace BoxApi.V2.SDK
         #endregion
 
 
-        private static void GuardFromNullOrEmpty(object arg, string argName)
+        private static void GuardFromNull(object arg, string argName)
         {
             if (arg == null || (arg is string && string.IsNullOrEmpty((string)arg)))
             {
@@ -344,28 +344,7 @@ namespace BoxApi.V2.SDK
 
         #region V2_Files
 
-        public void GetFileInfo(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-            if (version > 0)
-            {
-                url += "?version=" + version.ToString();
-            }
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-
-                    Console.WriteLine("FILE INFO - ");
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
+   
         public int CopyFile(int file_id, int parent_id)
         {
             var new_file_id = 0;
@@ -424,87 +403,6 @@ namespace BoxApi.V2.SDK
             var requestData = Encoding.ASCII.GetBytes(requestBody);
 
             using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
-        public void DeleteFile(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-
-            if (version > 0)
-            {
-                url += "/versions/" + version.ToString();
-            }
-
-            using (var stream = BoxWebRequest.ExecuteDELETE(url, _http_Authorization_Header))
-            {
-            }
-        }
-
-        public void GetFileData(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-            if (version > 0)
-            {
-                url += "/versions/" + version.ToString();
-            }
-            else
-            {
-                url += "/data";
-            }
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var sr = new StreamReader(stream);
-
-                    Console.WriteLine("FILE DATA - ");
-                    Console.WriteLine(sr.ReadToEnd());
-                }
-            }
-        }
-
-        public int CreateFile(string data)
-        {
-            var new_file_id = 0;
-
-            var actionString = "/files/data";
-            var url = _serviceUrl + actionString;
-
-            var requestData = Encoding.ASCII.GetBytes(data);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    new_file_id = fileInfo.id;
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-
-            return new_file_id;
-        }
-
-        public void UploadFile(int file_id, string data)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/data";
-
-            var requestData = Encoding.ASCII.GetBytes(data);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
             {
                 if (stream != null)
                 {

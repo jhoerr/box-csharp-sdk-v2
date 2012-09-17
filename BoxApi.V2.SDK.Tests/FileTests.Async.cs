@@ -45,7 +45,7 @@ namespace BoxApi.V2.SDK.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName, expected);
             
-            Client.ReadFileAsync(file.Id, readBytes =>
+            Client.ReadAsync(file, readBytes =>
             {
                 Assert.That(readBytes, Is.EqualTo(expected));
                 callbackHit = true;
@@ -57,6 +57,36 @@ namespace BoxApi.V2.SDK.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             Client.Delete(file);
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void WriteFileAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            var expected = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            // Act
+            Client.WriteAsync(file, expected, updatedFile =>
+                {
+                    byte[] actual = Client.Read(file.Id);
+                    Assert.That(actual, Is.EqualTo(expected));
+                    callbackHit = true;
+                }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(Client.GetFile(file.Id));
+
             if (MaxWaitInSeconds.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");

@@ -96,10 +96,18 @@ namespace BoxApi.V2
         }
 
 
-        public IRestRequest ReadFile(string id)
+        public IRestRequest Read(string id)
         {
             var request = RawRequest(Type.File, "{id}/data");
             request.AddUrlSegment("id", id);
+            return request;
+        }
+
+        public IRestRequest Write(string id, string name, byte[] content)
+        {
+            var request = JsonRequest(Type.File, "{id}/data", Method.POST);
+            request.AddUrlSegment("id", id);
+            request.AddFile("filename", content, name);
             return request;
         }
 

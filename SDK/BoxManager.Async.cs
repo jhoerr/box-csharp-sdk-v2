@@ -12,106 +12,95 @@ namespace BoxApi.V2.SDK
     {
         public void GetFolderAsync(string id, Action<Folder> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Get(Type.Folder, id);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void GetFolderItemsAsync(string id, Action<ItemCollection> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var folderItems = _requestHelper.GetItems(id);
             ExecuteAsync(folderItems, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(parentId, "parentId");
-            GuardFromNullOrEmpty(name, "name");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(parentId, "parentId");
+            GuardFromNull(name, "name");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.CreateFolder(parentId, name);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
         public void DeleteFolderAsync(string id, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFolder(id, recursive);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void CopyFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(newParentId, "newParentId");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
         }
 
         public void ShareFolderLinkAsync(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(sharedLink, "sharedLink");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNull(sharedLink, "sharedLink");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.ShareLink(Type.Folder, id, sharedLink);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void MoveFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(newParentId, "newParentId");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void RenameFolderAsync(string id, string newName, Action<Folder> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(newName, "newName");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNull(newName, "newName");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Rename(Type.Folder, id, newName);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void GetFileAsync(string id, Action<File> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Get(Type.File, id);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void DeleteFileAsync(string id, string etag, Action<IRestResponse> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(etag, "etag");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(id, "id");
+            GuardFromNull(etag, "etag");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFile(id, etag);
             ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
         }
 
         public void CreateFileAsync(string parentId, string name, Action<File> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(parentId, "parentId");
-            GuardFromNullOrEmpty(name, "name");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
+            GuardFromNull(parentId, "parentId");
+            GuardFromNull(name, "name");
+            GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.CreateFile(parentId, name, new byte[0]);
 
             // TODO: There are two side effects to to deal with here:
@@ -128,14 +117,40 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccessWrapper, onFailure, HttpStatusCode.OK);
         }
 
-        public void ReadFileAsync(string id, Action<byte[]> onSuccess, Action onFailure)
+        public void ReadAsync(File file, Action<byte[]> onSuccess, Action onFailure)
         {
-            GuardFromNullOrEmpty(id, "id");
-            GuardFromNullOrEmpty(onSuccess, "onSuccess");
-            GuardFromNullOrEmpty(onFailure, "onFailure");
-            IRestRequest request = _requestHelper.ReadFile(id);
+            GuardFromNull(file, "file");
+            ReadAsync(file.Id, onSuccess, onFailure);
+        }
+
+        public void ReadAsync(string id, Action<byte[]> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
             ExecuteAsync(request, onSuccessWrapper, onFailure, HttpStatusCode.OK);
+        }
+
+        public void WriteAsync(File file, byte[] content, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            WriteAsync(file.Id, file.Name, content, onSuccess, onFailure);
+        }
+
+        public void WriteAsync(string id, string name, byte[] content, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(content, "content");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.Write(id, name, content);
+            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.OK);
+        }
+
+        private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
+        {
+            GuardFromNull(onSuccess, "onSuccess");
+            GuardFromNull(onFailure, "onFailure");
         }
     }
 }
