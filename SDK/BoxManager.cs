@@ -1,14 +1,14 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 using RestSharp;
 using RestSharp.Deserializers;
-using FileInfo = BoxApi.V2.SDK.Model.FileInfo;
 
 namespace BoxApi.V2.SDK
 {
@@ -17,6 +17,7 @@ namespace BoxApi.V2.SDK
     /// </summary>
     public partial class BoxManager
     {
+        private const string JsonMimeType = "application/json";
         private string _serviceUrl = "https://www.box.com/api/";
         private string _http_Authorization_Header;
 
@@ -54,7 +55,7 @@ namespace BoxApi.V2.SDK
 
             _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy, Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken)};
             _restContentClient.ClearHandlers();
-            _restContentClient.AddHandler("application/json", new JsonDeserializer());
+            _restContentClient.AddHandler(JsonMimeType, new JsonDeserializer());
 
             _requestHelper = new RequestHelper("1.0", "2.0");
         }
@@ -267,10 +268,9 @@ namespace BoxApi.V2.SDK
 
         #endregion
 
-
         private static void GuardFromNull(object arg, string argName)
         {
-            if (arg == null || (arg is string && string.IsNullOrEmpty((string)arg)))
+            if (arg == null || (arg is string && string.IsNullOrEmpty((string) arg)))
             {
                 throw new ArgumentException("Argument cannot be null or empty", argName);
             }
@@ -279,19 +279,22 @@ namespace BoxApi.V2.SDK
         private IRestResponse Execute(IRestRequest request, HttpStatusCode expectedStatusCode)
         {
             var restResponse = _restContentClient.Execute(request);
-            if (!WasSuccessful(restResponse, expectedStatusCode))
+            Error error;
+            if (!WasSuccessful(restResponse, out error))
             {
-                throw new BoxException(restResponse);
+                throw new BoxException(error);
             }
             return restResponse;
         }
 
         private T Execute<T>(IRestRequest request, HttpStatusCode expectedStatusCode) where T : class, new()
         {
+
             var restResponse = _restContentClient.Execute<T>(request);
-            if (!WasSuccessful(restResponse, expectedStatusCode))
+            Error error;
+            if (!WasSuccessful(restResponse, out error))
             {
-                throw new BoxException(restResponse);
+                throw new BoxException(error);
             }
             return restResponse.Data;
         }
@@ -305,16 +308,17 @@ namespace BoxApi.V2.SDK
             }
 
             _restContentClient.ExecuteAsync<T>(request, response =>
-            {
-                if (WasSuccessful(response, expectedStatusCode))
                 {
-                    onSuccess(response.Data);
-                }
-                else if (onFailure != null)
-                {
-                    onFailure();
-                }
-            });
+                    Error error;
+                    if (WasSuccessful(response, out error))
+                    {
+                        onSuccess(response.Data);
+                    }
+                    else if (onFailure != null)
+                    {
+                        onFailure();
+                    }
+                });
         }
 
         private void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
@@ -325,51 +329,46 @@ namespace BoxApi.V2.SDK
             }
 
             _restContentClient.ExecuteAsync(request, response =>
-            {
-                if (WasSuccessful(response, expectedStatusCode))
                 {
-                    onSuccess(response);
-                }
-                else if (onFailure != null)
-                {
-                    onFailure();
-                }
-            });
+                    Error error;
+                    if (WasSuccessful(response, out error))
+                    {
+                        onSuccess(response);
+                    }
+                    else if (onFailure != null)
+                    {
+                        onFailure();
+                    }
+                });
         }
 
-        private static bool WasSuccessful(IRestResponse restResponse, HttpStatusCode expectedStatusCode)
+        private bool WasSuccessful(IRestResponse restResponse, out Error error)
         {
-            return restResponse != null && restResponse.StatusCode.Equals(expectedStatusCode);
+            error = null;
+            bool success = true;
+            if (restResponse == null)
+            {
+                success = false;
+            }
+
+            else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
+            {
+                success = false;
+                var jsonDeserializer = new JsonDeserializer();
+                error = jsonDeserializer.Deserialize<Error>(restResponse);
+                if (error.Type == null)
+                {
+                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
+                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
+                    {
+                        error = errorCollection.Entries.First();
+                    }
+                }
+            }
+            return success;
         }
 
         #region V2_Files
-
-   
-        public int CopyFile(int file_id, int parent_id)
-        {
-            var new_file_id = 0;
-
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/copy";
-
-            var requestBody = "{ \"parent_folder\" : { \"id\": \"" +
-                              parent_id.ToString() +
-                              "\" } }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var folderInfo = (FileInfo) ser.ReadObject(stream);
-                    new_file_id = folderInfo.id;
-                    Console.WriteLine(folderInfo.ToString());
-                }
-            }
-
-            return new_file_id;
-        }
 
         public void RenameFile(int file_id, string new_name)
         {
@@ -596,19 +595,6 @@ namespace BoxApi.V2.SDK
             }
         }
 
-
         #endregion
-    }
-
-    public class BoxException : Exception
-    {
-        public HttpStatusCode StatusCode { get; private set; }
-        public string Message { get; private set; }
-
-        public BoxException(IRestResponse restResponse)
-        {
-            StatusCode = restResponse.StatusCode;
-            Message = restResponse.StatusDescription;
-        }
     }
 }

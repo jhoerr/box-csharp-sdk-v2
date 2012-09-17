@@ -8,7 +8,7 @@ namespace BoxApi.V2.SDK.Tests
     {
         protected readonly BoxManager Client = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
         protected const string RootId = "0";
-        protected readonly Action AbortOnFailure = () => Assert.Fail("operation failed");
+        protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed");};
 
         protected int MaxWaitInSeconds { get; set; }
 

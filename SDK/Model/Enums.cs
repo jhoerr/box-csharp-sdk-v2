@@ -18,6 +18,7 @@ namespace BoxApi.V2.SDK.Model
         [Description("discussions")] Discussion,
         [Description("events")] Event,
         [Description("tokens")] Token,
+        [Description("error")] Error,
     }
 
     public static class EnumExtensions

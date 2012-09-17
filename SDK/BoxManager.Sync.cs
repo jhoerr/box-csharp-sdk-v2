@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using BoxApi.V2.SDK.Model;
 using RestSharp;
-using Type = BoxApi.V2.SDK.Model.Type;
 
 namespace BoxApi.V2.SDK
 {
@@ -33,6 +30,12 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
+        public void Delete(Folder folder)
+        {
+            GuardFromNull(folder, "folder");
+            DeleteFolder(folder.Id, true);
+        }
+
         public void Delete(Folder folder, bool recursive)
         {
             GuardFromNull(folder, "folder");
@@ -46,10 +49,29 @@ namespace BoxApi.V2.SDK
             Execute(request, HttpStatusCode.OK);
         }
 
-        public Folder CopyFolder(Folder folder, string newParentId, string newName = null)
+        public Folder Copy(Folder folder, Folder newParent, string newName = null)
+        {
+            GuardFromNull(folder, "folder");
+            return CopyFolder(folder.Id, newParent.Id, newName);
+        }
+
+        public Folder Copy(Folder folder, string newParentId, string newName = null)
         {
             GuardFromNull(folder, "folder");
             return CopyFolder(folder.Id, newParentId, newName);
+        }
+
+        public File Copy(File file, Folder folder, string newName = null)
+        {
+            GuardFromNull(file, "file");
+            GuardFromNull(folder, "folder");
+            return CopyFile(file.Id, folder.Id, newName);
+        }
+
+        public File Copy(File file, string newParentId, string newName = null)
+        {
+            GuardFromNull(file, "file");
+            return CopyFile(file.Id, newParentId, newName);
         }
 
         public Folder CopyFolder(string id, string newParentId, string newName = null)
@@ -60,6 +82,14 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request, HttpStatusCode.Created);
         }
 
+        public File CopyFile(string id, string newParentId, string newName = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            var request = _requestHelper.Copy(Type.File, id, newParentId, newName);
+            return Execute<File>(request, HttpStatusCode.Created);
+        }
+
         public Folder ShareFolderLink(string id, SharedLink sharedLink)
         {
             GuardFromNull(id, "id");
@@ -68,12 +98,24 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request, HttpStatusCode.OK);
         }
 
+        public Folder Move(Folder folder, string newParentId)
+        {
+            GuardFromNull(folder, "folder");
+            return MoveFolder(folder.Id, newParentId);
+        }
+
         public Folder MoveFolder(string id, string newParentId)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             var request = _requestHelper.Move(Type.Folder, id, newParentId);
             return Execute<Folder>(request, HttpStatusCode.OK);
+        }
+
+        public Folder Rename(Folder folder, string newName)
+        {
+            GuardFromNull(folder, "folder");
+            return RenameFolder(folder.Id, newName);
         }
 
         public Folder RenameFolder(string id, string newName)
@@ -116,6 +158,12 @@ namespace BoxApi.V2.SDK
             GuardFromNull(etag, "etag");
             var request = _requestHelper.DeleteFile(id, etag);
             Execute(request, HttpStatusCode.OK);
+        }
+
+        public byte[] Read(File file)
+        {
+            GuardFromNull(file, "file");
+            return Read(file.Id);
         }
 
         public byte[] Read(string id)

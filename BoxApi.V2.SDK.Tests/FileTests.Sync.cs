@@ -41,7 +41,7 @@ namespace BoxApi.V2.SDK.Tests
             var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName, expected);
-            byte[] actual = Client.Read(file.Id);
+            byte[] actual = Client.Read(file);
             Assert.That(actual, Is.EqualTo(expected));
             Client.Delete(file);
         }
@@ -56,11 +56,65 @@ namespace BoxApi.V2.SDK.Tests
             // Act
             Client.Write(file, expected);
             // Assert
-            byte[] actual = Client.Read(file.Id);
+            byte[] actual = Client.Read(file);
             Assert.That(actual, Is.EqualTo(expected));
             // Cleanup
-            string newEtag = Client.GetFile(file.Id).Etag;
-            Client.DeleteFile(file.Id, newEtag);
+            file = Client.GetFile(file.Id);
+            Client.Delete(file);
+        }
+
+        [Test]
+        public void CopyFile()
+        {
+            string testItemName = TestItemName();
+            File originalFile = Client.CreateFile(RootId, testItemName);
+            // Act
+            string newName = TestItemName();
+            File copyFile = Client.Copy(originalFile, RootId, newName);
+            // Assert
+            AssertFileConstraints(copyFile, newName, RootId);
+            Assert.That(copyFile.Id, Is.Not.EqualTo(originalFile.Id));
+            // Cleanup
+            Client.Delete(originalFile);
+            Client.Delete(copyFile);
+        }
+
+        [Test, ExpectedException(typeof(BoxException))]
+        public void CopyFileFailsWhenParentAndNameAreSame()
+        {
+            string testItemName = TestItemName();
+            File originalFile = Client.CreateFile(RootId, testItemName);
+            // Act
+            try
+            {
+                Client.Copy(originalFile, RootId);
+            }
+            finally
+            {
+                Client.Delete(originalFile);
+            }
+        }
+
+        [Test]
+        public void CopyFileToDifferentFolder()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            string folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName);
+            // Act
+            try
+            {
+                File copyFile = Client.Copy(file, folder);
+                // Assert
+                AssertFileConstraints(copyFile, file.Name, folder.Id);
+                Assert.That(copyFile.Id, Is.Not.EqualTo(file.Id));
+            }
+            finally
+            {
+                Client.Delete(file);
+                Client.Delete(folder);
+            }
         }
     }
 }

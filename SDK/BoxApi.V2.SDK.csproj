@@ -69,6 +69,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BoxAuthenticator.cs" />
+    <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.Async.cs" />
     <Compile Include="BoxManager.cs" />
     <Compile Include="BoxManager.Sync.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\CommentingUser.cs" />
     <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\Error.cs" />
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\FileInfo.cs" />
     <Compile Include="Model\Folder.cs" />

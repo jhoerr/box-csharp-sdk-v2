@@ -152,5 +152,27 @@ namespace BoxApi.V2.SDK
             GuardFromNull(onSuccess, "onSuccess");
             GuardFromNull(onFailure, "onFailure");
         }
+
+        public void CopyAsync(File file, Folder folder, Action<File> onSuccess, Action onFailure, string newName = null)
+        {
+            GuardFromNull(file, "file");
+            GuardFromNull(folder, "folder");
+            CopyFileAsync(file.Id, folder.Id, onSuccess, onFailure, newName);
+        }
+
+        public void CopyAsync(File file, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
+        {
+            GuardFromNull(file, "file");
+            CopyFileAsync(file.Id, newParentId, onSuccess, onFailure, newName);
+        }
+
+        public void CopyFileAsync(string id, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.Copy(Type.File, id, newParentId, newName);
+            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
+        }
     }
 }

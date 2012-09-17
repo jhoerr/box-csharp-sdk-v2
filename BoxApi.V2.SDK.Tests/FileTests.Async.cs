@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
 
@@ -78,6 +79,37 @@ namespace BoxApi.V2.SDK.Tests
                     Assert.That(actual, Is.EqualTo(expected));
                     callbackHit = true;
                 }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(Client.GetFile(file.Id));
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void CopyFileAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            string newItemName = TestItemName();
+            // Act
+            Client.CopyAsync(file, RootId, copiedFile =>
+            {
+                // Assert
+                AssertFileConstraints(copiedFile, newItemName, RootId);
+                Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id)); 
+                callbackHit = true;
+            }, AbortOnFailure, newItemName);
 
             do
             {
