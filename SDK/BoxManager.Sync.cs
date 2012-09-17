@@ -153,6 +153,20 @@ namespace BoxApi.V2.SDK
             return RenameFolder(folder.Id, newName);
         }
 
+        public File Rename(File file, string newName)
+        {
+            GuardFromNull(file, "file");
+            return RenameFile(file.Id, newName);
+        }
+
+        public File RenameFile(string id, string newName)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newName, "newName");
+            var request = _requestHelper.Rename(Type.File, id, newName);
+            return Execute<File>(request);
+        }
+
         public Folder RenameFolder(string id, string newName)
         {
             GuardFromNull(id, "id");

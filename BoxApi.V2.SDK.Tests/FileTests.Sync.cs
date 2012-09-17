@@ -136,5 +136,42 @@ namespace BoxApi.V2.SDK.Tests
                 Client.Delete(file);
             }
         }
+
+        [Test]
+        public void RenameFile()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            string newName = TestItemName();
+            // Act
+            try
+            {
+                File renamedFile = Client.Rename(file, newName);
+                // Assert
+                AssertFileConstraints(renamedFile, newName, RootId, file.Id);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void RenameFileToSameName()
+        {
+            string fileName = TestItemName();
+            var file = Client.CreateFile(RootId, fileName);
+            // Act
+            try
+            {
+                File renamedFile = Client.Rename(file, file.Name);
+                // Assert
+                AssertFileConstraints(renamedFile, file.Name, RootId, file.Id);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
     }
 }

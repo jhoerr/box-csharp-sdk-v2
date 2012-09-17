@@ -225,7 +225,7 @@ namespace BoxApi.V2.SDK.Tests
             Folder folder = Client.CreateFolder(RootId, folderName);
             var newName = TestItemName();
 
-            Client.RenameFolderAsync(folder.Id, newName, renamedFolder =>
+            Client.RenameAsync(folder, newName, renamedFolder =>
             {
                 callbackHit = true;
                 AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);

@@ -113,12 +113,33 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public void RenameAsync(Folder folder, string newName, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            RenameFolderAsync(folder.Id, newName, onSuccess, onFailure);
+        }
+
+        public void RenameAsync(File file, string newName, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            RenameFileAsync(file.Id, newName, onSuccess, onFailure);
+        }
+
         public void RenameFolderAsync(string id, string newName, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Rename(Type.Folder, id, newName);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void RenameFileAsync(string id, string newName, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newName, "newName");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Rename(Type.File, id, newName);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
