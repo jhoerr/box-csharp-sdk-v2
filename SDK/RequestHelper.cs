@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.SDK.Serialization;
@@ -75,22 +76,26 @@ namespace BoxApi.V2
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
+            var body = new Dictionary<string, object>();
+
             if (!string.IsNullOrEmpty(parentId))
             {
-                request.AddBody(new { parent = new { id = parentId } });
+                body.Add("parent", new{id = parentId});
             }
             if (!string.IsNullOrEmpty(name))
             {
-                request.AddBody(new {name});
+                body.Add("name", name);
             }
             if (!string.IsNullOrEmpty(description))
             {
-                request.AddBody(new { description });
+                body.Add("description", description);
             }
             if (sharedLink != null)
             {
-                request.AddBody(new {shared_link = sharedLink});
+                body.Add("shared_link", sharedLink);
             }
+
+            request.AddBody(body);
             return request;
         }
 

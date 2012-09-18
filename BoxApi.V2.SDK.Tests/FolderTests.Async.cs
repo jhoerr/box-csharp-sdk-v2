@@ -273,6 +273,79 @@ namespace BoxApi.V2.SDK.Tests
             }
         }
 
+        [Test]
+        public void UpdateDescriptionAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            var folder = Client.CreateFolder(RootId, TestItemName());
+            string newDescription = "new description";
+
+            // Act
+            folder.Description = newDescription;
+            Client.UpdateDescriptionAsync(folder, newDescription, updatedFolder =>
+            {
+                // Assert
+                AssertFolderConstraints(updatedFolder, folder.Name, folder.Parent.Id, folder.Id);
+                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+                callbackHit = true;
+            }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(folder, true);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+
+        [Test]
+        public void UpdateEverythingAsync()
+        {
+            // Arrange
+            var callbackHit = false;
+            string fileName = TestItemName();
+            var folder = Client.CreateFolder(RootId, fileName);
+            string newDescription = "new description";
+            string newFolder = TestItemName();
+            var newParent = Client.CreateFolder(RootId, newFolder);
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
+            string newName = TestItemName();
+
+            // Act
+            folder.Name = newName;
+            folder.Description = newDescription;
+            folder.Parent.Id = newParent.Id;
+            folder.SharedLink = sharedLink;
+            Client.UpdateAsync(folder, updatedFolder =>
+            {
+                // Assert
+                AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
+                AssertSharedLink(sharedLink, updatedFolder.SharedLink);
+                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+                callbackHit = true;
+            }, AbortOnFailure);
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            // Cleanup
+            Client.Delete(newParent, true);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
 
     }
 }

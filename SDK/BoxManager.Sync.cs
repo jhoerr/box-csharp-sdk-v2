@@ -201,6 +201,49 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request);
         }
 
+        public Folder UpdateDescription(Folder folder, string description)
+        {
+            GuardFromNull(folder, "folder");
+            return UpdateFolderDescription(folder.Id, description);
+        }
+
+        public Folder UpdateFolderDescription(string id, string description)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(description, "description");
+            var request = _requestHelper.Update(Type.Folder, id, description: description);
+            return Execute<Folder>(request);
+        }
+
+        public File UpdateDescription(File file, string description)
+        {
+            GuardFromNull(file, "file");
+            return UpdateFileDescription(file.Id, description);
+        }
+
+        public File UpdateFileDescription(string id, string description)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(description, "description");
+            var request = _requestHelper.Update(Type.File, id, description: description);
+            return Execute<File>(request);
+        }
+
+        public File Update(File file)
+        {
+            GuardFromNull(file, "file");
+            var request = _requestHelper.Update(Type.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            return Execute<File>(request);
+        }
+
+        public Folder Update(Folder folder)
+        {
+            GuardFromNull(folder, "folder");
+            var parentId = folder.Parent == null ? null : folder.Parent.Id;
+            var request = _requestHelper.Update(Type.Folder, folder.Id, parentId, folder.Name, folder.Description, folder.SharedLink);
+            return Execute<Folder>(request);
+        }
+
         public File Get(File file)
         {
             GuardFromNull(file, "file");

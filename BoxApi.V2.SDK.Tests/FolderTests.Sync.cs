@@ -216,5 +216,52 @@ namespace BoxApi.V2.SDK.Tests
             Client.Delete(folder, true);
         }
 
+        [Test]
+        public void UpdateDescription()
+        {
+            string folderName = TestItemName();
+            string newDescription = "new description";
+            var folder = Client.CreateFolder(RootId, folderName);
+            // Act
+            try
+            {
+                Folder updatedFolder = Client.UpdateDescription(folder, newDescription);
+                // Assert
+                AssertFolderConstraints(updatedFolder, folderName, RootId, folder.Id);
+                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+            }
+            finally
+            {
+                Client.Delete(folder);
+            }
+        }
+
+        [Test]
+        public void UpdateEverything()
+        {
+            var folder = Client.CreateFolder(RootId, TestItemName());
+            string newDescription = "new description";
+            var newParent = Client.CreateFolder(RootId, TestItemName());
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
+            string newName = TestItemName();
+            // Act
+            try
+            {
+                folder.Parent.Id = newParent.Id;
+                folder.Description = newDescription;
+                folder.Name = newName;
+                folder.SharedLink = sharedLink;
+                Folder updatedFolder = Client.Update(folder);
+                // Assert
+                AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
+                AssertSharedLink(sharedLink, folder.SharedLink);
+                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+            }
+            finally
+            {
+                Client.Delete(newParent);
+            }
+        }
+
     }
 }

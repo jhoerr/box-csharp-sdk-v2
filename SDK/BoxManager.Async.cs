@@ -176,6 +176,49 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public void UpdateDescriptionAsync(Folder folder, string description, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            UpdateFolderDescriptionAsync(folder.Id, description, onSuccess, onFailure);
+        }
+
+        private void UpdateFolderDescriptionAsync(string id, string description, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(description, "description");
+            var request = _requestHelper.Update(Type.Folder, id, description: description);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void UpdateDescriptionAsync(File file, string description, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            UpdateFileDescriptionAsync(file.Id, description, onSuccess, onFailure);
+        }
+
+        public void UpdateFileDescriptionAsync(string id, string description, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(description, "description");
+            var request = _requestHelper.Update(Type.File, id, description: description);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void UpdateAsync(Folder folder, Action<Folder> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            var parentId = folder.Parent == null ? null : folder.Parent.Id;
+            var request = _requestHelper.Update(Type.Folder, folder.Id, parentId, folder.Name, folder.Description, folder.SharedLink);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void UpdateAsync(File file, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            var request = _requestHelper.Update(Type.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
         public void GetAsync(File file, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
