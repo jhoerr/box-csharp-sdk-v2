@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using BoxApi.V2;
 using BoxApi.V2.SDK.Model;
 
@@ -13,19 +14,9 @@ namespace BoxApi.V2.Samples
 
 		static void Main(string[] args)
 		{
-             // Uncomment these lines to go through the regular auth workflow
-             // i.e. this application will throw up a browser for you to authenticate with box.com with
-             // user name and password, and obtain an auth token.
-            
-            _boxAuthLayer.StartAuthentication();
-
-            Console.WriteLine(@"Type ""OK"" and hit ENTER after successful logging onto Box...");
-            while (Console.ReadLine().ToLower() != "ok")
-            { }
-            
-            _boxAuthLayer.FinishAuthentication(ExecuteAPIMethods);
-
-			Console.ReadLine();
+            var boxManager = new BoxManager("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1", null);
+		    var authToken = boxManager.GetAppAuthTokenForUser("carsongross@gmail.com");
+            Console.WriteLine("Auth token : " + authToken);
 		}
 
 		private static void ExecuteAPIMethods(User user)

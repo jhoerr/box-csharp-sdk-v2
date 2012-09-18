@@ -25,7 +25,7 @@ namespace BoxApi.V2.Samples
 		/// </summary>
 		public void StartAuthentication()
 		{
-			_manager.GetTicket(GetTicketCompleted);
+			//_manager.GetTicket(GetTicketCompleted);
 		}
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace BoxApi.V2.Samples
 		/// <param name="printUserInfoCallback">Callback method which will be invoked after operation completes</param>
 		public void FinishAuthentication(Action<User> printUserInfoCallback)
 		{
-			_manager.GetAuthenticationToken(_ticket, GetAuthenticationTokenCompleted, printUserInfoCallback);
+			//_manager.GetAuthenticationToken(_ticket, GetAuthenticationTokenCompleted, printUserInfoCallback);
 		}       
 
 		private void GetAuthenticationTokenCompleted(GetAuthenticationTokenResponse response)
