@@ -65,9 +65,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthenticateUserResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="BoxAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.Async.cs" />
@@ -82,13 +79,9 @@
     <Compile Include="GetTicketResponse.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="JSONDataTypes.cs" />
-    <Compile Include="Model\Comment.cs" />
-    <Compile Include="Model\CommentingUser.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\File.cs" />
-    <Compile Include="Model\FileInfo.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
@@ -98,7 +91,6 @@
     <Compile Include="Model\SharedLink.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserEntity.cs" />
-    <Compile Include="Model\UserPermissionFlags.cs" />
     <Compile Include="RequestHelper.cs" />
     <Compile Include="ResponseBase.cs">
       <SubType>Code</SubType>
@@ -111,9 +103,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BoxWebRequest.cs" />
     <Compile Include="StatusMessageParser.cs" />
-    <Compile Include="TagPrimitive.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
