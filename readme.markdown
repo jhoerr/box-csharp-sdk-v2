@@ -1,6 +1,6 @@
 # box-csharp-sdk-v2
 
-A C# client for the [Box v2 REST API](http://developers.box.com/docs/).
+A C# client for the [Box v2 REST API](http://developers.box.com/docs/). This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK) and is published under the [MIT License](http://opensource.org/licenses/MIT).
 
 ```csharp
 // Instantiate a BoxManager with your api key and a user's auth token
