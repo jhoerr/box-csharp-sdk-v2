@@ -347,5 +347,45 @@ namespace BoxApi.V2.SDK
 
             return GetFile(itemCollection.Entries.Single().Id);
         }
+
+        public Comment AddComment (File file, string comment)
+        {
+            GuardFromNull(file, "file");
+            return AddComment(file.Id, comment);
+        }
+
+        public Comment AddComment(string fileId, string comment)
+        {
+            GuardFromNull(fileId, "fileId");
+            GuardFromNull(comment, "comment");
+            IRestRequest restRequest = _requestHelper.AddComment(fileId, comment);
+            return Execute<Comment>(restRequest);
+        }
+
+        public CommentCollection GetComments(File file)
+        {
+            GuardFromNull(file, "file");
+            return GetFileComments(file.Id);
+        }
+
+        public CommentCollection GetFileComments(string fileId)
+        {
+            GuardFromNull(fileId, "fileId");
+            IRestRequest restRequest = _requestHelper.GetComments(Type.File, fileId);
+            return Execute<CommentCollection>(restRequest);
+        }
+
+        public Comment GetComment(Comment comment)
+        {
+            GuardFromNull(comment, "comment");
+            return GetComment(comment.Id);
+        }
+
+        private Comment GetComment(string id)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest restRequest = _requestHelper.Get(Type.Comment, id);
+            return Execute<Comment>(restRequest);
+        }
     }
 }

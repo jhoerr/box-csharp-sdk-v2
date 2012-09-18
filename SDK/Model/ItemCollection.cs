@@ -2,31 +2,38 @@ using System.Collections.Generic;
 
 namespace BoxApi.V2.SDK.Model
 {
-    public class Collection
+    public class Collection<T> where T: class, new()
     {
         /// <summary>
         /// Count of Entries
         /// </summary>
         public string TotalCount { get; set; }
+
+        /// <summary>
+        /// A collection of T items
+        /// </summary>
+        public List<T> Entries { get; set; } 
     }
 
     /// <summary>
-    /// Provides basic information about a folder's contents
+    /// Detailed information about a folder's contents
     /// </summary>
-    public class ItemCollection : Collection
+    public class ItemCollection : Collection<Folder>
     {
-        /// <summary>
-        /// An array of file and folder objects contained in this folder
-        /// </summary>
-        public List<Folder> Entries { get; set; }
     }
 
-    public class ErrorCollection : Collection
+    /// <summary>
+    /// A list of errors returned during an operation
+    /// </summary>
+    public class ErrorCollection : Collection<Error>
     {
-        /// <summary>
-        /// An array of file and folder objects contained in this folder
-        /// </summary>
-        public List<Error> Entries { get; set; }
-
     }
+
+    /// <summary>
+    /// A list of comments attached to a file or discussion
+    /// </summary>
+    public class CommentCollection : Collection<Comment>
+    {
+    }
+
 }

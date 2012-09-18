@@ -114,6 +114,22 @@ namespace BoxApi.V2
             return request;
         }
 
+
+        public IRestRequest AddComment(string id, string message)
+        {
+            var request = JsonRequest(Type.File, "{id}/comments", Method.POST);
+            request.AddUrlSegment("id", id);
+            request.AddBody(new {message});
+            return request;
+        }
+
+        public IRestRequest GetComments(Type resourceType, string id)
+        {
+            var request = JsonRequest(resourceType, "{id}/comments");
+            request.AddUrlSegment("id", id);
+            return request;
+        }
+
         private IRestRequest RawRequest(Type resourceType, string resource, Method method = Method.GET)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));

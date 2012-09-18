@@ -343,5 +343,49 @@ namespace BoxApi.V2.SDK
             var request = _requestHelper.Copy(Type.File, id, newParentId, newName);
             ExecuteAsync(request, onSuccess, onFailure);
         }
+
+        public void AddComment(File file, string comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            AddComment(file.Id, comment, onSuccess, onFailure);
+        }
+
+        private void AddComment(string fileId, string comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(fileId, "fileId");
+            GuardFromNull(comment, "comment");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var restRequest = _requestHelper.AddComment(fileId, comment);
+            ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
+        public void GetComment(Comment comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(comment, "comment");
+            GetComment(comment.Id, onSuccess, onFailure);
+        }
+
+        private void GetComment(string commentId, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(commentId, "commentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var restRequest = _requestHelper.Get(Type.Comment, commentId);
+            ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
+        public void GetComments(File file, Action<CommentCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            GetFileComments(file.Id, onSuccess, onFailure);
+        }
+
+        private void GetFileComments(string fileId, Action<CommentCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(fileId, "fileId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var restRequest = _requestHelper.GetComments(Type.File, fileId);
+            ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
     }
 }

@@ -81,6 +81,7 @@
     <Compile Include="GetTicketResponse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\File.cs" />
