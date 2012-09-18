@@ -1,15 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
-<<<<<<< HEAD
 using System.Xml;
 using BoxApi.V2.SDK;
-=======
 using System.Text.RegularExpressions;
 using System.Threading;
->>>>>>> 2abf755370b6ae5fbf74a03ef34e7fb81e80edfe
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
@@ -98,42 +96,15 @@ namespace BoxApi.V2.SDK
                 client.ClearHandlers();
                 client.AddHandler("*", new JsonDeserializer());
                 var restResponse = client.Execute<Token>(restRequest);
-                if (!WasSuccessful(restResponse, HttpStatusCode.Created))
+                Error error;
+                if (!WasSuccessful(restResponse, out error))
                 {
-                    throw new BoxException(restResponse);
+                    throw new BoxException(error);
                 }
                 _authorizationToken = restResponse.Data.BoxToken;
                 _rootFolder = restResponse.Data.RootFolder;
             }
-<<<<<<< HEAD
             return _authorizationToken;
-=======
-            else
-            {
-                status = GetAuthenticationTokenStatus.Failed;
-                error = e.Error;
-            }
-
-            var response = new GetAuthenticationTokenResponse
-                {
-                    Status = status,
-                    UserState = state[1],
-                    Error = error,
-                    AuthenticationToken = string.Empty
-                };
-
-            if (response.Status == GetAuthenticationTokenStatus.Successful)
-            {
-                var authenticatedUser = new User(e.user);
-                response.AuthenticatedUser = authenticatedUser;
-                response.AuthenticationToken = e.auth_token;
-                _token = e.auth_token;
-
-                // Set HTTP auth header
-            }
-
-            getAuthenticationTokenCompleted(response);
->>>>>>> 2abf755370b6ae5fbf74a03ef34e7fb81e80edfe
         }
 
         private string BoxXmlAuthRequest(string url, string elementName)
