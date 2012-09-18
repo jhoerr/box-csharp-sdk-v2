@@ -35,6 +35,10 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,8 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxApiTestHarness.cs" />
-    <Compile Include="FolderTestsAsync.cs" />
-    <Compile Include="FolderTestsSync.cs" />
+    <Compile Include="CommentTests.Sync.cs" />
+    <Compile Include="CommentTests.Async.cs" />
+    <Compile Include="FileTests.Async.cs" />
+    <Compile Include="FileTests.Sync.cs" />
+    <Compile Include="FolderTests.Async.cs" />
+    <Compile Include="FolderTests.Sync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCredentials.cs" />
   </ItemGroup>

@@ -1,27 +1,30 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+<<<<<<< HEAD
 using System.Xml;
 using BoxApi.V2.SDK;
+=======
+using System.Text.RegularExpressions;
+using System.Threading;
+>>>>>>> 2abf755370b6ae5fbf74a03ef34e7fb81e80edfe
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.ServiceReference;
 using BoxApi.V2.Statuses;
 using RestSharp;
 using RestSharp.Deserializers;
-using FileInfo = BoxApi.V2.SDK.Model.FileInfo;
 
-namespace BoxApi.V2
+namespace BoxApi.V2.SDK
 {
     /// <summary>
     ///   Provides methods for using Box.NET SOAP web service
     /// </summary>
-    public sealed class BoxManager
+    public partial class BoxManager
     {
-        private const string ApiVersion2 = "2.0";
+        private const string JsonMimeType = "application/json";
         private string _serviceUrl = "https://www.box.com/api/";
-        private string _http_Authorization_Header;
 
         private readonly boxnetService _service;
         private readonly string _apiKey;
@@ -38,8 +41,8 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="applicationApiKey"> The unique API key which is assigned to application </param>
         /// <param name="proxy"> Proxy information </param>
-        public BoxManager(string applicationApiKey, IWebProxy proxy) :
-            this(applicationApiKey, proxy, null)
+        public BoxManager(string applicationApiKey, IWebProxy proxy = null) :
+            this(applicationApiKey, null, proxy)
         {
         }
 
@@ -47,12 +50,9 @@ namespace BoxApi.V2
         ///   Instantiates BoxManager
         /// </summary>
         /// <param name="applicationApiKey"> The unique API key which is assigned to application </param>
-        /// <param name="proxy"> Proxy information </param>
         /// <param name="authorizationToken"> Valid authorization token </param>
-        public BoxManager(
-            string applicationApiKey,
-            IWebProxy proxy,
-            string authorizationToken)
+        /// <param name="proxy"> Proxy information </param>
+        public BoxManager(string applicationApiKey, string authorizationToken, IWebProxy proxy = null)
         {
             _apiKey = applicationApiKey;
             _authorizationToken = authorizationToken;
@@ -64,7 +64,7 @@ namespace BoxApi.V2
 
             _restContentClient = new RestClient(_serviceUrl) {Proxy = proxy, Authenticator = new BoxAuthenticator(applicationApiKey, authorizationToken)};
             _restContentClient.ClearHandlers();
-            _restContentClient.AddHandler("*", new JsonDeserializer());
+            _restContentClient.AddHandler(JsonMimeType, new JsonDeserializer());
 
              _requestHelper = new RequestHelper("1.0", "2.0");
         }
@@ -105,7 +105,35 @@ namespace BoxApi.V2
                 _authorizationToken = restResponse.Data.BoxToken;
                 _rootFolder = restResponse.Data.RootFolder;
             }
+<<<<<<< HEAD
             return _authorizationToken;
+=======
+            else
+            {
+                status = GetAuthenticationTokenStatus.Failed;
+                error = e.Error;
+            }
+
+            var response = new GetAuthenticationTokenResponse
+                {
+                    Status = status,
+                    UserState = state[1],
+                    Error = error,
+                    AuthenticationToken = string.Empty
+                };
+
+            if (response.Status == GetAuthenticationTokenStatus.Successful)
+            {
+                var authenticatedUser = new User(e.user);
+                response.AuthenticatedUser = authenticatedUser;
+                response.AuthenticationToken = e.auth_token;
+                _token = e.auth_token;
+
+                // Set HTTP auth header
+            }
+
+            getAuthenticationTokenCompleted(response);
+>>>>>>> 2abf755370b6ae5fbf74a03ef34e7fb81e80edfe
         }
 
         private string BoxXmlAuthRequest(string url, string elementName)
@@ -125,85 +153,49 @@ namespace BoxApi.V2
 
         #endregion
 
-        #region V2_Folders
-
-        public Folder GetFolder(string id)
+        private static void GuardFromNull(object arg, string argName)
         {
-            var restRequest = _requestHelper.GetFolder(id);
-            return Execute<Folder>(restRequest, HttpStatusCode.OK);
-        }
-
-        public void GetFolderAsync(string id, Action<Folder> onSuccess, Action onFailure)
-        {
-            var restRequest = _requestHelper.GetFolder(id);
-            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.OK);
-        }
-
-        public Folder CreateFolder(string parentId, string name)
-        {
-            var restRequest = _requestHelper.CreateFolder(parentId, name);
-            return Execute<Folder>(restRequest, HttpStatusCode.Created);
-        }
-
-        public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
-        {
-            var restRequest = _requestHelper.CreateFolder(parentId, name);
-            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.Created);
-        }
-
-        public void DeleteFolder(string id, bool recursive)
-        {
-            var restRequest = _requestHelper.DeleteFolder(id, recursive);
-            Execute(restRequest, HttpStatusCode.OK);
-        }
-
-        public void DeleteFolderAsync(string id, bool recursive, Action onSuccess, Action onFailure)
-        {
-            var restRequest = _requestHelper.DeleteFolder(id, recursive);
-            ExecuteAsync(restRequest, onSuccess, onFailure, HttpStatusCode.OK);
-        }
-
-        public Folder CopyFolder(string folderId, string newParentId, string newName = null)
-        {
-            RestRequest request = _requestHelper.CopyFolder(folderId, newParentId, newName);
-            return Execute<Folder>(request, HttpStatusCode.Created);
-        }
-
-        public void CopyFolderAsync(string folderId, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
-        {
-            RestRequest request = _requestHelper.CopyFolder(folderId, newParentId, newName);
-            ExecuteAsync(request, onSuccess, onFailure, HttpStatusCode.Created);
-        }
-
-        private void Execute(RestRequest restRequest, HttpStatusCode expectedStatusCode)
-        {
-            var restResponse = _restContentClient.Execute(restRequest);
-            if (!WasSuccessful(restResponse, expectedStatusCode))
+            if (arg == null || (arg is string && string.IsNullOrEmpty((string) arg)))
             {
-                throw new BoxException(restResponse);
+                throw new ArgumentException("Argument cannot be null or empty", argName);
             }
         }
 
-        private T Execute<T>(IRestRequest restRequest, HttpStatusCode expectedStatusCode) where T : class, new()
+        private IRestResponse Execute(IRestRequest request)
         {
-            var restResponse = _restContentClient.Execute<T>(restRequest);
-            if (!WasSuccessful(restResponse, expectedStatusCode))
+            var restResponse = _restContentClient.Execute(request);
+            Error error;
+            if (!WasSuccessful(restResponse, out error))
             {
-                throw new BoxException(restResponse);
+                throw new BoxException(error);
+            }
+            return restResponse;
+        }
+
+        private T Execute<T>(IRestRequest request) where T : class, new()
+        {
+
+            var restResponse = _restContentClient.Execute<T>(request);
+            Error error;
+            if (!WasSuccessful(restResponse, out error))
+            {
+                throw new BoxException(error);
             }
             return restResponse.Data;
         }
 
-        private void ExecuteAsync<T>(RestRequest restRequest, Action<T> onSuccess, Action onFailure, HttpStatusCode expectedStatusCode) where T : class, new()
+
+        private void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action onFailure) where T : class, new()
         {
             if (onSuccess == null)
             {
                 throw new ArgumentException("onSuccess can not be null");
             }
 
-            _restContentClient.ExecuteAsync<T>(restRequest, response =>
+            _restContentClient.ExecuteAsync<T>(request, response =>
                 {
-                    if (WasSuccessful(response, expectedStatusCode))
+                    Error error;
+                    if (WasSuccessful(response, out error))
                     {
                         onSuccess(response.Data);
                     }
@@ -214,18 +206,19 @@ namespace BoxApi.V2
                 });
         }
 
-        private void ExecuteAsync(RestRequest restRequest, Action onSuccess, Action onFailure, HttpStatusCode expectedStatusCode)
+        private void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure)
         {
             if (onSuccess == null)
             {
                 throw new ArgumentException("callback can not be null");
             }
 
-            _restContentClient.ExecuteAsync(restRequest, response =>
+            _restContentClient.ExecuteAsync(request, response =>
                 {
-                    if (WasSuccessful(response, expectedStatusCode))
+                    Error error;
+                    if (WasSuccessful(response, out error))
                     {
-                        onSuccess();
+                        onSuccess(response);
                     }
                     else if (onFailure != null)
                     {
@@ -234,404 +227,35 @@ namespace BoxApi.V2
                 });
         }
 
-        private static bool WasSuccessful(IRestResponse restResponse, HttpStatusCode expectedStatusCode)
+        private bool WasSuccessful(IRestResponse restResponse, out Error error)
         {
-            return restResponse != null && restResponse.StatusCode.Equals(expectedStatusCode);
-        }
-
-        public void UpdateFolder(int folder_id, string new_name)
-        {
-            var actionString = "/folders/";
-            var url = _serviceUrl + actionString + folder_id.ToString();
-
-            var requestBody = "{ \"name\" : \"" +
-                              new_name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
+            error = null;
+            bool success = true;
+            if (restResponse == null)
             {
-                if (stream != null)
+                success = false;
+            }
+
+            else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
+            {
+                success = false;
+                var jsonDeserializer = new JsonDeserializer();
+                error = jsonDeserializer.Deserialize<Error>(restResponse);
+                if (error.Type == null)
                 {
-                    var ser = new DataContractJsonSerializer(typeof (Folder));
-                    var folder = (Folder) ser.ReadObject(stream);
-
-                    Console.WriteLine(folder.ToString());
-                }
-            }
-        }
-
-        #endregion
-
-        #region V2_Files
-
-        public void GetFileInfo(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-            if (version > 0)
-            {
-                url += "?version=" + version.ToString();
-            }
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-
-                    Console.WriteLine("FILE INFO - ");
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
-        public int CopyFile(int file_id, int parent_id)
-        {
-            var new_file_id = 0;
-
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/copy";
-
-            var requestBody = "{ \"parent_folder\" : { \"id\": \"" +
-                              parent_id.ToString() +
-                              "\" } }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var folderInfo = (FileInfo) ser.ReadObject(stream);
-                    new_file_id = folderInfo.id;
-                    Console.WriteLine(folderInfo.ToString());
-                }
-            }
-
-            return new_file_id;
-        }
-
-        public void RenameFile(int file_id, string new_name)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-
-            var requestBody = "{ \"name\" : \"" +
-                              new_name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
-        public void UpdateDescription(int file_id, string new_description)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-
-            var requestBody = "{ \"name\" : { \"description\": \"" +
-                              new_description +
-                              "\" } }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
-        public void DeleteFile(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-
-            if (version > 0)
-            {
-                url += "/versions/" + version.ToString();
-            }
-
-            using (var stream = BoxWebRequest.ExecuteDELETE(url, _http_Authorization_Header))
-            {
-            }
-        }
-
-        public void GetFileData(int file_id, int version)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString();
-            if (version > 0)
-            {
-                url += "/versions/" + version.ToString();
-            }
-            else
-            {
-                url += "/data";
-            }
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var sr = new StreamReader(stream);
-
-                    Console.WriteLine("FILE DATA - ");
-                    Console.WriteLine(sr.ReadToEnd());
-                }
-            }
-        }
-
-        public int CreateFile(string data)
-        {
-            var new_file_id = 0;
-
-            var actionString = "/files/data";
-            var url = _serviceUrl + actionString;
-
-            var requestData = Encoding.ASCII.GetBytes(data);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    new_file_id = fileInfo.id;
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-
-            return new_file_id;
-        }
-
-        public void UploadFile(int file_id, string data)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/data";
-
-            var requestData = Encoding.ASCII.GetBytes(data);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (FileInfo));
-                    var fileInfo = (FileInfo) ser.ReadObject(stream);
-                    Console.WriteLine(fileInfo.ToString());
-                }
-            }
-        }
-
-        #region V2_Comments
-
-        #endregion
-
-        public void PostComment(int file_id, string comment)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/comments";
-
-            var requestBody = "{ \"comment\" : { \"message\": \"" +
-                              comment +
-                              "\" } }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-            }
-        }
-
-        public void GetFileComments(int file_id)
-        {
-            var actionString = "/files/";
-            var url = _serviceUrl + actionString + file_id.ToString() + "/comments";
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Comment[]));
-                    var comments = (Comment[]) ser.ReadObject(stream);
-
-                    foreach (Comment comment in comments)
+                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
+                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
                     {
-                        Console.WriteLine(comment.ToString());
+                        error = errorCollection.Entries.First();
                     }
                 }
             }
+            return success;
         }
 
-        public void GetComment(int comment_id)
+        private static void Backoff(int attempt)
         {
-            var actionString = "/comments/";
-            var url = _serviceUrl + actionString + comment_id.ToString();
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Comment));
-                    var comment = (Comment) ser.ReadObject(stream);
-
-                    if (comment != null)
-                    {
-                        Console.WriteLine(comment.ToString());
-                    }
-                }
-            }
-        }
-
-        public void DeleteComment(int comment_id)
-        {
-            var actionString = "/comments/";
-            var url = _serviceUrl + actionString + comment_id.ToString();
-
-            using (var stream = BoxWebRequest.ExecuteDELETE(url, _http_Authorization_Header))
-            {
-            }
-        }
-
-        public void UpdateComment(int comment_id, string new_message)
-        {
-            var actionString = "/comments/";
-            var url = _serviceUrl + actionString + comment_id.ToString();
-
-            var requestBody = "{ \"message\" : \"" +
-                              new_message +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-            }
-        }
-
-        #region V2 Discussions API
-
-        #endregion
-
-        public void GetDiscussions(int folder_id)
-        {
-            var actionString = "/folders/";
-            var url = _serviceUrl + actionString + folder_id.ToString() + "/discussions";
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Entity[]));
-                    var discussions = (Entity[]) ser.ReadObject(stream);
-
-                    foreach (Entity disc in discussions)
-                    {
-                        Console.WriteLine(disc.ToString());
-                    }
-                }
-            }
-        }
-
-        public void DeleteDiscussion(int disc_id)
-        {
-            var actionString = "/discussions/";
-            var url = _serviceUrl + actionString + disc_id.ToString();
-
-            using (var stream = BoxWebRequest.ExecuteDELETE(url, _http_Authorization_Header))
-            {
-            }
-        }
-
-        public void GetDiscussionComments(int disc_id)
-        {
-            var actionString = "/discussions/";
-            var url = _serviceUrl + actionString + disc_id.ToString() + "/comments";
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                if (stream != null)
-                {
-                    var ser = new DataContractJsonSerializer(typeof (Comment[]));
-                    var comments = (Comment[]) ser.ReadObject(stream);
-
-                    foreach (Comment comment in comments)
-                    {
-                        Console.WriteLine(comment.ToString());
-                    }
-                }
-            }
-        }
-
-        public void PostCommentInDiscussion(int disc_id, string comment)
-        {
-            var actionString = "/discussions/";
-            var url = _serviceUrl + actionString + disc_id.ToString() + "/comments";
-
-            var requestBody = "{ \"comment\" : { \"message\": \"" +
-                              comment +
-                              "\" } }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePOST(url, _http_Authorization_Header, requestData))
-            {
-            }
-        }
-
-        public void UpdateDiscussionName(int disc_id, string new_name)
-        {
-            var actionString = "/discussions/";
-            var url = _serviceUrl + actionString + disc_id.ToString();
-
-            var requestBody = "{ \"name\" : \"" +
-                              new_name +
-                              "\" }";
-            var requestData = Encoding.ASCII.GetBytes(requestBody);
-
-            using (var stream = BoxWebRequest.ExecutePUT(url, _http_Authorization_Header, requestData))
-            {
-            }
-        }
-
-        #region V2 Events API
-
-        #endregion
-
-        public void GetEvents()
-        {
-            var actionString = "/events/";
-            var url = _serviceUrl + actionString;
-
-            using (var stream = BoxWebRequest.ExecuteGET(url, _http_Authorization_Header))
-            {
-                // Parse event info from stream
-            }
-        }
-
-
-        #endregion
-    }
-
-    public class BoxException : Exception
-    {
-        public HttpStatusCode StatusCode { get; private set; }
-        public string Message { get; private set; }
-
-        public BoxException(IRestResponse restResponse)
-        {
-            StatusCode = restResponse.StatusCode;
-            Message = restResponse.StatusDescription;
+            Thread.Sleep((int)Math.Pow(2, attempt) * 100);
         }
     }
 }

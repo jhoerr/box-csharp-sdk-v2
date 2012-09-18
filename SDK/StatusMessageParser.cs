@@ -7,16 +7,7 @@ namespace BoxApi.V2
 	/// </summary>
 	internal static class StatusMessageParser
 	{
-		internal static AuthenticationStatus ParseAuthorizeStatus(string status)
-		{
-			switch (status)
-			{
-				default:
-					return AuthenticationStatus.Unknown;
-			}
-		}
-
-		internal static GetTicketStatus ParseGetTicketStatus(string status)
+	    internal static GetTicketStatus ParseGetTicketStatus(string status)
 		{
 			switch (status.ToLower())
 			{

@@ -1,40 +1,23 @@
 ﻿using System;
-using System.Net;
-using BoxApi.V2;
+using BoxApi.V2.SDK;
 using BoxApi.V2.SDK.Model;
 
 namespace BoxApi.V2.Samples
 {
-	class ExerciseV2API
-	{
+    internal class ExerciseV2API
+    {
         //
         // NOTE - The api_key and auth_token need to be changed from the ones below
         //
-        private readonly static BoxAuthLayer _boxAuthLayer = new BoxAuthLayer("tb1fyy8l9g8gy2nyirri00rdsyxr5ae2", null);
-
-		static void Main(string[] args)
-		{
+        private static void Main(string[] args)
+        {
             var boxManager = new BoxManager("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1", null);
-		    var authToken = boxManager.GetAppAuthTokenForUser("carsongross@gmail.com");
+            var authToken = boxManager.GetAppAuthTokenForUser("carsongross@gmail.com");
             Console.WriteLine("Auth token : " + authToken);
-		}
+        }
 
-		private static void ExecuteAPIMethods(User user)
-		{
-           # region Folder API
-            
-            // GET /folders/0
-            _boxAuthLayer._manager.GetFolder("0");
-
-            // POST /folders/0
-            var newFolder = _boxAuthLayer._manager.CreateFolder("0", "MyNewFolder");
-		    int id = int.Parse(newFolder.Id);
-
-            // PUT /folders/1234
-            _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
-
-            #endregion
-
+        private static void ExecuteAPIMethods(User user)
+        {
             # region Files API
 
             /*
@@ -82,50 +65,56 @@ namespace BoxApi.V2.Samples
             /*
             // Post a comment - POST /files/2026759912/comments
             _boxAuthLayer._manager.PostComment(2026759912, "absolutely new comment");
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            const string apiKey = "YOUR_API_KEY";
+            const string authToken = "USER_AUTH_TOKEN";
             
-            // Get all file comments - GET /files/2026759912/comments
-            _boxAuthLayer._manager.GetFileComments(2026759912);
-             
-            // Get a specific comment - GET /comments/8536883
-            _boxAuthLayer._manager.GetComment(8536883);
-
-            // Delete a comment - DELETE /comments/8536883
-            _boxAuthLayer._manager.DeleteComment(8536883);
-            
-            // Update a comment - PUT /comments/8537019
-            _boxAuthLayer._manager.UpdateComment(8537019, "changed the comment!");
-            */
-
-            #endregion
-
-            #region Discussions API
-            /*
-            // Get Discussions for a folder - GET /folders/259009302/discussions
-            _boxAuthLayer._manager.GetDiscussions(259009302);
-
-            // Delete discussion - DELETE /discussions/402617
-            _boxAuthLayer._manager.DeleteDiscussion(402617);
-
-            // Get all comments in discussion - GET /discussions/402603/comments
-            _boxAuthLayer._manager.GetDiscussionComments(402603);
-
-            // Post a comment in discussion - POST /discussions/402603/comments
-            _boxAuthLayer._manager.PostCommentInDiscussion(402603, "great comment!");
-
-            // Update discussion name - PUT /discussions/402603
-            _boxAuthLayer._manager.UpdateDiscussionName(402603, "new discussion name");
-            */
-
-            #endregion
-
-            #region Events API
-            /*
-            // GET /events
-            _boxAuthLayer._manager.GetEvents();
-             */
- 
-            #endregion
-
+            ExecuteAPIMethods(apiKey, authToken);
         }
-	}
+
+        private static void ExecuteAPIMethods(string apiKey, string authToken)
+        {
+            // Instantiate a BoxManager with your api key and a user's auth token
+            var boxManager = new BoxManager(apiKey, authToken);
+
+            // Get all contents of the root folder
+            var rootFolder = boxManager.GetFolder(Folder.Root);
+
+            // Find a file
+            var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
+
+            // Change the file's name and description
+            file.Name = "the new name.txt";
+            file.Description = "the new description";
+
+            // Update the file
+            // A new file object is always returned with an updated ETag.
+            file = boxManager.Update(file);
+
+            // Create a new subfolder
+            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
+
+            // Move the file to the subfolder
+            file = boxManager.Move(file, subfolder);
+
+            // Write some content to the file
+            file = boxManager.Write(file, new byte[] {1, 2, 3});
+
+            // Read the contents to a stream
+            using (var stream = new MemoryStream())
+            {
+                boxManager.Read(file, stream);
+            }
+
+            // Delete the file
+            boxManager.Delete(file);
+        }
+    }
+            */
+            #endregion
+        }
+    }
 }

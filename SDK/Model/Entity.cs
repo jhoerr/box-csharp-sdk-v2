@@ -24,11 +24,7 @@ namespace BoxApi.V2.SDK.Model
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// The sha1 hash of the file.  Useful for quickly determining if the contents of the file have changed.
-        /// </summary>
-        public string Etag { get; set; }
-
+      
         public override string ToString()
         {
             var sb = new StringBuilder();
