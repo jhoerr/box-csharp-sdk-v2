@@ -15,7 +15,7 @@ namespace BoxApi.V2.SDK.Tests
 
             var testItemName = TestItemName();
             File actual = null;
-            Client.CreateFileAsync(RootId, testItemName, file =>
+            Client.CreateFile(RootId, testItemName, file =>
                 {
                     actual = file;
                     AssertFileConstraints(file, testItemName, RootId);
@@ -46,7 +46,7 @@ namespace BoxApi.V2.SDK.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName, expected);
             
-            Client.ReadAsync(file, readBytes =>
+            Client.Read(file, readBytes =>
             {
                 Assert.That(readBytes, Is.EqualTo(expected));
                 callbackHit = true;
@@ -73,7 +73,7 @@ namespace BoxApi.V2.SDK.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName);
             // Act
-            Client.WriteAsync(file, expected, updatedFile =>
+            Client.Write(file, expected, updatedFile =>
                 {
                     byte[] actual = Client.Read(file.Id);
                     Assert.That(actual, Is.EqualTo(expected));
@@ -103,7 +103,7 @@ namespace BoxApi.V2.SDK.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.CopyAsync(file, RootId, copiedFile =>
+            Client.Copy(file, RootId, copiedFile =>
             {
                 // Assert
                 AssertFileConstraints(copiedFile, newItemName, RootId);
@@ -135,7 +135,7 @@ namespace BoxApi.V2.SDK.Tests
             var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
             
             // Act
-            Client.ShareLinkAsync(file, expectedLink, sharedFile =>
+            Client.ShareLink(file, expectedLink, sharedFile =>
             {
                 // Assert
                 AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
@@ -166,7 +166,7 @@ namespace BoxApi.V2.SDK.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.RenameAsync(file, newItemName, renamedFile =>
+            Client.Rename(file, newItemName, renamedFile =>
             {
                 // Assert
                 AssertFileConstraints(renamedFile, newItemName, RootId);
@@ -197,7 +197,7 @@ namespace BoxApi.V2.SDK.Tests
             string folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName);
             // Act
-            Client.MoveAsync(file, folder, movedFile =>
+            Client.Move(file, folder, movedFile =>
             {
                 // Assert
                 AssertFileConstraints(movedFile, testItemName, folder.Id, file.Id);
@@ -228,7 +228,7 @@ namespace BoxApi.V2.SDK.Tests
             string newDescription = "new description";
 
             // Act
-            Client.UpdateDescriptionAsync(file, newDescription, updatedFile =>
+            Client.UpdateDescription(file, newDescription, updatedFile =>
             {
                 // Assert
                 AssertFileConstraints(updatedFile, file.Name, RootId, file.Id);
@@ -269,7 +269,7 @@ namespace BoxApi.V2.SDK.Tests
             file.Description = newDescription;
             file.Parent.Id = folder.Id;
             file.SharedLink = sharedLink;
-            Client.UpdateAsync(file, updatedFile =>
+            Client.Update(file, updatedFile =>
             {
                 // Assert
                 AssertFileConstraints(updatedFile, newName, folder.Id, file.Id);

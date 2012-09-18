@@ -8,13 +8,13 @@ namespace BoxApi.V2.SDK
 {
     public partial class BoxManager
     {
-        public void GetAsync(Folder folder, Action<Folder> onSuccess, Action onFailure)
+        public void Get(Folder folder, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            GetFolderAsync(folder.Id, onSuccess, onFailure);
+            GetFolder(folder.Id, onSuccess, onFailure);
         }
 
-        public void GetFolderAsync(string id, Action<Folder> onSuccess, Action onFailure)
+        public void GetFolder(string id, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -22,7 +22,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetItemsAsync(string id, Action<ItemCollection> onSuccess, Action onFailure)
+        public void GetItems(string id, Action<ItemCollection> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -30,7 +30,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
-        public void CreateFolderAsync(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
+        public void CreateFolder(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -39,13 +39,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void DeleteAsync(Folder folder, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
+        public void Delete(Folder folder, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            DeleteFolderAsync(folder.Id, recursive, onSuccess, onFailure);
+            DeleteFolder(folder.Id, recursive, onSuccess, onFailure);
         }
 
-        public void DeleteFolderAsync(string id, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
+        public void DeleteFolder(string id, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -53,19 +53,19 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void CopyAsync(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure, string newName = null)
+        public void Copy(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(newParent, "newParent");
-            CopyAsync(folder, newParent.Id, onSuccess, onFailure, newName);
+            Copy(folder, newParent.Id, onSuccess, onFailure, newName);
         }
 
-        public void CopyAsync(Folder folder, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
+        public void Copy(Folder folder, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(folder, "folder");
-            CopyFolderAsync(folder.Id, newParentId, onSuccess, onFailure, newName);
+            CopyFolder(folder.Id, newParentId, onSuccess, onFailure, newName);
         }
 
-        public void CopyFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
+        public void CopyFolder(string id, string newParentId, Action<Folder> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -74,19 +74,19 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void ShareLinkAsync(Folder folder, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
+        public void ShareLink(Folder folder, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            ShareFolderLinkAsync(folder.Id, sharedLink, onSuccess, onFailure);
+            ShareFolderLink(folder.Id, sharedLink, onSuccess, onFailure);
         }
 
-        public void ShareLinkAsync(File file, SharedLink sharedLink, Action<File> onSuccess, Action onFailure)
+        public void ShareLink(File file, SharedLink sharedLink, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            ShareFileLinkAsync(file.Id, sharedLink, onSuccess, onFailure);
+            ShareFileLink(file.Id, sharedLink, onSuccess, onFailure);
         }
 
-        public void ShareFolderLinkAsync(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
+        public void ShareFolderLink(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -95,7 +95,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void ShareFileLinkAsync(string id, SharedLink sharedLink, Action<File> onSuccess, Action onFailure)
+        public void ShareFileLink(string id, SharedLink sharedLink, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -104,19 +104,19 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void MoveAsync(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure)
+        public void Move(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(newParent, "newParent");
-            MoveAsync(folder, newParent.Id, onSuccess, onFailure);
+            Move(folder, newParent.Id, onSuccess, onFailure);
         }
 
-        public void MoveAsync(Folder folder, string newParentId, Action<Folder> onSuccess, Action onFailure)
+        public void Move(Folder folder, string newParentId, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            MoveFolderAsync(folder.Id, newParentId, onSuccess, onFailure);
+            MoveFolder(folder.Id, newParentId, onSuccess, onFailure);
         }
 
-        public void MoveFolderAsync(string id, string newParentId, Action<Folder> onSuccess, Action onFailure)
+        public void MoveFolder(string id, string newParentId, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -125,19 +125,19 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void MoveAsync(File file, Folder newParent, Action<File> onSuccess, Action onFailure)
+        public void Move(File file, Folder newParent, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(newParent, "newParent");
-            MoveAsync(file, newParent.Id, onSuccess, onFailure);
+            Move(file, newParent.Id, onSuccess, onFailure);
         }
 
-        public void MoveAsync(File file, string newParentId, Action<File> onSuccess, Action onFailure)
+        public void Move(File file, string newParentId, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            MoveFileAsync(file.Id, newParentId, onSuccess, onFailure);
+            MoveFile(file.Id, newParentId, onSuccess, onFailure);
         }
 
-        public void MoveFileAsync(string id, string newParentId, Action<File> onSuccess, Action onFailure)
+        public void MoveFile(string id, string newParentId, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -146,19 +146,19 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void RenameAsync(Folder folder, string newName, Action<Folder> onSuccess, Action onFailure)
+        public void Rename(Folder folder, string newName, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            RenameFolderAsync(folder.Id, newName, onSuccess, onFailure);
+            RenameFolder(folder.Id, newName, onSuccess, onFailure);
         }
 
-        public void RenameAsync(File file, string newName, Action<File> onSuccess, Action onFailure)
+        public void Rename(File file, string newName, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            RenameFileAsync(file.Id, newName, onSuccess, onFailure);
+            RenameFile(file.Id, newName, onSuccess, onFailure);
         }
 
-        public void RenameFolderAsync(string id, string newName, Action<Folder> onSuccess, Action onFailure)
+        public void RenameFolder(string id, string newName, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -167,7 +167,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void RenameFileAsync(string id, string newName, Action<File> onSuccess, Action onFailure)
+        public void RenameFile(string id, string newName, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -176,13 +176,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateDescriptionAsync(Folder folder, string description, Action<Folder> onSuccess, Action onFailure)
+        public void UpdateDescription(Folder folder, string description, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
-            UpdateFolderDescriptionAsync(folder.Id, description, onSuccess, onFailure);
+            UpdateFolderDescription(folder.Id, description, onSuccess, onFailure);
         }
 
-        private void UpdateFolderDescriptionAsync(string id, string description, Action<Folder> onSuccess, Action onFailure)
+        private void UpdateFolderDescription(string id, string description, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -190,13 +190,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateDescriptionAsync(File file, string description, Action<File> onSuccess, Action onFailure)
+        public void UpdateDescription(File file, string description, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            UpdateFileDescriptionAsync(file.Id, description, onSuccess, onFailure);
+            UpdateFileDescription(file.Id, description, onSuccess, onFailure);
         }
 
-        public void UpdateFileDescriptionAsync(string id, string description, Action<File> onSuccess, Action onFailure)
+        public void UpdateFileDescription(string id, string description, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -204,7 +204,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateAsync(Folder folder, Action<Folder> onSuccess, Action onFailure)
+        public void Update(Folder folder, Action<Folder> onSuccess, Action onFailure)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
@@ -212,7 +212,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateAsync(File file, Action<File> onSuccess, Action onFailure)
+        public void Update(File file, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
             var request = _requestHelper.Update(Type.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
@@ -226,18 +226,18 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetAsync(File file, Action<File> onSuccess, Action onFailure)
+        public void Get(File file, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            GetFileAsync(file.Id, onSuccess, onFailure);
+            GetFile(file.Id, onSuccess, onFailure);
         }
 
-        public void GetFileAsync(string id, Action<File> onSuccess, Action onFailure)
+        public void GetFile(string id, Action<File> onSuccess, Action onFailure)
         {
-            GetFileAsync(id, 0, onSuccess, onFailure);
+            GetFile(id, 0, onSuccess, onFailure);
         }
 
-        private void GetFileAsync(string id, int attempt, Action<File> onSuccess, Action onFailure)
+        private void GetFile(string id, int attempt, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -250,7 +250,7 @@ namespace BoxApi.V2.SDK
                     {
                         // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
                         Backoff(attempt);
-                        GetFileAsync(id, attempt, onSuccess, onFailure);
+                        GetFile(id, attempt, onSuccess, onFailure);
                     }
                     else
                     {
@@ -261,13 +261,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
-        public void DeleteAsync(File file, Action<IRestResponse> onSuccess, Action onFailure)
+        public void Delete(File file, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            DeleteFileAsync(file.Id, file.Etag, onSuccess, onFailure);
+            DeleteFile(file.Id, file.Etag, onSuccess, onFailure);
         }
 
-        public void DeleteFileAsync(string id, string etag, Action<IRestResponse> onSuccess, Action onFailure)
+        public void DeleteFile(string id, string etag, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(etag, "etag");
@@ -276,13 +276,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void DeleteAsync(Comment comment, Action<IRestResponse> onSuccess, Action onFailure)
+        public void Delete(Comment comment, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(comment, "comment");
-            DeleteCommentAsync(comment.Id, onSuccess, onFailure);
+            DeleteComment(comment.Id, onSuccess, onFailure);
         }
 
-        public void DeleteCommentAsync(string id, Action<IRestResponse> onSuccess, Action onFailure)
+        public void DeleteComment(string id, Action<IRestResponse> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -290,7 +290,7 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void CreateFileAsync(string parentId, string name, Action<File> onSuccess, Action onFailure)
+        public void CreateFile(string parentId, string name, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -303,17 +303,17 @@ namespace BoxApi.V2.SDK
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
 
-            Action<ItemCollection> onSuccessWrapper = items => GetFileAsync(items.Entries.Single().Id, onSuccess, onFailure);
+            Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, onSuccess, onFailure);
             ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
-        public void ReadAsync(File file, Action<byte[]> onSuccess, Action onFailure)
+        public void Read(File file, Action<byte[]> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            ReadAsync(file.Id, onSuccess, onFailure);
+            Read(file.Id, onSuccess, onFailure);
         }
 
-        public void ReadAsync(string id, Action<byte[]> onSuccess, Action onFailure)
+        public void Read(string id, Action<byte[]> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -322,13 +322,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
-        public void WriteAsync(File file, byte[] content, Action<File> onSuccess, Action onFailure)
+        public void Write(File file, byte[] content, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            WriteAsync(file.Id, file.Name, content, onSuccess, onFailure);
+            Write(file.Id, file.Name, content, onSuccess, onFailure);
         }
 
-        public void WriteAsync(string id, string name, byte[] content, Action<File> onSuccess, Action onFailure)
+        public void Write(string id, string name, byte[] content, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(content, "content");
@@ -343,20 +343,20 @@ namespace BoxApi.V2.SDK
             GuardFromNull(onFailure, "onFailure");
         }
 
-        public void CopyAsync(File file, Folder newParent, Action<File> onSuccess, Action onFailure, string newName = null)
+        public void Copy(File file, Folder newParent, Action<File> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
-            CopyFileAsync(file.Id, newParent.Id, onSuccess, onFailure, newName);
+            CopyFile(file.Id, newParent.Id, onSuccess, onFailure, newName);
         }
 
-        public void CopyAsync(File file, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
+        public void Copy(File file, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(file, "file");
-            CopyFileAsync(file.Id, newParentId, onSuccess, onFailure, newName);
+            CopyFile(file.Id, newParentId, onSuccess, onFailure, newName);
         }
 
-        public void CopyFileAsync(string id, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
+        public void CopyFile(string id, string newParentId, Action<File> onSuccess, Action onFailure, string newName = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");

@@ -115,7 +115,6 @@ namespace BoxApi.V2.SDK.Tests
             var newComment = "newComment";
             var comment = Client.AddComment(file, "originalComment");
             comment.Message = newComment;
-
             // Act
             Client.Update(comment, updatedComment =>
                 {
@@ -147,7 +146,7 @@ namespace BoxApi.V2.SDK.Tests
             var comment = Client.AddComment(file, "originalComment");
 
             // Act
-            Client.DeleteAsync(comment, response =>
+            Client.Delete(comment, response =>
                 {
                     var commentCollection = Client.GetComments(file);
                     Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
