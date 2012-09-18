@@ -6,7 +6,7 @@ namespace BoxApi.V2.SDK.Tests
 {
     public class BoxApiTestHarness
     {
-        protected readonly BoxManager Client = new BoxManager(TestCredentials.ApiKey, null, TestCredentials.AuthorizationToken);
+        protected readonly BoxManager Client = new BoxManager(TestCredentials.ApiKey, TestCredentials.AuthorizationToken, null);
         protected const string RootId = "0";
         protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed");};
 
@@ -33,7 +33,7 @@ namespace BoxApi.V2.SDK.Tests
             AssertEntityConstraints(file, "file", expectedName, expectedParentId, expectedId);
         }
 
-        private static void AssertEntityConstraints(HierarchyEntity item, string expectedType, string expectedName, string expectedParentId, string expectedId)
+        private static void AssertEntityConstraints(File item, string expectedType, string expectedName, string expectedParentId, string expectedId)
         {
             Assert.That(item, Is.Not.Null);
             Assert.That(item.Type, Is.EqualTo(expectedType));

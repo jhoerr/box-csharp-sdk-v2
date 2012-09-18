@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using BoxApi.V2.SDK.Model;
 using RestSharp;
+using File = BoxApi.V2.SDK.Model.File;
 using Type = BoxApi.V2.SDK.Model.Type;
 
 namespace BoxApi.V2.SDK
@@ -306,6 +308,19 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             var request = _requestHelper.Read(id);
             return Execute(request).RawBytes;
+        }
+
+        public void Read(File file, Stream output)
+        {
+            GuardFromNull(file, "file");
+            Read(file.Id, output);
+        }
+
+        public void Read(string id, Stream output)
+        {
+            GuardFromNull(id, "id");
+            var buffer = Read(id);
+            output.Write(buffer, 0, buffer.Length);
         }
 
         public File Write(File file, byte[] content)

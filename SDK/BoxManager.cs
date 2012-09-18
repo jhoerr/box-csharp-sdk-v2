@@ -33,8 +33,8 @@ namespace BoxApi.V2.SDK
         /// </summary>
         /// <param name="applicationApiKey"> The unique API key which is assigned to application </param>
         /// <param name="proxy"> Proxy information </param>
-        public BoxManager(string applicationApiKey, IWebProxy proxy) :
-            this(applicationApiKey, proxy, null)
+        public BoxManager(string applicationApiKey, IWebProxy proxy = null) :
+            this(applicationApiKey, null, proxy)
         {
         }
 
@@ -42,12 +42,9 @@ namespace BoxApi.V2.SDK
         ///   Instantiates BoxManager
         /// </summary>
         /// <param name="applicationApiKey"> The unique API key which is assigned to application </param>
-        /// <param name="proxy"> Proxy information </param>
         /// <param name="authorizationToken"> Valid authorization token </param>
-        public BoxManager(
-            string applicationApiKey,
-            IWebProxy proxy,
-            string authorizationToken)
+        /// <param name="proxy"> Proxy information </param>
+        public BoxManager(string applicationApiKey, string authorizationToken, IWebProxy proxy = null)
         {
             _restAuthorizationClient = new RestClient {Proxy = proxy};
             _restAuthorizationClient.ClearHandlers();
@@ -167,7 +164,6 @@ namespace BoxApi.V2.SDK
                 _token = e.auth_token;
 
                 // Set HTTP auth header
-                _http_Authorization_Header = "BoxAuth api_key=" + _apiKey + "&auth_token=" + _token;
             }
 
             getAuthenticationTokenCompleted(response);

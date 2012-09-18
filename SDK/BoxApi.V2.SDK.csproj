@@ -84,7 +84,6 @@
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Entity.cs" />
-    <Compile Include="Model\HierarchyEntity.cs" />
     <Compile Include="Model\ItemCollection.cs" />
     <Compile Include="Model\ModifiableEntity.cs" />
     <Compile Include="Model\Permissions.cs" />

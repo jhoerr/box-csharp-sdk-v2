@@ -17,7 +17,7 @@ namespace BoxApi.V2.Samples
 		/// <param name="applicationApiKey"></param>
 		public BoxAuthLayer(string applicationApiKey, string authToken = null)
 		{
-            _manager = new BoxManager(applicationApiKey, null, authToken);
+            _manager = new BoxManager(applicationApiKey, authToken, null);
 		}
 
 		/// <summary>

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using BoxApi.V2;
+using BoxApi.V2.SDK;
 using BoxApi.V2.SDK.Model;
 
 namespace BoxApi.V2.Samples
@@ -30,111 +33,40 @@ namespace BoxApi.V2.Samples
 
 		private static void ExecuteAPIMethods(User user)
 		{
-           # region Folder API
-            
-            // GET /folders/0
-            _boxAuthLayer._manager.GetFolder("0");
+// Instantiate a BoxManager with your api key and a user's auth token
+var boxManager = new BoxManager("api_key", "auth_token");
 
-            // POST /folders/0
-            var newFolder = _boxAuthLayer._manager.CreateFolder("0", "MyNewFolder");
-		    int id = int.Parse(newFolder.Id);
+// Get all contents of the root folder
+Folder rootFolder = boxManager.GetFolder(Folder.Root);
 
-            // PUT /folders/1234
-//            _boxAuthLayer._manager.UpdateFolder(id, "MyUpdatedFolder");
+// Find a file
+var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
 
-            #endregion
+// Change the file's name and description
+file.Name = "the new name.txt";
+file.Description = "the new description";
 
-            # region Files API
+// Update the file
+// A new file object is always returned with an updated ETag.
+file = boxManager.Update(file);
 
-            /*
-            // GET /files/2026759912
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 0);
+// Create a new subfolder
+Folder subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
 
-            // GET /files/2026759912?version=1
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 1);
+// Move the file to the subfolder
+file = boxManager.Move(file, subfolder);
 
-            // GET /files/2026759912?version=2
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 2);
+// Write some content to the file
+file = boxManager.Write(file, new byte[] {1, 2, 3});
 
-            // POST /files/2026759912/copy
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.CopyFile(2026759912, 0);
+// Read the contents to a stream
+using (var stream = new MemoryStream())
+{
+    boxManager.Read(file, stream);
+}
 
-            // Rename file: PUT /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.RenameFile(2027059362, "newFileName");
-
-            // Update description: PUT /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.UpdateDescription(2027059362, "newDescription");
-
-            // DELETE /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 0);
-
-            // DELETE /files/2027059362/versions/1
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 1);
-
-            // Download a file's data - GET /files/123/data
-            _boxAuthLayer._manager.GetFileData(2027059362, 0);
-
-            // Download a file's data - GET /files/123/versions/1
-            _boxAuthLayer._manager.GetFileData(2027059362, 1);
-             
-            // Upload a new file - POST /files/data
-            string fileData = "test line 1";
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.CreateFile(fileData);
-
-            // Upload a new version of a file - POST /files/1234/data
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.UploadFile(2026759912, fileData);
-            */
-
-            #endregion
-
-            #region Comments API
-            /*
-            // Post a comment - POST /files/2026759912/comments
-            _boxAuthLayer._manager.PostComment(2026759912, "absolutely new comment");
-            
-            // Get all file comments - GET /files/2026759912/comments
-            _boxAuthLayer._manager.GetFileComments(2026759912);
-             
-            // Get a specific comment - GET /comments/8536883
-            _boxAuthLayer._manager.GetComment(8536883);
-
-            // Delete a comment - DELETE /comments/8536883
-            _boxAuthLayer._manager.DeleteComment(8536883);
-            
-            // Update a comment - PUT /comments/8537019
-            _boxAuthLayer._manager.UpdateComment(8537019, "changed the comment!");
-            */
-
-            #endregion
-
-            #region Discussions API
-            /*
-            // Get Discussions for a folder - GET /folders/259009302/discussions
-            _boxAuthLayer._manager.GetDiscussions(259009302);
-
-            // Delete discussion - DELETE /discussions/402617
-            _boxAuthLayer._manager.DeleteDiscussion(402617);
-
-            // Get all comments in discussion - GET /discussions/402603/comments
-            _boxAuthLayer._manager.GetDiscussionComments(402603);
-
-            // Post a comment in discussion - POST /discussions/402603/comments
-            _boxAuthLayer._manager.PostCommentInDiscussion(402603, "great comment!");
-
-            // Update discussion name - PUT /discussions/402603
-            _boxAuthLayer._manager.UpdateDiscussionName(402603, "new discussion name");
-            */
-
-            #endregion
-
-            #region Events API
-            /*
-            // GET /events
-            _boxAuthLayer._manager.GetEvents();
-             */
- 
-            #endregion
-
-        }
+// Delete the file
+boxManager.Delete(file);
+		}
 	}
 }

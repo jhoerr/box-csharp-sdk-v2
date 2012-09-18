@@ -18,7 +18,7 @@ namespace BoxApi.V2.SDK.Model
         /// <summary>
         /// An array of file and folder objects contained in this folder
         /// </summary>
-        public List<File> Entries { get; set; }
+        public List<Folder> Entries { get; set; }
     }
 
     public class ErrorCollection : Collection
