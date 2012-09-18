@@ -11,7 +11,7 @@ namespace BoxApi.V2.SDK.Tests
     public class CommentTestsSync : BoxApiTestHarness
     {
         [Test]
-        public void AddComment()
+        public void Add()
         {
             File file = Client.CreateFile(RootId, TestItemName());
             string message = "the message";
@@ -30,7 +30,7 @@ namespace BoxApi.V2.SDK.Tests
         }
 
         [Test]
-        public void GetComment()
+        public void Get()
         {
             File file = Client.CreateFile(RootId, TestItemName());
             string message = "the message";
@@ -49,7 +49,7 @@ namespace BoxApi.V2.SDK.Tests
         }
 
         [Test]
-        public void GetComments()
+        public void GetAll()
         {
             File file = Client.CreateFile(RootId, TestItemName());
             string firstComment = "first comment";
@@ -62,6 +62,44 @@ namespace BoxApi.V2.SDK.Tests
                 Assert.That(comments.TotalCount, Is.EqualTo("2"));
                 Assert.That(comments.Entries.Any(c => c.Message.Equals(firstComment)), Is.True);
                 Assert.That(comments.Entries.Any(c => c.Message.Equals(secondComment)), Is.True);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void Update()
+        {
+            File file = Client.CreateFile(RootId, TestItemName());
+            string originalComment = "originalComment";
+            string newComment = "newComment";
+            try
+            {
+                var comment = Client.AddComment(file, originalComment);
+                comment.Message = newComment;
+                var updatedComment = Client.Update(comment);
+                Assert.That(updatedComment, Is.Not.Null);
+                Assert.That(updatedComment.Message, Is.EqualTo(newComment));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void Delete()
+        {
+            File file = Client.CreateFile(RootId, TestItemName());
+            string originalComment = "originalComment";
+            try
+            {
+                var comment = Client.AddComment(file, originalComment);
+                Client.Delete(comment);
+                var commentCollection = Client.GetComments(file);
+                Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
             }
             finally
             {

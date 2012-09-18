@@ -219,6 +219,13 @@ namespace BoxApi.V2.SDK
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public void Update(Comment comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(comment, "comment");
+            var request = _requestHelper.Update(Type.Comment, comment.Id, message: comment.Message);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
         public void GetAsync(File file, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
@@ -266,6 +273,20 @@ namespace BoxApi.V2.SDK
             GuardFromNull(etag, "etag");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFile(id, etag);
+            ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void DeleteAsync(Comment comment, Action<IRestResponse> onSuccess, Action onFailure)
+        {
+            GuardFromNull(comment, "comment");
+            DeleteCommentAsync(comment.Id, onSuccess, onFailure);
+        }
+
+        public void DeleteCommentAsync(string id, Action<IRestResponse> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.DeleteComment(id);
             ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -386,6 +407,5 @@ namespace BoxApi.V2.SDK
             var restRequest = _requestHelper.GetComments(Type.File, fileId);
             ExecuteAsync(restRequest, onSuccess, onFailure);
         }
-
     }
 }

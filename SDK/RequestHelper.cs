@@ -50,17 +50,28 @@ namespace BoxApi.V2
 
         public IRestRequest DeleteFolder(string id, bool recursive)
         {
-            var request = JsonRequest(Type.Folder, "{id}", Method.DELETE);
-            request.AddUrlSegment("id", id);
+            var request = GetDeleteRequest(Type.Folder, id);
             request.AddParameter("recursive", recursive.ToString().ToLower());
             return request;
         }
 
         public IRestRequest DeleteFile(string id, string etag)
         {
-            var request = JsonRequest(Type.File, "{id}", Method.DELETE);
-            request.AddUrlSegment("id", id);
+            var request = GetDeleteRequest(Type.File, id);
             request.AddHeader("If-Match", etag ?? string.Empty);
+            return request;
+        }
+
+        public IRestRequest DeleteComment(string id)
+        {
+            var request = GetDeleteRequest(Type.Comment, id);
+            return request;
+        }
+
+        private IRestRequest GetDeleteRequest(Type resourceType, string id)
+        {
+            var request = JsonRequest(resourceType, "{id}", Method.DELETE);
+            request.AddUrlSegment("id", id);
             return request;
         }
 
@@ -72,7 +83,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update(Type resourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null)
+        public IRestRequest Update(Type resourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
         {
             var request = JsonRequest(resourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
@@ -94,6 +105,10 @@ namespace BoxApi.V2
             {
                 body.Add("shared_link", sharedLink);
             }
+            if (!string.IsNullOrEmpty(message))
+            {
+                body.Add("message", message);
+            }
 
             request.AddBody(body);
             return request;
@@ -113,7 +128,6 @@ namespace BoxApi.V2
             request.AddFile("filename", content, name);
             return request;
         }
-
 
         public IRestRequest AddComment(string id, string message)
         {

@@ -246,6 +246,13 @@ namespace BoxApi.V2.SDK
             return Execute<Folder>(request);
         }
 
+        public Comment Update(Comment comment)
+        {
+            GuardFromNull(comment, "comment");
+            var request = _requestHelper.Update(Type.Comment, comment.Id, message:comment.Message);
+            return Execute<Comment>(request);
+        }
+
         public File Get(File file)
         {
             GuardFromNull(file, "file");
@@ -294,6 +301,19 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(etag, "etag");
             var request = _requestHelper.DeleteFile(id, etag);
+            Execute(request);
+        }
+
+        public void Delete(Comment comment)
+        {
+            GuardFromNull(comment, "comment");
+            DeleteComment(comment.Id);
+        }
+
+        private void DeleteComment(string id)
+        {
+            GuardFromNull(id, "id");
+            var request = _requestHelper.DeleteComment(id);
             Execute(request);
         }
 
