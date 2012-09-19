@@ -1,21 +1,29 @@
 using System;
+using System.IO;
+using System.Windows.Forms;
 using BoxApi.V2.SDK.Model;
 using NUnit.Framework;
+using RestSharp;
+using RestSharp.Deserializers;
+using RestSharp.Serializers;
+using File = BoxApi.V2.SDK.Model.File;
 
 namespace BoxApi.V2.SDK.Tests
 {
     public class BoxApiTestHarness
     {
-        protected readonly BoxManager Client = new BoxManager(TestCredentials.ApiKey, TestCredentials.AuthorizationToken, null);
+        protected readonly BoxManager Client = InitBoxManager();
+
+
         protected const string RootId = "0";
-        protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed");};
+        protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed"); };
 
         protected int MaxWaitInSeconds { get; set; }
 
         [SetUp]
         public void Setup()
         {
-            MaxWaitInSeconds = TestCredentials.MaxAsyncWaitInSeconds;
+            MaxWaitInSeconds = 5;
         }
 
         protected static string TestItemName()
@@ -63,5 +71,59 @@ namespace BoxApi.V2.SDK.Tests
             Assert.That(actual.Permissions.Download, Is.True);
             Assert.That(actual.Permissions.Preview, Is.True);
         }
+
+        private static BoxManager InitBoxManager()
+        {
+            TestConfigInfo testConfigInfo;
+            var fi = new FileInfo("..\\..\\test_info.json");
+            if (!fi.Exists)
+            {
+                testConfigInfo = ConfigureTestInfo(fi);
+            }
+            else
+            {
+                string content;
+                using (var stream = fi.OpenText())
+                {
+                    content = stream.ReadToEnd();
+                }
+                try
+                {
+                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse() { Content = content });
+                } 
+                catch(Exception e)
+                {
+                    testConfigInfo = ConfigureTestInfo(fi);
+                }
+
+            }
+            return new BoxManager(testConfigInfo.AppKey, testConfigInfo.AuthKey);
+        }
+
+        private static TestConfigInfo ConfigureTestInfo(FileInfo fi)
+        {
+            TestConfigInfo testConfigInfo;
+            var ui = new TestConfig();
+            ui.ShowDialog();
+            using (var stream = fi.CreateText())
+            {
+                testConfigInfo = new TestConfigInfo()
+                                     {
+                                         AppKey = ui.AppKey,
+                                         AuthKey = ui.AuthKey,
+                                         TestEmail = ui.TestEmail,
+                                     };
+                stream.Write(new JsonSerializer().Serialize(testConfigInfo));
+            }
+            return testConfigInfo;
+        }
+
+        public class TestConfigInfo
+        {
+            public string AppKey { get; set; }
+            public string TestEmail { get; set; }
+            public string AuthKey { get; set; }
+        }
+
     }
 }
