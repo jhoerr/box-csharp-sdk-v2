@@ -5,21 +5,21 @@ using System.Text;
 
 namespace BoxApi.V2.SDK.Model
 {
-    class Token
+    class BoxToken
     {
         /// <summary>
-        /// Type of item.  One of: File, Folder, Comment, Discussion, Event, Token
+        /// Type of item.  One of: File, Folder, Comment, Discussion, Event, BoxToken
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
         /// The items's ID
         /// </summary>
-        public string BoxToken { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
         /// A unique ID for use with the /events endpoint
         /// </summary>
-        public Entity RootFolder { get; set; }
+        public Entity Item { get; set; }
     }
 }
