@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Xml;
+using BoxApi.V2.SDK;
 using System.Text.RegularExpressions;
 using System.Threading;
 using BoxApi.V2.SDK.Model;
@@ -23,10 +26,13 @@ namespace BoxApi.V2.SDK
 
         private readonly boxnetService _service;
         private readonly string _apiKey;
-        private string _token;
+        private string _ticket;
+        private string _authorizationToken;
         private readonly RestClient _restContentClient;
         private readonly RestClient _restAuthorizationClient;
         private readonly RequestHelper _requestHelper;
+        private Entity _rootFolder;
+        private IWebProxy _proxy;
 
         /// <summary>
         ///   Instantiates BoxManager
@@ -46,6 +52,10 @@ namespace BoxApi.V2.SDK
         /// <param name="proxy"> Proxy information </param>
         public BoxManager(string applicationApiKey, string authorizationToken, IWebProxy proxy = null)
         {
+            _apiKey = applicationApiKey;
+            _authorizationToken = authorizationToken;
+            _proxy = proxy;
+
             _restAuthorizationClient = new RestClient {Proxy = proxy};
             _restAuthorizationClient.ClearHandlers();
             _restAuthorizationClient.AddHandler("*", new XmlDeserializer());
@@ -54,212 +64,62 @@ namespace BoxApi.V2.SDK
             _restContentClient.ClearHandlers();
             _restContentClient.AddHandler(JsonMimeType, new JsonDeserializer());
 
-            _requestHelper = new RequestHelper("1.0", "2.0");
+             _requestHelper = new RequestHelper("1.0", "2.0");
         }
 
-        #region GetAuthenticationToken
+        #region V2_Authentication
 
-        /// <summary>
-        ///   Gets authentication token required for communication between Box.NET service and user's application.
-        ///   Method has to be called after the user has authorized themself on Box.NET site
-        /// </summary>
-        /// <param name="authenticationTicket"> Athentication ticket </param>
-        /// <param name="authenticationToken"> Authentication token </param>
-        /// <param name="authenticatedUser"> Authenticated user account information </param>
-        /// <returns> Operation result </returns>
-        public GetAuthenticationTokenStatus GetAuthenticationToken(
-            string authenticationTicket,
-            out string authenticationToken,
-            out User authenticatedUser)
+        public string GetTicket()
         {
-            SOAPUser user;
-
-            var result = _service.get_auth_token(_apiKey, authenticationTicket, out authenticationToken, out user);
-
-            authenticatedUser = user == null ? null : new User(user);
-            _token = authenticationToken;
-
-            return StatusMessageParser.ParseGetAuthenticationTokenStatus(result);
+            return _ticket ?? (_ticket = BoxXmlAuthRequest("https://www.box.com/api/1.0/rest?action=get_ticket&api_key=" + _apiKey, "ticket"));
         }
 
-        /// <summary>
-        ///   Gets authentication token required for communication between Box.NET service and user's application.
-        ///   Method has to be called after the user has authorized themself on Box.NET site
-        /// </summary>
-        /// <param name="authenticationTicket"> Athentication ticket </param>
-        /// <param name="getAuthenticationTokenCompleted"> Call back method which will be invoked when operation completes </param>
-        /// <exception cref="ArgumentNullException">Thrown if
-        ///   <paramref name="getAuthenticationTokenCompleted" />
-        ///   is null</exception>
-        public void GetAuthenticationToken(
-            string authenticationTicket,
-            OperationFinished<GetAuthenticationTokenResponse> getAuthenticationTokenCompleted)
+        public string GetAuthorizationUrl()
         {
-            GetAuthenticationToken(authenticationTicket, getAuthenticationTokenCompleted, null);
+            return "https://www.box.com/api/1.0/auth/" + GetTicket();
         }
 
-        /// <summary>
-        ///   Gets authentication token required for communication between Box.NET service and user's application.
-        ///   Method has to be called after the user has authorized themself on Box.NET site
-        /// </summary>
-        /// <param name="authenticationTicket"> Athentication ticket </param>
-        /// <param name="getAuthenticationTokenCompleted"> Callback method which will be invoked when operation completes </param>
-        /// <param name="userState"> A user-defined object containing state information. This object is passed to the <paramref
-        ///    name="getAuthenticationTokenCompleted" /> delegate as a part of response when the operation is completed </param>
-        /// <exception cref="ArgumentNullException">Thrown if
-        ///   <paramref name="getAuthenticationTokenCompleted" />
-        ///   is null</exception>
-        public void GetAuthenticationToken(
-            string authenticationTicket,
-            OperationFinished<GetAuthenticationTokenResponse> getAuthenticationTokenCompleted,
-            object userState)
+        public string GetAuthorizationToken()
         {
-            // ThrowIfParameterIsNull(getAuthenticationTokenCompleted, "getAuthenticationTokenCompleted");
-
-            _service.get_auth_tokenCompleted += GetAuthenticationTokenFinished;
-
-            object[] state = {getAuthenticationTokenCompleted, userState};
-
-            _service.get_auth_tokenAsync(_apiKey, authenticationTicket, state);
+            return _authorizationToken ?? (_authorizationToken =
+                BoxXmlAuthRequest("https://www.box.com/api/1.0/rest?action=get_auth_token&api_key=" + _apiKey + "&ticket=" + GetTicket(), "auth_token"));
         }
 
-        private void GetAuthenticationTokenFinished(object sender, get_auth_tokenCompletedEventArgs e)
+        public string GetAppAuthTokenForUser(string email)
         {
-            var state = (object[]) e.UserState;
-            Exception error = null;
-
-            var getAuthenticationTokenCompleted =
-                (OperationFinished<GetAuthenticationTokenResponse>) state[0];
-
-            GetAuthenticationTokenStatus status;
-
-            if (e.Error == null)
+            if (_authorizationToken == null)
             {
-                status = StatusMessageParser.ParseGetAuthenticationTokenStatus(e.Result);
-
-                if (status == GetAuthenticationTokenStatus.Unknown)
+                var restRequest = new RestRequest("2.0/tokens", Method.POST) { RequestFormat = DataFormat.Json };
+                restRequest.AddHeader("Authorization", "BoxAuth api_key=" + _apiKey);
+                restRequest.AddBody(new { email });
+                var client = new RestClient(_serviceUrl) { Proxy = _proxy };
+                client.ClearHandlers();
+                client.AddHandler("*", new JsonDeserializer());
+                var restResponse = client.Execute<Token>(restRequest);
+                Error error;
+                if (!WasSuccessful(restResponse, out error))
                 {
-                    error = new Exception(e.Result);
+                    throw new BoxException(error);
                 }
+                _authorizationToken = restResponse.Data.BoxToken;
+                _rootFolder = restResponse.Data.RootFolder;
             }
-            else
-            {
-                status = GetAuthenticationTokenStatus.Failed;
-                error = e.Error;
-            }
-
-            var response = new GetAuthenticationTokenResponse
-                {
-                    Status = status,
-                    UserState = state[1],
-                    Error = error,
-                    AuthenticationToken = string.Empty
-                };
-
-            if (response.Status == GetAuthenticationTokenStatus.Successful)
-            {
-                var authenticatedUser = new User(e.user);
-                response.AuthenticatedUser = authenticatedUser;
-                response.AuthenticationToken = e.auth_token;
-                _token = e.auth_token;
-
-                // Set HTTP auth header
-            }
-
-            getAuthenticationTokenCompleted(response);
+            return _authorizationToken;
         }
 
-        #endregion
-
-        #region GetTicket
-
-        /// <summary>
-        ///   Gets ticket which is used to generate an authentication page 
-        ///   for the user to login
-        /// </summary>
-        /// <param name="authenticationTicket"> Authentication ticket </param>
-        /// <returns> Operation status </returns>
-        public GetTicketStatus GetTicket(out string authenticationTicket)
+        private string BoxXmlAuthRequest(string url, string elementName)
         {
-            var result = _service.get_ticket(_apiKey, out authenticationTicket);
-
-            return StatusMessageParser.ParseGetTicketStatus(result);
-        }
-
-        /// <summary>
-        ///   Gets ticket which is used to generate an authentication page 
-        ///   for the user to login
-        /// </summary>
-        /// <param name="getAuthenticationTicketCompleted"> Call back method which will be invoked when operation completes </param>
-        /// <exception cref="ArgumentException">Thrown if
-        ///   <paramref name="getAuthenticationTicketCompleted" />
-        ///   is
-        ///   <c>null</c>
-        /// </exception>
-        public void GetTicket(OperationFinished<GetTicketResponse> getAuthenticationTicketCompleted)
-        {
-            GetTicket(getAuthenticationTicketCompleted, null);
-        }
-
-        /// <summary>
-        ///   Gets ticket which is used to generate an authentication page 
-        ///   for the user to login
-        /// </summary>
-        /// <param name="getAuthenticationTicketCompleted"> Call back method which will be invoked when operation completes </param>
-        /// <param name="userState"> A user-defined object containing state information. This object is passed to the <paramref
-        ///    name="getAuthenticationTicketCompleted" /> delegate as a part of response when the operation is completed </param>
-        /// <exception cref="ArgumentException">Thrown if
-        ///   <paramref name="getAuthenticationTicketCompleted" />
-        ///   is
-        ///   <c>null</c>
-        /// </exception>
-        public void GetTicket(
-            OperationFinished<GetTicketResponse> getAuthenticationTicketCompleted,
-            object userState)
-        {
-            // ThrowIfParameterIsNull(getAuthenticationTicketCompleted, "getAuthenticationTicketCompleted");
-
-            object[] data = {getAuthenticationTicketCompleted, userState};
-
-            _service.get_ticketCompleted += GetTicketFinished;
-
-            _service.get_ticketAsync(_apiKey, data);
-        }
-
-
-        private void GetTicketFinished(object sender, get_ticketCompletedEventArgs e)
-        {
-            var data = (object[]) e.UserState;
-            var getAuthenticationTicketCompleted = (OperationFinished<GetTicketResponse>) data[0];
-            GetTicketResponse response;
-
-            if (e.Error != null)
+            var req = (HttpWebRequest)WebRequest.Create(url);
+            using (var response = req.GetResponse() as HttpWebResponse)
             {
-                response = new GetTicketResponse
-                    {
-                        Status = GetTicketStatus.Failed,
-                        UserState = data[1],
-                        Error = e.Error
-                    };
+                var reader = new StreamReader(response.GetResponseStream());
+                // Console application output  
+                var doc = new XmlDocument();
+                string resp = reader.ReadToEnd();
+                doc.LoadXml(resp);
+                var node = doc.GetElementsByTagName(elementName).Item(0);
+                return node == null ? null : node.InnerText;
             }
-            else
-            {
-                var status = StatusMessageParser.ParseGetTicketStatus(e.Result);
-
-                var error = status == GetTicketStatus.Unknown
-                                ? new Exception(e.Result)
-                                : null;
-
-                response = new GetTicketResponse
-                    {
-                        Status = status,
-                        Ticket = e.ticket,
-                        UserState = data[1],
-                        Error = error
-                    };
-            }
-
-            getAuthenticationTicketCompleted(response);
         }
 
         #endregion

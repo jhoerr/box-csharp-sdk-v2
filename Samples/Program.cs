@@ -1,11 +1,70 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using BoxApi.V2.SDK;
 using BoxApi.V2.SDK.Model;
 
 namespace BoxApi.V2.Samples
 {
+    internal class ExerciseV2API
+    {
+        //
+        // NOTE - The api_key and auth_token need to be changed from the ones below
+        //
+        private static void Main(string[] args)
+        {
+            var boxManager = new BoxManager("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1", null);
+            var authToken = boxManager.GetAppAuthTokenForUser("carsongross@gmail.com");
+            Console.WriteLine("Auth token : " + authToken);
+        }
+
+        private static void ExecuteAPIMethods(User user)
+        {
+            # region Files API
+
+            /*
+            // GET /files/2026759912
+            _boxAuthLayer._manager.GetFileInfo(2026759912, 0);
+
+            // GET /files/2026759912?version=1
+            _boxAuthLayer._manager.GetFileInfo(2026759912, 1);
+
+            // GET /files/2026759912?version=2
+            _boxAuthLayer._manager.GetFileInfo(2026759912, 2);
+
+            // POST /files/2026759912/copy
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.CopyFile(2026759912, 0);
+
+            // Rename file: PUT /files/2027059362
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.RenameFile(2027059362, "newFileName");
+
+            // Update description: PUT /files/2027059362
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.UpdateDescription(2027059362, "newDescription");
+
+            // DELETE /files/2027059362
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 0);
+
+            // DELETE /files/2027059362/versions/1
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 1);
+
+            // Download a file's data - GET /files/123/data
+            _boxAuthLayer._manager.GetFileData(2027059362, 0);
+
+            // Download a file's data - GET /files/123/versions/1
+            _boxAuthLayer._manager.GetFileData(2027059362, 1);
+             
+            // Upload a new file - POST /files/data
+            string fileData = "test line 1";
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.CreateFile(fileData);
+
+            // Upload a new version of a file - POST /files/1234/data
+            // SERVER-NOT-WORKING _boxAuthLayer._manager.UploadFile(2026759912, fileData);
+            */
+
+            #endregion
+
+            #region Comments API
+            /*
+            // Post a comment - POST /files/2026759912/comments
+            _boxAuthLayer._manager.PostComment(2026759912, "absolutely new comment");
     internal class Program
     {
         private static void Main(string[] args)
@@ -52,6 +111,10 @@ namespace BoxApi.V2.Samples
 
             // Delete the file
             boxManager.Delete(file);
+        }
+    }
+            */
+            #endregion
         }
     }
 }
