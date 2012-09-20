@@ -14,7 +14,6 @@ namespace BoxApi.V2.SDK.Tests
 {
     public partial class TestConfig : Form
     {
-
         public string AppKey { get; private set; }
         public string TestEmail { get; private set; }
         public string AuthKey { get; private set; }
@@ -42,7 +41,7 @@ namespace BoxApi.V2.SDK.Tests
                 return;
             }
             TestEmail = email.Text;
-            var auth = new BoxAuth(appKey.Text);
+            var auth = new BoxAuthenticator(appKey.Text);
             string authUrl = auth.GetAuthorizationUrl();
             OpenUrl(authUrl);
             MessageBox.Show(this, "Please confirm access to the app in the launched browser window");

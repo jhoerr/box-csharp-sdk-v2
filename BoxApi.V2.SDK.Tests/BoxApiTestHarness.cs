@@ -14,7 +14,6 @@ namespace BoxApi.V2.SDK.Tests
     {
         protected readonly BoxManager Client = InitBoxManager();
 
-
         protected const string RootId = "0";
         protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed"); };
 
