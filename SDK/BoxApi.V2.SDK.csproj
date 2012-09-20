@@ -73,15 +73,6 @@
     <Compile Include="BoxManager.Async.cs" />
     <Compile Include="BoxManager.cs" />
     <Compile Include="BoxManager.Sync.cs" />
-    <Compile Include="EventHandlers.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GetAuthenticationTokenResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GetTicketResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Model\BoxAuthToken.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Enums.cs" />
@@ -98,16 +89,8 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserEntity.cs" />
     <Compile Include="RequestHelper.cs" />
-    <Compile Include="ResponseBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Serialization\AttributableJsonSerializer.cs" />
-    <Compile Include="Statuses\AuthenticationStatus.cs" />
-    <Compile Include="Statuses\GetAuthenticationTokenStatus.cs" />
-    <Compile Include="Statuses\GetTicketStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BoxWebRequest.cs" />
-    <Compile Include="StatusMessageParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
