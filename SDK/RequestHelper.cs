@@ -1,21 +1,15 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using BoxApi.V2.SDK.Model;
 using BoxApi.V2.SDK.Serialization;
 using RestSharp;
+using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
     public class RequestHelper
     {
-        private readonly string _authorizationApiVersion;
-        private readonly string _contentApiVersion;
-
-        public RequestHelper(string authorizationApiVersion, string contentApiVersion)
-        {
-            _authorizationApiVersion = authorizationApiVersion;
-            _contentApiVersion = contentApiVersion;
-        }
+        public const string JsonMimeType = "application/json";
 
         public IRestRequest Get(Type resourceType, string id)
         {
@@ -148,9 +142,36 @@ namespace BoxApi.V2
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
             var request = new RestRequest(path, method);
-            request.AddUrlSegment("version", _contentApiVersion);
+            request.AddUrlSegment("version", "2.0");
             request.AddUrlSegment("type", resourceType.Description());
             return request;
+        }
+
+        public bool WasSuccessful(IRestResponse restResponse, out Error error)
+        {
+            error = null;
+            bool success = true;
+            if (restResponse == null)
+            {
+                success = false;
+            }
+
+            else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
+            {
+                success = false;
+                var jsonDeserializer = new JsonDeserializer();
+                error = jsonDeserializer.Deserialize<Error>(restResponse);
+                if (error.Type == null)
+                {
+                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
+                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
+                    {
+                        error = errorCollection.Entries.First();
+                    }
+                }
+            }
+            return success;
+ 
         }
 
         private IRestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
@@ -160,5 +181,6 @@ namespace BoxApi.V2
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
+
     }
 }

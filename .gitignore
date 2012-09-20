@@ -6,3 +6,4 @@ packages
 *.user
 nuget
 *.log
+test_info.json

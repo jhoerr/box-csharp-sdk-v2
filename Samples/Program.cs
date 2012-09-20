@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using BoxApi.V2.SDK;
 using BoxApi.V2.SDK.Model;
+using Microsoft.Win32;
 
 namespace BoxApi.V2.Samples
 {
@@ -11,9 +13,26 @@ namespace BoxApi.V2.Samples
         //
         private static void Main(string[] args)
         {
-            var boxManager = new BoxManager("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1", null);
-            var authToken = boxManager.GetAppAuthTokenForUser("carsongross@gmail.com");
+            TestTicketBasedAuth();
+        }
+
+
+        private static void TestTokenBasedAuth()
+        {
+            var boxAuth = new BoxAuth("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1");
+            var authToken = boxAuth.GetAppAuthTokenForUser("carsongross_test1@gmail.com");
             Console.WriteLine("Auth token : " + authToken);
+        }
+
+        private static void TestTicketBasedAuth()
+        {
+            var boxAuth = new BoxAuth("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1");
+            var authURL = boxAuth.GetAuthorizationUrl();
+            Console.WriteLine("Got ticket " + boxAuth.Ticket);
+            Console.WriteLine("Please accept the token request in the browser and hit enter...");
+            OpenUrl(authURL);
+            Console.ReadLine();
+            Console.WriteLine("Auth token : " + boxAuth.GetAuthorizationToken());
         }
 
         private static void ExecuteAPIMethods(User user)
@@ -115,6 +134,19 @@ namespace BoxApi.V2.Samples
     }
             */
             #endregion
+        }
+
+
+        /// <summary>
+        /// Opens <paramref name="url"/> in a default web browser
+        /// </summary>
+        /// <param name="url">Destination URL</param>
+        public static void OpenUrl(string url)
+        {
+            string key = @"htmlfile\shell\open\command";
+            RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(key, false);
+            string defaultBrowserPath = ((string)registryKey.GetValue(null, null)).Split('"')[1];
+            Process.Start(defaultBrowserPath, url);
         }
     }
 }

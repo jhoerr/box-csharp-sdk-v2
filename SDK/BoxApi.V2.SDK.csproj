@@ -81,6 +81,7 @@
     <Compile Include="GetTicketResponse.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\BoxAuthToken.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\Error.cs" />
@@ -88,7 +89,8 @@
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ItemCollection.cs" />
-    <Compile Include="Model\Token.cs" />
+    <Compile Include="Model\BoxTicket.cs" />
+    <Compile Include="Model\BoxToken.cs" />
     <Compile Include="Model\ModifiableEntity.cs" />
     <Compile Include="Model\Permissions.cs" />
     <Compile Include="Model\SharedLink.cs" />
