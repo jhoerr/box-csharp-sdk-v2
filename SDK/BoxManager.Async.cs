@@ -19,7 +19,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Get(Type.Folder, id);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void GetItems(string id, Action<ItemCollection> onSuccess, Action onFailure)
@@ -27,7 +27,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var folderItems = _requestHelper.GetItems(id);
-            ExecuteAsync(folderItems, onSuccess, onFailure);
+            _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
         public void CreateFolder(string parentId, string name, Action<Folder> onSuccess, Action onFailure)
@@ -36,7 +36,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.CreateFolder(parentId, name);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Delete(Folder folder, bool recursive, Action<IRestResponse> onSuccess, Action onFailure)
@@ -50,7 +50,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFolder(id, recursive);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Copy(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure, string newName = null)
@@ -71,7 +71,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Copy(Type.Folder, id, newParentId, newName);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void ShareLink(Folder folder, SharedLink sharedLink, Action<Folder> onSuccess, Action onFailure)
@@ -92,7 +92,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.Folder, id, sharedLink: sharedLink);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void ShareFileLink(string id, SharedLink sharedLink, Action<File> onSuccess, Action onFailure)
@@ -101,7 +101,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.File, id, sharedLink: sharedLink);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Move(Folder folder, Folder newParent, Action<Folder> onSuccess, Action onFailure)
@@ -122,7 +122,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.Folder, id, newParentId);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Move(File file, Folder newParent, Action<File> onSuccess, Action onFailure)
@@ -143,7 +143,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.File, id, newParentId);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Rename(Folder folder, string newName, Action<Folder> onSuccess, Action onFailure)
@@ -164,7 +164,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.Folder, id, name: newName);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void RenameFile(string id, string newName, Action<File> onSuccess, Action onFailure)
@@ -173,7 +173,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(Type.File, id, name: newName);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void UpdateDescription(Folder folder, string description, Action<Folder> onSuccess, Action onFailure)
@@ -187,7 +187,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
             var request = _requestHelper.Update(Type.Folder, id, description: description);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void UpdateDescription(File file, string description, Action<File> onSuccess, Action onFailure)
@@ -201,7 +201,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
             var request = _requestHelper.Update(Type.File, id, description: description);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Update(Folder folder, Action<Folder> onSuccess, Action onFailure)
@@ -209,21 +209,21 @@ namespace BoxApi.V2.SDK
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
             var request = _requestHelper.Update(Type.Folder, folder.Id, parentId, folder.Name, folder.Description, folder.SharedLink);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Update(File file, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
             var request = _requestHelper.Update(Type.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Update(Comment comment, Action<Comment> onSuccess, Action onFailure)
         {
             GuardFromNull(comment, "comment");
             var request = _requestHelper.Update(Type.Comment, comment.Id, message: comment.Message);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Get(File file, Action<File> onSuccess, Action onFailure)
@@ -258,7 +258,7 @@ namespace BoxApi.V2.SDK
                     }
                 };
 
-            ExecuteAsync(request, onSuccessWrapper, onFailure);
+            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         public void Delete(File file, Action<IRestResponse> onSuccess, Action onFailure)
@@ -273,7 +273,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(etag, "etag");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFile(id, etag);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void Delete(Comment comment, Action<IRestResponse> onSuccess, Action onFailure)
@@ -287,7 +287,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteComment(id);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void CreateFile(string parentId, string name, Action<File> onSuccess, Action onFailure)
@@ -304,7 +304,7 @@ namespace BoxApi.V2.SDK
             // As a result we must wait a bit and then re-fetch the file from the server.
 
             Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, onSuccess, onFailure);
-            ExecuteAsync(request, onSuccessWrapper, onFailure);
+            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         public void Read(File file, Action<byte[]> onSuccess, Action onFailure)
@@ -319,7 +319,7 @@ namespace BoxApi.V2.SDK
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
-            ExecuteAsync(request, onSuccessWrapper, onFailure);
+            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         public void Write(File file, byte[] content, Action<File> onSuccess, Action onFailure)
@@ -334,7 +334,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(content, "content");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Write(id, name, content);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
@@ -362,7 +362,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Copy(Type.File, id, newParentId, newName);
-            ExecuteAsync(request, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         public void AddComment(File file, string comment, Action<Comment> onSuccess, Action onFailure)
@@ -377,7 +377,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(comment, "comment");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var restRequest = _requestHelper.AddComment(fileId, comment);
-            ExecuteAsync(restRequest, onSuccess, onFailure);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
         public void GetComment(Comment comment, Action<Comment> onSuccess, Action onFailure)
@@ -391,7 +391,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(commentId, "commentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var restRequest = _requestHelper.Get(Type.Comment, commentId);
-            ExecuteAsync(restRequest, onSuccess, onFailure);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
         public void GetComments(File file, Action<CommentCollection> onSuccess, Action onFailure)
@@ -405,7 +405,7 @@ namespace BoxApi.V2.SDK
             GuardFromNull(fileId, "fileId");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var restRequest = _requestHelper.GetComments(Type.File, fileId);
-            ExecuteAsync(restRequest, onSuccess, onFailure);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
     }
 }

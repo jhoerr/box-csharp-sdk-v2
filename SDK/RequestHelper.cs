@@ -138,6 +138,23 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetTicket(string apiKey)
+        {
+            var restRequest = new RestRequest("1.0/rest");
+            restRequest.AddParameter("action", "get_ticket");
+            restRequest.AddParameter("api_key", apiKey);
+            return restRequest;
+        }
+
+        public IRestRequest SwapTicketForToken(string apiKey, string ticket)
+        {
+            var restRequest = new RestRequest("1.0/rest");
+            restRequest.AddParameter("action", "get_auth_token");
+            restRequest.AddParameter("api_key", apiKey);
+            restRequest.AddParameter("ticket", ticket);
+            return restRequest;
+        }
+
         private IRestRequest RawRequest(Type resourceType, string resource, Method method = Method.GET)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
@@ -181,6 +198,5 @@ namespace BoxApi.V2
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
-
     }
 }

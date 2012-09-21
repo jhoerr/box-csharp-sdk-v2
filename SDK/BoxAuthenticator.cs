@@ -8,8 +8,8 @@ namespace BoxApi.V2.SDK
 {
     public class BoxAuthenticator
     {
-        private string _serviceUrl = "https://www.box.com/api/";
-        private RequestHelper _requestHelper;
+        private readonly RequestHelper _requestHelper;
+        private readonly BoxRestClient _restClient;
 
         public WebProxy Proxy { get; private set; }
         public string ApiKey { get; private set; }
@@ -23,24 +23,16 @@ namespace BoxApi.V2.SDK
             Ticket = ticket;
             Proxy = proxy;
             _requestHelper = new RequestHelper();
-        } 
+            _restClient = new BoxRestClient(null, proxy);
+        }
 
         public string GetTicket()
         {
             if(Ticket == null)
             {
-                var restRequest = new RestRequest("1.0/rest");
-                restRequest.AddParameter("action", "get_ticket");
-                restRequest.AddParameter("api_key", ApiKey);
-                var client = new RestClient(_serviceUrl) { Proxy = Proxy };
-                client.ClearHandlers();
-                client.AddHandler("*", new XmlDeserializer());
-                var restResponse = client.Execute<BoxTicket>(restRequest);
-                if (!restResponse.Data.Status.Equals("get_ticket_ok"))
-                {
-                    throw new Exception(restResponse.Data.Status); //TODO - BoxException?
-                }
-                Ticket = restResponse.Data.Ticket;         
+                var request = _requestHelper.GetTicket(ApiKey);
+                var ticket = _restClient.ExecuteAndDeserialize<BoxTicket>(request);
+                Ticket = ticket.Ticket;         
             }
             return Ticket ;
         }
@@ -58,19 +50,9 @@ namespace BoxApi.V2.SDK
                 {
                     throw new Exception("You must retrive and approve a ticket before exchanging it for an authorization token");
                 }
-                var restRequest = new RestRequest("1.0/rest");
-                restRequest.AddParameter("action", "get_auth_token");
-                restRequest.AddParameter("api_key", ApiKey);
-                restRequest.AddParameter("ticket", Ticket);
-                var client = new RestClient(_serviceUrl) { Proxy = Proxy };
-                client.ClearHandlers();
-                client.AddHandler("*", new XmlDeserializer());
-                var restResponse = client.Execute<BoxAuthToken>(restRequest);
-                if (!restResponse.Data.Status.Equals("get_auth_token_ok"))
-                {
-                    throw new Exception(restResponse.Data.Status); //TODO - BoxException?
-                }
-                AuthToken = restResponse.Data.AuthToken;
+                var request = _requestHelper.SwapTicketForToken(ApiKey, Ticket);
+                var token = _restClient.ExecuteAndDeserialize<BoxAuthToken>(request);
+                AuthToken = token.AuthToken;
             }
             return AuthToken;
         }
@@ -82,16 +64,8 @@ namespace BoxApi.V2.SDK
                 var restRequest = new RestRequest("2.0/tokens", Method.POST) { RequestFormat = DataFormat.Json };
                 restRequest.AddHeader("Authorization", "BoxAuth api_key=" + ApiKey);
                 restRequest.AddBody(new { email });
-                var client = new RestClient(_serviceUrl) { Proxy = Proxy};
-                client.ClearHandlers();
-                client.AddHandler("*", new JsonDeserializer());
-                var restResponse = client.Execute<BoxToken>(restRequest);
-                Error error;
-                if (!_requestHelper.WasSuccessful(restResponse, out error))
-                {
-                    throw new BoxException(error);
-                }
-                AuthToken = restResponse.Data.Token;
+                var token = _restClient.ExecuteAndDeserialize<BoxToken>(restRequest);
+                AuthToken = token.Token;
             }
             return AuthToken;
         }

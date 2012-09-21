@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxAuthenticator.cs" />
+    <Compile Include="BoxRestClient.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.Async.cs" />

@@ -74,7 +74,7 @@ namespace BoxApi.V2.SDK.Tests
         private static BoxManager InitBoxManager()
         {
             TestConfigInfo testConfigInfo;
-            var fi = new FileInfo("..\\..\\test_info.json");
+            var fi = new FileInfo(@"..\..\test_info.json");
             if (!fi.Exists)
             {
                 testConfigInfo = ConfigureTestInfo(fi);
