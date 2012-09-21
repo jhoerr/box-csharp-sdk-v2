@@ -26,20 +26,18 @@ namespace BoxApi.V2.SDK
             _restClient = new BoxRestClient(null, proxy);
         }
 
-        public string GetTicket()
+        private void SetTicket()
         {
-            if(Ticket == null)
-            {
-                var request = _requestHelper.GetTicket(ApiKey);
-                var ticket = _restClient.ExecuteAndDeserialize<BoxTicket>(request);
-                Ticket = ticket.Ticket;         
-            }
-            return Ticket ;
+            var request = _requestHelper.GetTicket(ApiKey);
+            var boxTicket = _restClient.ExecuteAndDeserialize<BoxTicket>(request);
+            Ticket = boxTicket.Ticket;
         }
 
         public string GetAuthorizationUrl()
         {
-            return "https://www.box.com/api/1.0/auth/" + GetTicket();
+            SetTicket();
+            var request = _requestHelper.AuthorizationUrl(Ticket);
+            return _restClient.BuildUri(request).AbsoluteUri;
         }
 
         public string GetAuthorizationToken()

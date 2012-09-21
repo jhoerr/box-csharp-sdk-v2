@@ -146,6 +146,13 @@ namespace BoxApi.V2
             return restRequest;
         }
 
+        public IRestRequest AuthorizationUrl(string ticket)
+        {
+            var restRequest = new RestRequest("1.0/auth/{ticket}");
+            restRequest.AddUrlSegment("ticket", ticket);
+            return restRequest;
+        }
+
         public IRestRequest SwapTicketForToken(string apiKey, string ticket)
         {
             var restRequest = new RestRequest("1.0/rest");
