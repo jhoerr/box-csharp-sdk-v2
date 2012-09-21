@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using BoxApi.V2.SDK;
 using BoxApi.V2.SDK.Model;
 using Microsoft.Win32;
@@ -35,65 +37,6 @@ namespace BoxApi.V2.Samples
             Console.WriteLine("Auth token : " + boxAuth.GetAuthorizationToken());
         }
 
-        private static void ExecuteAPIMethods(User user)
-        {
-            # region Files API
-
-            /*
-            // GET /files/2026759912
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 0);
-
-            // GET /files/2026759912?version=1
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 1);
-
-            // GET /files/2026759912?version=2
-            _boxAuthLayer._manager.GetFileInfo(2026759912, 2);
-
-            // POST /files/2026759912/copy
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.CopyFile(2026759912, 0);
-
-            // Rename file: PUT /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.RenameFile(2027059362, "newFileName");
-
-            // Update description: PUT /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.UpdateDescription(2027059362, "newDescription");
-
-            // DELETE /files/2027059362
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 0);
-
-            // DELETE /files/2027059362/versions/1
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.DeleteFile(2027059362, 1);
-
-            // Download a file's data - GET /files/123/data
-            _boxAuthLayer._manager.GetFileData(2027059362, 0);
-
-            // Download a file's data - GET /files/123/versions/1
-            _boxAuthLayer._manager.GetFileData(2027059362, 1);
-             
-            // Upload a new file - POST /files/data
-            string fileData = "test line 1";
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.CreateFile(fileData);
-
-            // Upload a new version of a file - POST /files/1234/data
-            // SERVER-NOT-WORKING _boxAuthLayer._manager.UploadFile(2026759912, fileData);
-            */
-
-            #endregion
-
-            #region Comments API
-            /*
-            // Post a comment - POST /files/2026759912/comments
-            _boxAuthLayer._manager.PostComment(2026759912, "absolutely new comment");
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-            const string apiKey = "YOUR_API_KEY";
-            const string authToken = "USER_AUTH_TOKEN";
-            
-            ExecuteAPIMethods(apiKey, authToken);
-        }
-
         private static void ExecuteAPIMethods(string apiKey, string authToken)
         {
             // Instantiate a BoxManager with your api key and a user's auth token
@@ -120,7 +63,7 @@ namespace BoxApi.V2.Samples
             file = boxManager.Move(file, subfolder);
 
             // Write some content to the file
-            file = boxManager.Write(file, new byte[] {1, 2, 3});
+            file = boxManager.Write(file, new byte[] { 1, 2, 3 });
 
             // Read the contents to a stream
             using (var stream = new MemoryStream())
@@ -131,11 +74,6 @@ namespace BoxApi.V2.Samples
             // Delete the file
             boxManager.Delete(file);
         }
-    }
-            */
-            #endregion
-        }
-
 
         /// <summary>
         /// Opens <paramref name="url"/> in a default web browser
