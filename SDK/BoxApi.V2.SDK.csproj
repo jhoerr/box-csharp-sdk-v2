@@ -8,8 +8,8 @@
     <ProjectGuid>{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoxApi.V2.SDK</RootNamespace>
-    <AssemblyName>BoxApi.V2.SDK</AssemblyName>
+    <RootNamespace>BoxApi.V2</RootNamespace>
+    <AssemblyName>BoxApi.V2</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
@@ -30,7 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\BoxApi.V2.SDK.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\BoxApi.V2.xml</DocumentationFile>
     <LangVersion>default</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
@@ -41,7 +41,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\BoxApi.V2.SDK.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\BoxApi.V2.xml</DocumentationFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>

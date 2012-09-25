@@ -3,14 +3,17 @@
   <metadata>
     <id>Box.v2.SDK</id>
     <title>Box.com SDK (API v2)</title>
-    <version>0.1</version>
+    <version>0.2</version>
     <authors>John Hoerr, Carson Gross, Box</authors>
     <owners>John Hoerr, Carson Gross, Box</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A client SDK for the Box.com API (v2).  (http://developers.box.com/docs/)</description>
-    <releaseNotes>b1: File/Folder resources supported. Authorization support is forthcoming, so you will need to provide an authorization token along with your API key.</releaseNotes>
+    <releaseNotes>
+	    b2:* Can now generate authorization tickets (and user redirect URLs), and swap that ticket for an authorization token.
+	       * Coment resources supported.
+	    b1: File/Folder resources supported. Authorization support is forthcoming, so you will need to provide an authorization token along with your API key.</releaseNotes>
     <copyright>Copyright 2012 John Hoerr, Carson Gross, The Trustees of Indiana University (www.iu.edu)</copyright>
     <tags>Box Box.com</tags>
     <dependencies>

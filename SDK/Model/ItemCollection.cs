@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     public class Collection<T> where T: class, new()
     {

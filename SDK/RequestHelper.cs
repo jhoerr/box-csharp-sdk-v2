@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using BoxApi.V2.SDK.Model;
-using BoxApi.V2.SDK.Serialization;
+using BoxApi.V2.Model;
+using BoxApi.V2.Serialization;
 using RestSharp;
 using RestSharp.Deserializers;
 
@@ -11,24 +11,24 @@ namespace BoxApi.V2
     {
         public const string JsonMimeType = "application/json";
 
-        public IRestRequest Get(Type resourceType, string id)
+        public IRestRequest Get(ResourceType resourceResourceType, string id)
         {
 
-            var request = JsonRequest(resourceType, "{id}");
+            var request = JsonRequest(resourceResourceType, "{id}");
             request.AddUrlSegment("id", id);
             return request;
         }
 
         public IRestRequest GetItems(string id)
         {
-            var request = JsonRequest(Type.Folder, "{id}/items");
+            var request = JsonRequest(ResourceType.Folder, "{id}/items");
             request.AddUrlSegment("id", id);
             return request;
         }
 
         public IRestRequest CreateFolder(string parentId, string name)
         {
-            var request = JsonRequest(Type.Folder, "{parentId}", Method.POST);
+            var request = JsonRequest(ResourceType.Folder, "{parentId}", Method.POST);
             request.AddUrlSegment("parentId", parentId);
             request.AddBody(new {name});
             return request;
@@ -36,7 +36,7 @@ namespace BoxApi.V2
 
         public IRestRequest CreateFile(string parentId, string name, byte[] content)
         {
-            var request = JsonRequest(Type.File, "data", Method.POST);
+            var request = JsonRequest(ResourceType.File, "data", Method.POST);
             request.AddFile("filename1", content, name);
             request.AddParameter("folder_id", parentId);
             return request;
@@ -44,42 +44,42 @@ namespace BoxApi.V2
 
         public IRestRequest DeleteFolder(string id, bool recursive)
         {
-            var request = GetDeleteRequest(Type.Folder, id);
+            var request = GetDeleteRequest(ResourceType.Folder, id);
             request.AddParameter("recursive", recursive.ToString().ToLower());
             return request;
         }
 
         public IRestRequest DeleteFile(string id, string etag)
         {
-            var request = GetDeleteRequest(Type.File, id);
+            var request = GetDeleteRequest(ResourceType.File, id);
             request.AddHeader("If-Match", etag ?? string.Empty);
             return request;
         }
 
         public IRestRequest DeleteComment(string id)
         {
-            var request = GetDeleteRequest(Type.Comment, id);
+            var request = GetDeleteRequest(ResourceType.Comment, id);
             return request;
         }
 
-        private IRestRequest GetDeleteRequest(Type resourceType, string id)
+        private IRestRequest GetDeleteRequest(ResourceType resourceResourceType, string id)
         {
-            var request = JsonRequest(resourceType, "{id}", Method.DELETE);
+            var request = JsonRequest(resourceResourceType, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public IRestRequest Copy(Type resourceType, string id, string newParentId, string name)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name)
         {
-            var request = JsonRequest(resourceType, "{id}/copy", Method.POST);
+            var request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddBody(new {parent = new {id = newParentId}, name});
             return request;
         }
 
-        public IRestRequest Update(Type resourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
+        public IRestRequest Update(ResourceType resourceResourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
         {
-            var request = JsonRequest(resourceType, "{id}", Method.PUT);
+            var request = JsonRequest(resourceResourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
             var body = new Dictionary<string, object>();
 
@@ -110,14 +110,14 @@ namespace BoxApi.V2
 
         public IRestRequest Read(string id)
         {
-            var request = RawRequest(Type.File, "{id}/data");
+            var request = RawRequest(ResourceType.File, "{id}/data");
             request.AddUrlSegment("id", id);
             return request;
         }
 
         public IRestRequest Write(string id, string name, byte[] content)
         {
-            var request = JsonRequest(Type.File, "{id}/data", Method.POST);
+            var request = JsonRequest(ResourceType.File, "{id}/data", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddFile("filename", content, name);
             return request;
@@ -125,15 +125,15 @@ namespace BoxApi.V2
 
         public IRestRequest AddComment(string id, string message)
         {
-            var request = JsonRequest(Type.File, "{id}/comments", Method.POST);
+            var request = JsonRequest(ResourceType.File, "{id}/comments", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddBody(new {message});
             return request;
         }
 
-        public IRestRequest GetComments(Type resourceType, string id)
+        public IRestRequest GetComments(ResourceType resourceResourceType, string id)
         {
-            var request = JsonRequest(resourceType, "{id}/comments");
+            var request = JsonRequest(resourceResourceType, "{id}/comments");
             request.AddUrlSegment("id", id);
             return request;
         }
@@ -162,12 +162,12 @@ namespace BoxApi.V2
             return restRequest;
         }
 
-        private IRestRequest RawRequest(Type resourceType, string resource, Method method = Method.GET)
+        private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
             var request = new RestRequest(path, method);
             request.AddUrlSegment("version", "2.0");
-            request.AddUrlSegment("type", resourceType.Description());
+            request.AddUrlSegment("type", resourceResourceType.Description());
             return request;
         }
 
@@ -198,9 +198,9 @@ namespace BoxApi.V2
  
         }
 
-        private IRestRequest JsonRequest(Type resourceType, string resource = null, Method method = Method.GET)
+        private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource = null, Method method = Method.GET)
         {
-            var request = RawRequest(resourceType, resource, method);
+            var request = RawRequest(resourceResourceType, resource, method);
             request.RequestFormat = DataFormat.Json;
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;

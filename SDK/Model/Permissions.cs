@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     /// <summary>
     /// The set of permissions that apply to a SharedLink

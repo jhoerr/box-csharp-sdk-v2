@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class File : ModifiableEntity

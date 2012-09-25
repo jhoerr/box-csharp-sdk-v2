@@ -1,4 +1,4 @@
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     /// <summary>
     ///   Represents Box.NET user entity

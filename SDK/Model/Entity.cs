@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     public class Entity
     {

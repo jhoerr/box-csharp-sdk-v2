@@ -1,14 +1,15 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using BoxApi.V2.SDK.Model;
+using BoxApi.V2;
+using BoxApi.V2.Model;
 using NUnit.Framework;
 using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serializers;
-using File = BoxApi.V2.SDK.Model.File;
+using File = BoxApi.V2.Model.File;
 
-namespace BoxApi.V2.SDK.Tests
+namespace BoxApi.V2.Tests
 {
     public class BoxApiTestHarness
     {

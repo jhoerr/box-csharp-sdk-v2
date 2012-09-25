@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using BoxApi.V2.SDK.Model;
+using BoxApi.V2.Model;
 using NUnit.Framework;
 
-namespace BoxApi.V2.SDK.Tests
+namespace BoxApi.V2.Tests
 {
     [TestFixture]
     public class FileTestsAsync : BoxApiTestHarness

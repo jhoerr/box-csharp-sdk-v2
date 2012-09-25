@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using NUnit.Framework;
 
-namespace BoxApi.V2.SDK.Tests
+namespace BoxApi.V2.Tests
 {
     [TestFixture]
     public class CommentTestsAsync : BoxApiTestHarness

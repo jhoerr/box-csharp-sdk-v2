@@ -7,10 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using BoxApi.V2;
 using Microsoft.Win32;
 using RestSharp.Serializers;
 
-namespace BoxApi.V2.SDK.Tests
+namespace BoxApi.V2.Tests
 {
     public partial class TestConfig : Form
     {

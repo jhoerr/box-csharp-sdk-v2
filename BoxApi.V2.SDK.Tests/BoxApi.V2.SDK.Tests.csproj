@@ -7,8 +7,8 @@
     <ProjectGuid>{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BoxApi.V2.SDK.Tests</RootNamespace>
-    <AssemblyName>BoxApi.V2.SDK.Tests</AssemblyName>
+    <RootNamespace>BoxApi.V2.Tests</RootNamespace>
+    <AssemblyName>BoxApi.V2.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>

@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     public enum Access
     {
@@ -10,7 +10,7 @@ namespace BoxApi.V2.SDK.Model
         Collaborators,
     }
 
-    public enum Type
+    public enum ResourceType
     {
         [Description("files")] File,
         [Description("folders")] Folder,

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Folder : File
@@ -16,8 +16,20 @@ namespace BoxApi.V2.SDK.Model
         [JsonProperty(PropertyName = "item_collection")]
         public ItemCollection ItemCollection { get; set; }
 
-        public IEnumerable<File> Files { get { return ItemCollection.Entries.Where(i => i.Type.Equals("file")).Cast<File>(); } }
-        public IEnumerable<Folder> Folders { get { return ItemCollection.Entries.Where(i => i.Type.Equals("file")); } }
+        public IEnumerable<File> Files
+        {
+            get { return FromEntriesGetAll(Model.ResourceType.File.Description()); }
+        }
+
+        public IEnumerable<Folder> Folders
+        {
+            get { return FromEntriesGetAll(Model.ResourceType.Folder.Description()); }
+        }
+
+        private IEnumerable<Folder> FromEntriesGetAll(string value)
+        {
+            return ItemCollection.Entries.Where(i => i.Type.Equals(value));
+        }
 
         public override string ToString()
         {
@@ -27,7 +39,7 @@ namespace BoxApi.V2.SDK.Model
 
             if (ItemCollection != null)
             {
-                foreach (Entity item in ItemCollection.Entries)
+                foreach (var item in ItemCollection.Entries)
                 {
                     if (item != null)
                     {

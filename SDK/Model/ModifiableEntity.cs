@@ -1,6 +1,6 @@
 using System;
 
-namespace BoxApi.V2.SDK.Model
+namespace BoxApi.V2.Model
 {
     public class ModifiableEntity : Entity
     {

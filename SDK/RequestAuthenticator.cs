@@ -1,6 +1,6 @@
 using RestSharp;
 
-namespace BoxApi.V2.SDK
+namespace BoxApi.V2
 {
     public class RequestAuthenticator : IAuthenticator
     {

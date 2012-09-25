@@ -1,4 +1,4 @@
-﻿namespace BoxApi.V2.SDK.Tests
+﻿namespace BoxApi.V2.Tests
 {
     partial class TestConfig
     {

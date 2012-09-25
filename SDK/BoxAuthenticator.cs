@@ -1,10 +1,10 @@
 using System;
 using System.Net;
-using BoxApi.V2.SDK.Model;
+using BoxApi.V2.Model;
 using RestSharp;
 using RestSharp.Deserializers;
 
-namespace BoxApi.V2.SDK
+namespace BoxApi.V2
 {
     public class BoxAuthenticator
     {

@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using BoxApi.V2.SDK;
-using BoxApi.V2.SDK.Model;
+using BoxApi.V2;
+using BoxApi.V2.Model;
 using Microsoft.Win32;
 
 namespace BoxApi.V2.Samples
 {
-    internal class ExerciseV2API
+    public class Program
     {
         //
         // NOTE - The api_key and auth_token need to be changed from the ones below

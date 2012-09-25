@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using RestSharp.Serializers;
 
-namespace BoxApi.V2.SDK.Serialization
+namespace BoxApi.V2.Serialization
 {
     /// <summary>
     /// Default JSON serializer for request bodies
