@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.SDK", "SDK\BoxApi.V2.SDK.csproj", "{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2", "BoxApi.V2\BoxApi.V2.csproj", "{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.Samples", "Samples\BoxApi.V2.Samples.csproj", "{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.Samples", "BoxApi.V2.Samples\BoxApi.V2.Samples.csproj", "{A46101FE-13CB-4F5E-BD85-0C4C705C8C45}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{78E2F2AB-C5EB-4F47-885C-385142FB1F25}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{78E2F2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.SDK.Tests", "BoxApi.V2.SDK.Tests\BoxApi.V2.SDK.Tests.csproj", "{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxApi.V2.Tests", "BoxApi.V2.Tests\BoxApi.V2.Tests.csproj", "{7CFAE3ED-6C57-4002-8FA6-56467FDFA2C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

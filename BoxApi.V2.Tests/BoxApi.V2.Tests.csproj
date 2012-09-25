@@ -69,9 +69,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SDK\BoxApi.V2.SDK.csproj">
+    <ProjectReference Include="..\BoxApi.V2\BoxApi.V2.csproj">
       <Project>{FC868A3E-DDC5-43D2-85AA-A27FEC79B251}</Project>
-      <Name>BoxApi.V2.SDK</Name>
+      <Name>BoxApi.V2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -92,7 +92,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SDK\BoxApi.V2.SDK.csproj">
+    <ProjectReference Include="..\BoxApi.V2\BoxApi.V2.csproj">
       <Project>{fc868a3e-ddc5-43d2-85aa-a27fec79b251}</Project>
       <Name>BoxApi.V2.SDK</Name>
     </ProjectReference>
