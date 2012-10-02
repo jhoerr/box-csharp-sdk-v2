@@ -341,9 +341,20 @@ namespace BoxApi.V2
             output.Write(buffer, 0, buffer.Length);
         }
 
+        public Model.File Write(Model.File file, Stream content)
+        {
+            return Write(file, ReadFully(content));
+        }
+
         public Model.File Write(Model.File file, byte[] content)
         {
+            GuardFromNull(file, "file");
             return Write(file.Id, file.Name, file.Etag, content);
+        }
+
+        public Model.File Write(string id, string name, string etag, Stream content)
+        {
+            return Write(id, name, etag, ReadFully(content));
         }
 
         public Model.File Write(string id, string name, string etag, byte[] content)

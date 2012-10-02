@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using BoxApi.V2.Model;
 using RestSharp;
+using File = BoxApi.V2.Model.File;
 
 namespace BoxApi.V2
 {
@@ -342,10 +344,22 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
+        public void Write(File file, Stream content, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(file, "file");
+            Write(file, ReadFully(content), onSuccess, onFailure);
+        }
+
         public void Write(File file, byte[] content, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
             Write(file.Id, file.Name, file.Etag, content, onSuccess, onFailure);
+        }
+
+        public void Write(string id, string name, string etag, Stream content, Action<File> onSuccess, Action onFailure)
+        {
+            GuardFromNull(content, "content");
+            Write(id, name, etag, ReadFully(content), onSuccess, onFailure);
         }
 
         public void Write(string id, string name, string etag, byte[] content, Action<File> onSuccess, Action onFailure)
@@ -356,6 +370,8 @@ namespace BoxApi.V2
             var request = _requestHelper.Write(id, name, etag, content);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
+
+    
 
         private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
         {

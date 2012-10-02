@@ -1,16 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
-using BoxApi.V2.Model;
-using RestSharp;
-using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
     /// <summary>
     ///   Provides methods for using Box.NET SOAP web service
     /// </summary>
-    public partial class BoxManager  
+    public partial class BoxManager
     {
         private readonly BoxRestClient _restClient;
         private readonly RequestHelper _requestHelper;
@@ -37,7 +35,21 @@ namespace BoxApi.V2
 
         private static void Backoff(int attempt)
         {
-            Thread.Sleep((int)Math.Pow(2, attempt) * 100);
+            Thread.Sleep((int) Math.Pow(2, attempt)*100);
+        }
+
+        private static byte[] ReadFully(Stream input)
+        {
+            var buffer = new byte[16*1024];
+            using (var ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }

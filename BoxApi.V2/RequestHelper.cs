@@ -8,8 +8,6 @@ namespace BoxApi.V2
 {
     public class RequestHelper
     {
-        public const string JsonMimeType = "application/json";
-
         public IRestRequest Get(ResourceType resourceResourceType, string id)
         {
             var request = JsonRequest(resourceResourceType, "{id}");
