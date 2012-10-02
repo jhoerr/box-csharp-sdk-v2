@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BoxApi.V2.Samples.ExerciseV2API")]
+[assembly: AssemblyTitle("BoxApi.V2.Samples")]
 [assembly: AssemblyDescription("Sample application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("BoxApi.V2.Samples.ExerciseV2API")]
+[assembly: AssemblyProduct("BoxApi.V2.Samples")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

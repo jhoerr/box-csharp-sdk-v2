@@ -6,9 +6,9 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BoxApi.V2.SDK")]
-[assembly: AssemblyDescription("BoxApi.V2.SDK is a .NET library for accessing the V2 version of the BoxAPI")]
-[assembly: AssemblyProduct("BoxApi.V2.SDK")]
+[assembly: AssemblyTitle("BoxApi.V2")]
+[assembly: AssemblyDescription("BoxApi.V2 is a .NET library for accessing the V2 version of the BoxAPI")]
+[assembly: AssemblyProduct("BoxApi.V2")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
