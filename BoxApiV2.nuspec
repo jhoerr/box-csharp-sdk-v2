@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A client for the Box.com API (v2).  (http://developers.box.com/docs/)</description>
     <releaseNotes>
+	    0.5: Updated for recent API changes
 	    0.4: Fixing namespaces
 	    0.3: Now supports 'fields' when getting folder items; Bug fixes
 	    0.2: Authorization workflow and Comment resource support
