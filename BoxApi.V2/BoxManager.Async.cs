@@ -21,11 +21,32 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public void GetItems(Folder folder, Field[] fields, Action<ItemCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            GetItems(folder.Id, fields, onSuccess, onFailure);
+        }
+
+        public void GetItems(string id, Field[] fields, Action<ItemCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(fields, "fields");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var folderItems = _requestHelper.GetItems(id, fields);
+            _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
+        }
+
+        public void GetItems(Folder folder, Action<ItemCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            GetItems(folder.Id, onSuccess, onFailure);
+        }
+
         public void GetItems(string id, Action<ItemCollection> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var folderItems = _requestHelper.GetItems(id);
+            var folderItems = _requestHelper.GetItems(id, null);
             _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,16 +24,16 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public ItemCollection GetItems(Folder folder)
+        public ItemCollection GetItems(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return GetItems(folder.Id);
+            return GetItems(folder.Id, fields);
         }
 
-        public ItemCollection GetItems(string id)
+        public ItemCollection GetItems(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.GetItems(id);
+            var request = _requestHelper.GetItems(id, fields);
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
         }
 

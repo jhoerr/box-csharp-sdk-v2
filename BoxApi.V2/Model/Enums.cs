@@ -21,6 +21,24 @@ namespace BoxApi.V2.Model
         [Description("error")] Error,
     }
 
+    public enum Field
+    {
+        [Description("created_at")] CreatedAt,
+        [Description("created_by")] CreatedBy,
+        [Description("description")] Description,
+        [Description("etag")] Etag,
+        [Description("modified_at")] ModifiedAt,
+        [Description("modified_bu")] ModifiedBy,
+        [Description("name")] Name,
+        [Description("owned_by")] OwnedBy,
+        [Description("parent")] Parent,
+        [Description("path")] Path,
+        [Description("path_id")] PathId,
+        [Description("sequence_id")] SequenceId,
+        [Description("shared_link")] SharedLink,
+        [Description("size")] Size,
+    }
+
     public static class EnumExtensions
     {
         public static string Name(this Enum value)

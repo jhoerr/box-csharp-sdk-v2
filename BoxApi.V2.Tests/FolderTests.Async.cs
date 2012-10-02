@@ -112,7 +112,7 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                Client.GetFolder(folder.Id);
+                Client.Get(folder);
                 Assert.Fail("Should not be able to fetch the deleted folder.");
             }
             catch (BoxException e)

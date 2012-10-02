@@ -19,10 +19,15 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetItems(string id)
+        public IRestRequest GetItems(string id, Field[] fields)
         {
             var request = JsonRequest(ResourceType.Folder, "{id}/items");
             request.AddUrlSegment("id", id);
+            if (fields != null && fields.Any())
+            {
+                var fieldList = string.Join(",", fields.Select(f => f.Description()));
+                request.AddParameter("fields", fieldList);
+            }
             return request;
         }
 
