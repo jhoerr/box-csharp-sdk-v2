@@ -345,15 +345,15 @@ namespace BoxApi.V2
         public void Write(File file, byte[] content, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            Write(file.Id, file.Name, content, onSuccess, onFailure);
+            Write(file.Id, file.Name, file.Etag, content, onSuccess, onFailure);
         }
 
-        public void Write(string id, string name, byte[] content, Action<File> onSuccess, Action onFailure)
+        public void Write(string id, string name, string etag, byte[] content, Action<File> onSuccess, Action onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(content, "content");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Write(id, name, content);
+            var request = _requestHelper.Write(id, name, etag, content);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

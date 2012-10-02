@@ -162,6 +162,8 @@ namespace BoxApi.V2.Tests
             var copyName = TestItemName();
             var copy = Client.Copy(folder, RootId, copyName);
             Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
+            Client.Delete(folder);
+            Client.Delete(copy);
         }
 
         [Test, ExpectedException(typeof (BoxException))]

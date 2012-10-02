@@ -39,7 +39,7 @@ namespace BoxApi.V2
 
         public Folder CreateFolder(string parentId, string name)
         {
-            GuardFromNull(parentId, "parentFolderId");
+            GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
             var request = _requestHelper.CreateFolder(parentId, name);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
@@ -343,13 +343,15 @@ namespace BoxApi.V2
 
         public Model.File Write(Model.File file, byte[] content)
         {
-            return Write(file.Id, file.Name, content);
+            return Write(file.Id, file.Name, file.Etag, content);
         }
 
-        public Model.File Write(string id, string name, byte[] content)
+        public Model.File Write(string id, string name, string etag, byte[] content)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Write(id, name, content);
+            GuardFromNull(name, "name");
+            GuardFromNull(etag, "etag");
+            var request = _requestHelper.Write(id, name, etag, content);
             return WriteFile(request);
         }
 

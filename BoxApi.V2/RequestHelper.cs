@@ -3,7 +3,6 @@ using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Serialization;
 using RestSharp;
-using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
@@ -13,7 +12,6 @@ namespace BoxApi.V2
 
         public IRestRequest Get(ResourceType resourceResourceType, string id)
         {
-
             var request = JsonRequest(resourceResourceType, "{id}");
             request.AddUrlSegment("id", id);
             return request;
@@ -33,9 +31,8 @@ namespace BoxApi.V2
 
         public IRestRequest CreateFolder(string parentId, string name)
         {
-            var request = JsonRequest(ResourceType.Folder, "{parentId}", Method.POST);
-            request.AddUrlSegment("parentId", parentId);
-            request.AddBody(new {name});
+            var request = JsonRequest(ResourceType.Folder, null, Method.POST);
+            request.AddBody(new {name, parent = new {id = parentId}});
             return request;
         }
 
@@ -82,7 +79,8 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update(ResourceType resourceResourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
+        public IRestRequest Update(ResourceType resourceResourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null,
+                                   string message = null)
         {
             var request = JsonRequest(resourceResourceType, "{id}", Method.PUT);
             request.AddUrlSegment("id", id);
@@ -90,7 +88,7 @@ namespace BoxApi.V2
 
             if (!string.IsNullOrEmpty(parentId))
             {
-                body.Add("parent", new{id = parentId});
+                body.Add("parent", new {id = parentId});
             }
             if (!string.IsNullOrEmpty(name))
             {
@@ -120,11 +118,13 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Write(string id, string name, byte[] content)
+        public IRestRequest Write(string id, string name, string etag, byte[] content)
         {
             var request = JsonRequest(ResourceType.File, "{id}/data", Method.POST);
             request.AddUrlSegment("id", id);
+            request.AddHeader("If-Match", etag ?? string.Empty);
             request.AddFile("filename", content, name);
+
             return request;
         }
 
@@ -169,38 +169,11 @@ namespace BoxApi.V2
 
         private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET)
         {
-            string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
+            var path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
             var request = new RestRequest(path, method);
             request.AddUrlSegment("version", "2.0");
             request.AddUrlSegment("type", resourceResourceType.Description());
             return request;
-        }
-
-        public bool WasSuccessful(IRestResponse restResponse, out Error error)
-        {
-            error = null;
-            bool success = true;
-            if (restResponse == null)
-            {
-                success = false;
-            }
-
-            else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
-            {
-                success = false;
-                var jsonDeserializer = new JsonDeserializer();
-                error = jsonDeserializer.Deserialize<Error>(restResponse);
-                if (error.Type == null)
-                {
-                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
-                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
-                    {
-                        error = errorCollection.Entries.First();
-                    }
-                }
-            }
-            return success;
- 
         }
 
         private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource = null, Method method = Method.GET)
