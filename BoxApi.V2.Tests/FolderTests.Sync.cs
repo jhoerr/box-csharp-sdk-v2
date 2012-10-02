@@ -218,14 +218,20 @@ namespace BoxApi.V2.Tests
             Client.Delete(targetFolder, true);
         }
 
-        [Test, Ignore("This fails, but probably shouldn't.  http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
+        [Test, Description("This fails, but eventually won't.  See http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
         public void MoveFolderToSameParent()
         {
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
-            var moved = Client.Move(folder, RootId);
-            AssertFolderConstraints(moved, folderName, RootId, folder.Id);
-            Client.DeleteFolder(folder.Id, true);
+            try
+            {
+                var moved = Client.Move(folder, RootId);
+                AssertFolderConstraints(moved, folderName, RootId, folder.Id);
+            }
+            finally 
+            {
+                Client.DeleteFolder(folder.Id, true);
+            }
         }
 
         [Test]
