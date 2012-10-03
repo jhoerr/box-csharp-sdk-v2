@@ -412,7 +412,7 @@ namespace BoxApi.V2
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var restRequest = _requestHelper.AddComment(fileId, comment);
+            var restRequest = _requestHelper.CreateComment(fileId, comment);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 

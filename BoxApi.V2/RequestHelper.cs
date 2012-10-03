@@ -62,6 +62,12 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest DeleteDiscussion(string id)
+        {
+            var request = GetDeleteRequest(ResourceType.Discussion, id);
+            return request;
+        }
+
         private IRestRequest GetDeleteRequest(ResourceType resourceResourceType, string id)
         {
             var request = JsonRequest(resourceResourceType, "{id}", Method.DELETE);
@@ -126,7 +132,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest AddComment(string id, string message)
+        public IRestRequest CreateComment(string id, string message)
         {
             var request = JsonRequest(ResourceType.File, "{id}/comments", Method.POST);
             request.AddUrlSegment("id", id);
@@ -138,6 +144,13 @@ namespace BoxApi.V2
         {
             var request = JsonRequest(resourceResourceType, "{id}/comments");
             request.AddUrlSegment("id", id);
+            return request;
+        }
+
+        public IRestRequest CreateDiscussion(string parentId, string name, string description)
+        {
+            var request = JsonRequest(ResourceType.Discussion, null, Method.POST);
+            request.AddBody(new { parent = new { id = parentId }, name, description });
             return request;
         }
 

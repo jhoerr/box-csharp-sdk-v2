@@ -389,7 +389,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
-            IRestRequest restRequest = _requestHelper.AddComment(fileId, comment);
+            IRestRequest restRequest = _requestHelper.CreateComment(fileId, comment);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
@@ -417,6 +417,40 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             IRestRequest restRequest = _requestHelper.Get(ResourceType.Comment, id);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
+        }
+
+        public Discussion CreateDiscussion(Folder parent, string name, string description = null)
+        {
+            GuardFromNull(parent, "parent");
+            return CreateDiscussion(parent.Id, name, description);
+        }
+
+        public Discussion CreateDiscussion(string parentId, string name, string description = null)
+        {
+            GuardFromNull(parentId, "parentId");
+            GuardFromNull(name, "name");
+            IRestRequest request = _requestHelper.CreateDiscussion(parentId, name, description);
+            return _restClient.ExecuteAndDeserialize<Discussion>(request);
+        }
+
+        public void Delete (Discussion discussion)
+        {
+            GuardFromNull(discussion, "discussion");
+            DeleteDiscussion(discussion.Id);
+        }
+
+        public void DeleteDiscussion(string id)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DeleteDiscussion(id);
+            _restClient.Execute(request);
+        }
+
+        public Discussion GetDiscussion(string id)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.Get(ResourceType.Discussion, id);
+            return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
     }
 }

@@ -44,11 +44,6 @@ namespace BoxApi.V2
         {
 
             var restResponse = base.Execute<T>(request);
-            Error error;
-            if (!WasSuccessful(restResponse, out error))
-            {
-                throw new BoxException(error);
-            }
             return restResponse.Data;
         }
 
@@ -105,7 +100,11 @@ namespace BoxApi.V2
             {
                 success = false;
             }
-
+            else if(restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
+            {
+                error = new Error() { Code = "Internal Server Error", Status = "500" };
+                success = false;
+            }
             else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
             {
                 success = false;
