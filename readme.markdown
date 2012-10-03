@@ -18,10 +18,10 @@ Support currently exists for:
 * Files
 * Folders
 * Comments
+* Discussions
 
 Support is planned but not yet implemented for:
 
-* Discussions
 * Collaborations
 * Events
 * Tokens
