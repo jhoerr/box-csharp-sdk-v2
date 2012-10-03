@@ -15,6 +15,12 @@ namespace BoxApi.V2.Tests
             Client.CreateDiscussion(Folder.Root, "foo");
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _folder = null;
+        }
+
         [TearDown]
         public void TearDown()
         {
@@ -70,8 +76,8 @@ namespace BoxApi.V2.Tests
             Assert.That(actual.TotalCount, Is.EqualTo("2"));
             Assert.That(actual.Entries.Any(), Is.True);
             Assert.That(actual.Entries.Count(), Is.EqualTo(2));
-            Assert.That(actual.Entries.First().Name, Is.EqualTo(firstName));
-            Assert.That(actual.Entries.Last().Name, Is.EqualTo(secondName));
+            Assert.That(actual.Entries.Any(d => d.Name.Equals(firstName)), Is.True);
+            Assert.That(actual.Entries.Any(d => d.Name.Equals(secondName)), Is.True);
         }
 
 
@@ -117,8 +123,8 @@ namespace BoxApi.V2.Tests
             Assert.That(comments.TotalCount, Is.EqualTo("2"));
             Assert.That(comments.Entries.Any(), Is.True);
             Assert.That(comments.Entries.Count(), Is.EqualTo(2));
-            Assert.That(comments.Entries.First().Message, Is.EqualTo(firstMessage));
-            Assert.That(comments.Entries.Last().Message, Is.EqualTo(secondMessage));
+            Assert.That(comments.Entries.Any(c => c.Message.Equals(firstMessage)), Is.True);
+            Assert.That(comments.Entries.Any(c => c.Message.Equals(secondMessage)), Is.True);
         }
     }
 }
