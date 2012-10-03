@@ -1,4 +1,5 @@
-﻿using BoxApi.V2.Model;
+﻿using System.Linq;
+using BoxApi.V2.Model;
 using NUnit.Framework;
 
 namespace BoxApi.V2.Tests
@@ -6,10 +7,21 @@ namespace BoxApi.V2.Tests
     [TestFixture]
     public class DiscussionTestsSync : BoxApiTestHarness
     {
-        [Test, ExpectedException(typeof(BoxException))]
+        private Folder _folder;
+
+        [Test, ExpectedException(typeof (BoxException))]
         public void CantCreateDisussionOnRootFolder()
         {
             Client.CreateDiscussion(Folder.Root, "foo");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (_folder != null)
+            {
+                Client.Delete(_folder);
+            }
         }
 
         [Test]
@@ -17,25 +29,14 @@ namespace BoxApi.V2.Tests
         {
             const string name = "name";
             const string description = "description";
-            Folder folder = null;
-            Discussion discussion = null;
-            try
-            {
-                folder = Client.CreateFolder(Folder.Root, TestItemName());
-                discussion = Client.CreateDiscussion(folder.Id, name, description);
-                Assert.That(discussion, Is.Not.Null);
-                Assert.That(discussion.Parent.Id, Is.EqualTo(folder.Id));
-                Assert.That(discussion.Name, Is.EqualTo(name));
-                Assert.That(discussion.Description, Is.EqualTo(description));
-            }
-            finally
-            {
-                Client.Delete(folder);
-                if (discussion != null)
-                {
-                    Client.Delete(discussion);
-                }
-            }
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+
+            var discussion = Client.CreateDiscussion(_folder.Id, name, description);
+
+            Assert.That(discussion, Is.Not.Null);
+            Assert.That(discussion.Parent.Id, Is.EqualTo(_folder.Id));
+            Assert.That(discussion.Name, Is.EqualTo(name));
+            Assert.That(discussion.Description, Is.EqualTo(description));
         }
 
         [Test]
@@ -43,44 +44,81 @@ namespace BoxApi.V2.Tests
         {
             const string name = "name";
             const string description = "description";
-            Folder folder = null;
-            Discussion discussion = null;
-            try
-            {
-                folder = Client.CreateFolder(Folder.Root, TestItemName());
-                discussion = Client.CreateDiscussion(folder.Id, name, description);
-                var actual = Client.GetDiscussion(discussion.Id);
-                Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.Parent.Id, Is.EqualTo(folder.Id));
-                Assert.That(actual.Name, Is.EqualTo(name));
-                Assert.That(actual.Description, Is.EqualTo(description));
-            }
-            finally
-            {
-                Client.Delete(folder);
-                if (discussion != null)
-                {
-                    Client.Delete(discussion);
-                }
-            }
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var discussion = Client.CreateDiscussion(_folder.Id, name, description);
+
+            var actual = Client.GetDiscussion(discussion.Id);
+
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Parent.Id, Is.EqualTo(_folder.Id));
+            Assert.That(actual.Name, Is.EqualTo(name));
+            Assert.That(actual.Description, Is.EqualTo(description));
         }
 
-        [Test, Description("Should result in a 404 on the Discussion"), ExpectedException(typeof(BoxException))]
+        [Test]
+        public void GetAFoldersDiscussions()
+        {
+            const string firstName = "name the first";
+            const string secondName = "name the second";
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            Client.CreateDiscussion(_folder.Id, firstName);
+            Client.CreateDiscussion(_folder.Id, secondName);
+
+            DiscussionCollection actual = Client.GetDiscussions(_folder);
+
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.TotalCount, Is.EqualTo("2"));
+            Assert.That(actual.Entries.Any(), Is.True);
+            Assert.That(actual.Entries.Count(), Is.EqualTo(2));
+            Assert.That(actual.Entries.First().Name, Is.EqualTo(firstName));
+            Assert.That(actual.Entries.Last().Name, Is.EqualTo(secondName));
+        }
+
+
+        [Test, Description("Should result in a 404 on the Discussion"), ExpectedException(typeof (BoxException))]
         public void DeleteDiscussion()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
-            Discussion discussion = Client.CreateDiscussion(folder.Id, "foo");
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var discussion = Client.CreateDiscussion(_folder.Id, "foo");
+
             Client.Delete(discussion);
 
-            try
-            {
-                var deleted = Client.GetDiscussion(discussion.Id);
-                Assert.That(deleted, Is.Null);
-            }
-            finally
-            {
-                Client.Delete(folder);
-            }
+            var deleted = Client.GetDiscussion(discussion.Id);
+            Assert.That(deleted, Is.Null);
+        }
+
+        [Test]
+        public void AddCommentToDiscussion()
+        {
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var discussion = Client.CreateDiscussion(_folder.Id, "foo");
+            const string message = "message";
+
+            var comment = Client.CreateComment(discussion, message);
+
+            Assert.That(comment, Is.Not.Null);
+            Assert.That(comment.IsReplyComment, Is.False);
+            Assert.That(comment.Message, Is.EqualTo(message));
+        }
+
+        [Test]
+        public void GetDiscussionComments()
+        {
+            const string firstMessage = "message the first";
+            const string secondMessage = "message the second";
+            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var discussion = Client.CreateDiscussion(_folder.Id, "foo");
+            Client.CreateComment(discussion, firstMessage);
+            Client.CreateComment(discussion, secondMessage);
+
+            var comments = Client.GetComments(discussion);
+
+            Assert.That(comments, Is.Not.Null);
+            Assert.That(comments.TotalCount, Is.EqualTo("2"));
+            Assert.That(comments.Entries.Any(), Is.True);
+            Assert.That(comments.Entries.Count(), Is.EqualTo(2));
+            Assert.That(comments.Entries.First().Message, Is.EqualTo(firstMessage));
+            Assert.That(comments.Entries.Last().Message, Is.EqualTo(secondMessage));
         }
     }
 }

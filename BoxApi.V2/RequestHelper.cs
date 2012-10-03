@@ -27,6 +27,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetDiscussions(string folderId)
+        {
+            var request = JsonRequest(ResourceType.Folder, "{id}/discussions");
+            request.AddUrlSegment("id", folderId);
+            return request;
+        }
+
         public IRestRequest CreateFolder(string parentId, string name)
         {
             var request = JsonRequest(ResourceType.Folder, null, Method.POST);
@@ -132,9 +139,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateComment(string id, string message)
+        public IRestRequest CreateComment(ResourceType resourceType, string id, string message)
         {
-            var request = JsonRequest(ResourceType.File, "{id}/comments", Method.POST);
+            var request = JsonRequest(resourceType, "{id}/comments", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddBody(new {message});
             return request;

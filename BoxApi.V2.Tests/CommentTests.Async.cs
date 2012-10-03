@@ -16,7 +16,7 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
 
             // Act
-            Client.AddComment(file, comment, newComment =>
+            Client.CreateComment(file, comment, newComment =>
                 {
                     // Assert
                     Assert.That(newComment, Is.Not.Null);
@@ -46,7 +46,7 @@ namespace BoxApi.V2.Tests
             var message = "my comment!";
             var fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
-            var comment = Client.AddComment(file, message);
+            var comment = Client.CreateComment(file, message);
 
             // Act
             Client.GetComment(comment, gotComment =>
@@ -80,8 +80,8 @@ namespace BoxApi.V2.Tests
             var message2 = "my other comment!";
             var fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
-            Client.AddComment(file, message1);
-            Client.AddComment(file, message2);
+            Client.CreateComment(file, message1);
+            Client.CreateComment(file, message2);
 
             // Act
             Client.GetComments(file, comments =>
@@ -113,7 +113,7 @@ namespace BoxApi.V2.Tests
             var callbackHit = false;
             var file = Client.CreateFile(RootId, TestItemName());
             var newComment = "newComment";
-            var comment = Client.AddComment(file, "originalComment");
+            var comment = Client.CreateComment(file, "originalComment");
             comment.Message = newComment;
             // Act
             Client.Update(comment, updatedComment =>
@@ -143,7 +143,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var file = Client.CreateFile(RootId, TestItemName());
-            var comment = Client.AddComment(file, "originalComment");
+            var comment = Client.CreateComment(file, "originalComment");
 
             // Act
             Client.Delete(comment, response =>

@@ -401,18 +401,18 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void AddComment(File file, string comment, Action<Comment> onSuccess, Action onFailure)
+        public void CreateComment(File file, string comment, Action<Comment> onSuccess, Action onFailure)
         {
             GuardFromNull(file, "file");
-            AddComment(file.Id, comment, onSuccess, onFailure);
+            CreateFileComment(file.Id, comment, onSuccess, onFailure);
         }
 
-        private void AddComment(string fileId, string comment, Action<Comment> onSuccess, Action onFailure)
+        private void CreateFileComment(string fileId, string comment, Action<Comment> onSuccess, Action onFailure)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var restRequest = _requestHelper.CreateComment(fileId, comment);
+            var restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 

@@ -379,17 +379,31 @@ namespace BoxApi.V2
             return GetFile(itemCollection.Entries.Single().Id);
         }
 
-        public Comment AddComment (Model.File file, string comment)
+        public Comment CreateComment (Model.File file, string comment)
         {
             GuardFromNull(file, "file");
-            return AddComment(file.Id, comment);
+            return CreateFileComment(file.Id, comment);
         }
 
-        public Comment AddComment(string fileId, string comment)
+        public Comment CreateComment(Discussion discussion, string comment)
+        {
+            GuardFromNull(discussion, "discussion");
+            return CreateDiscussionComment(discussion.Id, comment);
+        }
+
+        public Comment CreateFileComment(string fileId, string comment)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
-            IRestRequest restRequest = _requestHelper.CreateComment(fileId, comment);
+            IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment);
+            return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
+        }
+
+        public Comment CreateDiscussionComment(string discussionId, string comment)
+        {
+            GuardFromNull(discussionId, "discussionId");
+            GuardFromNull(comment, "comment");
+            IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
@@ -399,10 +413,23 @@ namespace BoxApi.V2
             return GetFileComments(file.Id);
         }
 
+        public CommentCollection GetComments(Discussion discussion)
+        {
+            GuardFromNull(discussion, "discussion");
+            return GetDiscussionComments(discussion.Id);
+        }
+
         public CommentCollection GetFileComments(string fileId)
         {
             GuardFromNull(fileId, "fileId");
             IRestRequest restRequest = _requestHelper.GetComments(ResourceType.File, fileId);
+            return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
+        }
+
+        public CommentCollection GetDiscussionComments(string discussionId)
+        {
+            GuardFromNull(discussionId, "discussionId");
+            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
             return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
         }
 
@@ -451,6 +478,19 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             IRestRequest request = _requestHelper.Get(ResourceType.Discussion, id);
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
+        }
+
+        public DiscussionCollection GetDiscussions(Folder folder)
+        {
+            GuardFromNull(folder, "folder");
+            return GetDiscussions(folder.Id);
+        }
+
+        private DiscussionCollection GetDiscussions(string folderId)
+        {
+            GuardFromNull(folderId, "folderId");
+            IRestRequest request = _requestHelper.GetDiscussions(folderId);
+            return _restClient.ExecuteAndDeserialize<DiscussionCollection>(request);
         }
     }
 }

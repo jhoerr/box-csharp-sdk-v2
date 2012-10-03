@@ -17,7 +17,7 @@ namespace BoxApi.V2.Tests
             string message = "the message";
             try
             {
-                Comment comment = Client.AddComment(file, message);
+                Comment comment = Client.CreateComment(file, message);
                 Assert.That(comment, Is.Not.Null);
                 Assert.That(comment.Item.Id, Is.EqualTo(file.Id));
                 Assert.That(comment.Message, Is.EqualTo(message));
@@ -36,7 +36,7 @@ namespace BoxApi.V2.Tests
             string message = "the message";
             try
             {
-                Comment expected = Client.AddComment(file, message);
+                Comment expected = Client.CreateComment(file, message);
                 Comment actual = Client.GetComment(expected);
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.Item.Id, Is.EqualTo(expected.Item.Id));
@@ -56,8 +56,8 @@ namespace BoxApi.V2.Tests
             string secondComment = "second comment";
             try
             {
-                Client.AddComment(file, firstComment);
-                Client.AddComment(file, secondComment);
+                Client.CreateComment(file, firstComment);
+                Client.CreateComment(file, secondComment);
                 var comments = Client.GetComments(file);
                 Assert.That(comments.TotalCount, Is.EqualTo("2"));
                 Assert.That(comments.Entries.Any(c => c.Message.Equals(firstComment)), Is.True);
@@ -77,7 +77,7 @@ namespace BoxApi.V2.Tests
             string newComment = "newComment";
             try
             {
-                var comment = Client.AddComment(file, originalComment);
+                var comment = Client.CreateComment(file, originalComment);
                 comment.Message = newComment;
                 var updatedComment = Client.Update(comment);
                 Assert.That(updatedComment, Is.Not.Null);
@@ -96,7 +96,7 @@ namespace BoxApi.V2.Tests
             string originalComment = "originalComment";
             try
             {
-                var comment = Client.AddComment(file, originalComment);
+                var comment = Client.CreateComment(file, originalComment);
                 Client.Delete(comment);
                 var commentCollection = Client.GetComments(file);
                 Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
