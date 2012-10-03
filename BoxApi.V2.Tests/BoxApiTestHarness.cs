@@ -16,7 +16,7 @@ namespace BoxApi.V2.Tests
         protected readonly BoxManager Client = InitBoxManager();
 
         protected const string RootId = "0";
-        protected readonly Action AbortOnFailure = () => { throw new Exception("Operation failed"); };
+        protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
 
         protected int MaxWaitInSeconds { get; set; }
 

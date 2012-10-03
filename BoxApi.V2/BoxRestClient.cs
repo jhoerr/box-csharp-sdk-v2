@@ -48,7 +48,7 @@ namespace BoxApi.V2
         }
 
 
-        public void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action onFailure) where T : class, new()
+        public void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action<Error> onFailure) where T : class, new()
         {
             if (onSuccess == null)
             {
@@ -65,12 +65,12 @@ namespace BoxApi.V2
                     else if (onFailure != null)
                     {
                         handle.Abort();
-                        onFailure();
+                        onFailure(error);
                     }
                 });
         }
 
-        public void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action onFailure)
+        public void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action<Error> onFailure)
         {
             if (onSuccess == null)
             {
@@ -87,7 +87,7 @@ namespace BoxApi.V2
                     else if (onFailure != null)
                     {
                         handle.Abort();
-                        onFailure();
+                        onFailure(error);
                     }
                 });
         }

@@ -36,7 +36,7 @@ namespace BoxApi.V2.Tests
         public void GetNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.GetFolder("abc", folder => { }, () => { failureOccured = true; });
+            Client.GetFolder("abc", folder => { }, (error) => { failureOccured = true; });
 
             do
             {
@@ -79,7 +79,7 @@ namespace BoxApi.V2.Tests
         {
             var failureOccured = false;
 
-            Client.CreateFolder(RootId, "\\bad name:", folder => { }, () => failureOccured = true);
+            Client.CreateFolder(RootId, "\\bad name:", folder => { }, (error) => failureOccured = true);
 
             do
             {
@@ -124,7 +124,7 @@ namespace BoxApi.V2.Tests
         public void DeleteNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.DeleteFolder("abc", true, response => { }, () => { failureOccured = true; });
+            Client.DeleteFolder("abc", true, response => { }, (error) => { failureOccured = true; });
 
             do
             {
