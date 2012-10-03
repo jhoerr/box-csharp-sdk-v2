@@ -69,6 +69,11 @@
   <ItemGroup>
     <Compile Include="BoxAuthenticator.cs" />
     <Compile Include="BoxRestClient.cs" />
+    <Compile Include="Model\Collection.cs" />
+    <Compile Include="Model\CommentCollection.cs" />
+    <Compile Include="Model\Discussion.cs" />
+    <Compile Include="Model\DiscussionCollection.cs" />
+    <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.Async.cs" />
