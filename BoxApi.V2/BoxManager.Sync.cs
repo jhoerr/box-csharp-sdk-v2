@@ -385,18 +385,31 @@ namespace BoxApi.V2
             return CreateFileComment(file.Id, comment);
         }
 
-        public Comment CreateComment(Discussion discussion, string comment)
-        {
-            GuardFromNull(discussion, "discussion");
-            return CreateDiscussionComment(discussion.Id, comment);
-        }
-
         public Comment CreateFileComment(string fileId, string comment)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
             IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
+        }
+
+        public CommentCollection GetComments(Discussion discussion)
+        {
+            GuardFromNull(discussion, "discussion");
+            return GetDiscussionComments(discussion.Id);
+        }
+
+        public CommentCollection GetDiscussionComments(string discussionId)
+        {
+            GuardFromNull(discussionId, "discussionId");
+            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
+            return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
+        }
+
+        public Comment CreateComment(Discussion discussion, string comment)
+        {
+            GuardFromNull(discussion, "discussion");
+            return CreateDiscussionComment(discussion.Id, comment);
         }
 
         public Comment CreateDiscussionComment(string discussionId, string comment)
@@ -413,23 +426,10 @@ namespace BoxApi.V2
             return GetFileComments(file.Id);
         }
 
-        public CommentCollection GetComments(Discussion discussion)
-        {
-            GuardFromNull(discussion, "discussion");
-            return GetDiscussionComments(discussion.Id);
-        }
-
         public CommentCollection GetFileComments(string fileId)
         {
             GuardFromNull(fileId, "fileId");
             IRestRequest restRequest = _requestHelper.GetComments(ResourceType.File, fileId);
-            return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
-        }
-
-        public CommentCollection GetDiscussionComments(string discussionId)
-        {
-            GuardFromNull(discussionId, "discussionId");
-            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
             return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
         }
 

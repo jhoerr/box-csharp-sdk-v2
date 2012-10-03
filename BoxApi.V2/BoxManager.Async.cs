@@ -371,8 +371,6 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-    
-
         private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
         {
             GuardFromNull(onSuccess, "onSuccess");
@@ -442,6 +440,86 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             var restRequest = _requestHelper.GetComments(ResourceType.File, fileId);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
+        public void CreateDiscussion(Folder parent, string name, string description, Action<Discussion> onSuccess, Action onFailure)
+        {
+            GuardFromNull(parent, "parent");
+            CreateDiscussion(parent.Id, name, description, onSuccess, onFailure);
+        }
+
+        public void CreateDiscussion(string parentId, string name, string description, Action<Discussion> onSuccess, Action onFailure)
+        {
+            GuardFromNull(parentId, "parentId");
+            GuardFromNull(name, "name");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.CreateDiscussion(parentId, name, description);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void GetComments(Discussion discussion, Action<CommentCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(discussion, "discussion");
+            GetDiscussionComments(discussion.Id);
+        }
+
+        public void GetDiscussionComments(string discussionId, Action<CommentCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(discussionId, "discussionId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
+        public void CreateComment(Discussion discussion, string comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(discussion, "discussion");
+            CreateDiscussionComment(discussion.Id, comment, onSuccess, onFailure);
+        }
+
+        public void CreateDiscussionComment(string discussionId, string comment, Action<Comment> onSuccess, Action onFailure)
+        {
+            GuardFromNull(discussionId, "discussionId");
+            GuardFromNull(comment, "comment");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
+        }
+
+        public void Delete(Discussion discussion, Action<IRestResponse> onSuccess, Action onFailure)
+        {
+            GuardFromNull(discussion, "discussion");
+            DeleteDiscussion(discussion.Id, onSuccess, onFailure);
+        }
+
+        public void DeleteDiscussion(string id, Action<IRestResponse> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.DeleteDiscussion(id);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void GetDiscussion(string id, Action<Discussion> onSuccess, Action onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.Get(ResourceType.Discussion, id);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void GetDiscussions(Folder folder, Action<DiscussionCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            GetDiscussions(folder.Id, onSuccess, onFailure);
+        }
+
+        private void GetDiscussions(string folderId, Action<DiscussionCollection> onSuccess, Action onFailure)
+        {
+            GuardFromNull(folderId, "folderId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.GetDiscussions(folderId);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
     }
 }
