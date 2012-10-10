@@ -19,10 +19,10 @@ Support currently exists for:
 * Folders
 * Comments
 * Discussions
+* Collaborations
 
 Support is planned but not yet implemented for:
 
-* Collaborations
 * Events
 * Tokens
 * Users
