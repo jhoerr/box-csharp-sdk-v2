@@ -2,21 +2,22 @@
 <package >
   <metadata>
     <id>Box.v2.SDK</id>
-    <title>Box.com client (API v2)</title>
+    <title>Box.com SDK (API v2)</title>
     <version>0.6</version>
     <authors>John Hoerr, Carson Gross, Box</authors>
     <owners>John Hoerr, Carson Gross, Box</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A client for Box.com (API v2).  (http://developers.box.com/docs/)</description>
+    <description>A client SDK for Box.com (API v2).  (http://developers.box.com/docs/).  Both this project and the new Box API are still in beta.  Expect frequent and breaking changes until version 1.0.</description>
     <releaseNotes>
-	    0.6: Discussions
+	    0.7: Implemented Collaborations
+	    0.6: Implemented Discussions
 	    0.5: Updated for recent API changes
-	    0.4: Fixing namespaces
-	    0.3: Supports 'fields' when getting folder items; Bug fixes
-	    0.2: Authorization workflow and Comment resource
-	    0.1: File/Folder resources.
+	    0.4: Simplifying namespaces
+	    0.3: Added support for 'fields' when getting folder items; Bug fixes
+	    0.2: Implemented Authorization workflow and Comments
+	    0.1: Implemented Files and Folder.
     </releaseNotes>
     <copyright>Copyright 2012 John Hoerr, Carson Gross, The Trustees of Indiana University (www.iu.edu)</copyright>
     <tags>Box Box.com</tags>
