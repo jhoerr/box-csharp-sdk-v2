@@ -521,5 +521,81 @@ namespace BoxApi.V2
             IRestRequest request = _requestHelper.GetDiscussions(folderId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
+
+        public void CreateCollaboration(Folder folder, string userId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            CreateCollaboration(folder.Id, userId, role, onSuccess, onFailure);
+        }
+
+        public void CreateCollaboration(string folderId, string userId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(folderId, "folderId");
+            GuardFromNull(userId, "userId");
+            GuardFromNull(role, "role");
+            var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description());
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        private void GetCollaboration(string collaborationId, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaborationId, "collaborationId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.GetCollaboration(collaborationId);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void GetCollaborations(Folder folder, Action<CollaborationCollection> onSuccess, Action<Error> onFailure, bool onlyPending = false)
+        {
+            GuardFromNull(folder, "folder");
+            GetCollaborations(folder.Id, onSuccess, onFailure, onlyPending);
+        }
+
+        private void GetCollaborations(string folderId, Action<CollaborationCollection> onSuccess, Action<Error> onFailure, bool onlyPending = false)
+        {
+            GuardFromNull(folderId, "folderId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.GetCollaborations(folderId, onlyPending);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void Update(Collaboration collaboration, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaboration, "collaboration");
+            UpdateCollaboration(collaboration.Id, role, onSuccess, onFailure);
+        }
+
+        public void Update(Collaboration collaboration, Role role, Status status, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaboration, "collaboration");
+            UpdateCollaboration(collaboration.Id, role, status, onSuccess, onFailure);
+        }
+
+        private void UpdateCollaboration(string collaborationId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaborationId, "collaborationId");
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        private void UpdateCollaboration(string collaborationId, Role role, Status status, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaborationId, "collaborationId");
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role, status);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        public void Delete(Collaboration collaboration, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaboration, "collaboration");
+            DeleteCollaboration(collaboration.Id, onSuccess, onFailure);
+        }
+
+        private void DeleteCollaboration(string collaborationId, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(collaborationId, "collaborationId");
+            var request = _requestHelper.DeleteCollaboration(collaborationId);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
     }
 }

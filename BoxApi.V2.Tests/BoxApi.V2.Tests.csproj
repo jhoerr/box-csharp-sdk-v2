@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxApiTestHarness.cs" />
+    <Compile Include="CollaborationTests.Sync.cs" />
     <Compile Include="CommentTests.Sync.cs" />
     <Compile Include="CommentTests.Async.cs" />
     <Compile Include="DiscussionTests.Sync.cs" />

@@ -18,7 +18,8 @@ namespace BoxApi.V2.Model
         [Description("discussions")] Discussion,
         [Description("events")] Event,
         [Description("tokens")] Token,
-        [Description("error")] Error,
+        [Description("collaborations")]Collaboration,
+        [Description("error")]Error,
     }
 
     public enum Field
@@ -37,6 +38,24 @@ namespace BoxApi.V2.Model
         [Description("sequence_id")] SequenceId,
         [Description("shared_link")] SharedLink,
         [Description("size")] Size,
+    }
+
+    public enum Role
+    {
+        [Description("Editor")] Editor,
+        [Description("Viewer")] Viewer,
+        [Description("Previewer")] Previewer,
+        [Description("Uploader")] Uploader,
+        [Description("Previewer-Uploader")] PreviewerUploader,
+        [Description("Viewer-Uploader")] ViewerUploader,
+        [Description("Co-Owner")] CoOwner,
+    }
+
+    public enum Status
+    {
+        [Description("pending")]Pending,
+        [Description("accepted")]Accepted,
+        [Description("rejected")]Rejected,
     }
 
     public static class EnumExtensions

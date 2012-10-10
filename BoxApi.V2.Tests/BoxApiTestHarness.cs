@@ -13,16 +13,19 @@ namespace BoxApi.V2.Tests
 {
     public class BoxApiTestHarness
     {
-        protected readonly BoxManager Client = InitBoxManager();
+        protected readonly BoxManager Client;
 
         protected const string RootId = "0";
         protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
+        protected readonly string CollaboratingUser;
 
         protected int MaxWaitInSeconds { get; set; }
 
-        [SetUp]
-        public void Setup()
+        protected BoxApiTestHarness()
         {
+            var testInfo = GetTestInfo();
+            Client = new BoxManager(testInfo.AppKey, testInfo.AuthKey);
+            CollaboratingUser = testInfo.CollaboratingUser;
             MaxWaitInSeconds = 5;
         }
 
@@ -72,7 +75,7 @@ namespace BoxApi.V2.Tests
             Assert.That(actual.Permissions.Preview, Is.True);
         }
 
-        private static BoxManager InitBoxManager()
+        private static TestConfigInfo GetTestInfo()
         {
             TestConfigInfo testConfigInfo;
             var fi = new FileInfo(@"..\..\test_info.json");
@@ -89,15 +92,14 @@ namespace BoxApi.V2.Tests
                 }
                 try
                 {
-                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse() { Content = content });
-                } 
-                catch(Exception e)
+                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse() {Content = content});
+                }
+                catch (Exception e)
                 {
                     testConfigInfo = ConfigureTestInfo(fi);
                 }
-
             }
-            return new BoxManager(testConfigInfo.AppKey, testConfigInfo.AuthKey);
+            return testConfigInfo;
         }
 
         private static TestConfigInfo ConfigureTestInfo(FileInfo fi)
@@ -123,6 +125,7 @@ namespace BoxApi.V2.Tests
             public string AppKey { get; set; }
             public string TestEmail { get; set; }
             public string AuthKey { get; set; }
+            public string CollaboratingUser { get; set; }
         }
 
     }

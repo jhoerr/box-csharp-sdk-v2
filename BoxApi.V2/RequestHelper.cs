@@ -157,7 +157,54 @@ namespace BoxApi.V2
         public IRestRequest CreateDiscussion(string parentId, string name, string description)
         {
             var request = JsonRequest(ResourceType.Discussion, null, Method.POST);
-            request.AddBody(new { parent = new { id = parentId }, name, description });
+            request.AddBody(new {parent = new {id = parentId}, name, description});
+            return request;
+        }
+
+        public IRestRequest CreateCollaboration(string folderId, string userId, string role)
+        {
+            var request = JsonRequest(ResourceType.Collaboration, null, Method.POST);
+            request.AddBody(new {item = new {type="folder", id = folderId}, accessible_by = new {id = userId}, role});
+            return request;
+        }
+
+        public IRestRequest GetCollaboration(string collaborationId)
+        {
+            var request = JsonRequest(ResourceType.Collaboration, "{id}");
+            request.AddUrlSegment("id", collaborationId);
+            return request;
+        }
+
+        public IRestRequest GetCollaborations(string folderId, bool onlyPending)
+        {
+            var request = JsonRequest(ResourceType.Folder, "{id}/collaborations");
+            request.AddUrlSegment("id", folderId);
+            if (onlyPending)
+            {
+                request.AddParameter("status", "pending");
+            }
+            return request;
+        }
+
+        public IRestRequest UpdateCollaboration(string collaborationId, Role role)
+        {
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT);
+            request.AddUrlSegment("id", collaborationId);
+            request.AddBody(new { role = role.Description() });
+            return request;
+        }
+
+        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Status status)
+        {
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT);
+            request.AddUrlSegment("id", collaborationId);
+            request.AddBody(new { role = role.Description(), status = status.Description() });
+            return request;
+        }
+
+        public IRestRequest DeleteCollaboration(string collaborationId)
+        {
+            var request = GetDeleteRequest(ResourceType.Collaboration, collaborationId);
             return request;
         }
 
