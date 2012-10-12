@@ -11,32 +11,12 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetFolder()
         {
-            var folder = Client.GetFolder(RootId);
+            var folder = Client.GetFolder(RootId, null);
             AssertFolderConstraints(folder, "All Files", null, RootId);
         }
 
         [Test]
         public void GetFolderItems()
-        {
-            var testFolder = Client.CreateFolder(RootId, TestItemName());
-            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
-            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
-            try
-            {
-                var items = Client.GetItems(testFolder);
-                Assert.That(items, Is.Not.Null);
-                Assert.That(items.TotalCount, Is.EqualTo("2"));
-                Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
-                Assert.That(items.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-            }
-            finally
-            {
-                Client.Delete(testFolder, true);
-            }
-        }
-
-        [Test]
-        public void GetFolderItemsWithParticularFields()
         {
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             Client.CreateFolder(testFolder.Id, TestItemName());
@@ -65,7 +45,7 @@ namespace BoxApi.V2.Tests
         [Test, ExpectedException(typeof (BoxException))]
         public void GetNonExistentFolder()
         {
-            Client.GetFolder("abc");
+            Client.GetFolder("abc", null);
         }
 
         [Test]

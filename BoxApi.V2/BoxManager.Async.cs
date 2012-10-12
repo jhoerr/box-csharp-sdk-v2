@@ -9,17 +9,17 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
-        public void Get(Folder folder, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Get(Folder folder, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            GetFolder(folder.Id, onSuccess, onFailure);
+            GetFolder(folder.Id, null, onSuccess, onFailure);
         }
 
-        public void GetFolder(string id, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void GetFolder(string id, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Get(ResourceType.Folder, id);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -35,20 +35,6 @@ namespace BoxApi.V2
             GuardFromNull(fields, "fields");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var folderItems = _requestHelper.GetItems(id, fields);
-            _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
-        }
-
-        public void GetItems(Folder folder, Action<ItemCollection> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(folder, "folder");
-            GetItems(folder.Id, onSuccess, onFailure);
-        }
-
-        public void GetItems(string id, Action<ItemCollection> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var folderItems = _requestHelper.GetItems(id, null);
             _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 

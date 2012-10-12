@@ -15,7 +15,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
 
-            Client.GetFolder(RootId, folder =>
+            Client.GetFolder(RootId, null, folder =>
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, "All Files", null, RootId);
@@ -36,7 +36,7 @@ namespace BoxApi.V2.Tests
         public void GetNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.GetFolder("abc", folder => { }, (error) => { failureOccured = true; });
+            Client.GetFolder("abc", null, folder => { }, (error) => { failureOccured = true; });
 
             do
             {
@@ -112,7 +112,7 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                Client.Get(folder);
+                Client.Get(folder, null);
                 Assert.Fail("Should not be able to fetch the deleted folder.");
             }
             catch (BoxException e)
@@ -253,7 +253,7 @@ namespace BoxApi.V2.Tests
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
        
-            Client.GetItems(testFolder.Id, contents =>
+            Client.GetItems(testFolder.Id, new[]{Field.Name,}, contents =>
             {
                 callbackHit = true;
                 Assert.That(contents, Is.Not.Null);

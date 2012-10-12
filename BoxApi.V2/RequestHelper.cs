@@ -8,28 +8,24 @@ namespace BoxApi.V2
 {
     public class RequestHelper
     {
-        public IRestRequest Get(ResourceType resourceResourceType, string id)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null)
         {
-            var request = JsonRequest(resourceResourceType, "{id}");
+            var request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public IRestRequest GetItems(string id, Field[] fields)
+        public IRestRequest GetItems(string id, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Folder, "{id}/items");
+            var request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id);
-            if (fields != null && fields.Any())
-            {
-                var fieldList = string.Join(",", fields.Select(f => f.Description()));
-                request.AddParameter("fields", fieldList);
-            }
+           
             return request;
         }
 
         public IRestRequest GetDiscussions(string folderId)
         {
-            var request = JsonRequest(ResourceType.Folder, "{id}/discussions");
+            var request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET);
             request.AddUrlSegment("id", folderId);
             return request;
         }
@@ -149,7 +145,7 @@ namespace BoxApi.V2
 
         public IRestRequest GetComments(ResourceType resourceResourceType, string id)
         {
-            var request = JsonRequest(resourceResourceType, "{id}/comments");
+            var request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET);
             request.AddUrlSegment("id", id);
             return request;
         }
@@ -170,14 +166,14 @@ namespace BoxApi.V2
 
         public IRestRequest GetCollaboration(string collaborationId)
         {
-            var request = JsonRequest(ResourceType.Collaboration, "{id}");
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET);
             request.AddUrlSegment("id", collaborationId);
             return request;
         }
 
         public IRestRequest GetCollaborations(string folderId, bool onlyPending)
         {
-            var request = JsonRequest(ResourceType.Folder, "{id}/collaborations");
+            var request = JsonRequest(ResourceType.Folder, "{id}/collaborations", Method.GET);
             request.AddUrlSegment("id", folderId);
             if (onlyPending)
             {
@@ -241,11 +237,16 @@ namespace BoxApi.V2
             return request;
         }
 
-        private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource = null, Method method = Method.GET)
+        private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource, Method method, Field[] fields = null)
         {
             var request = RawRequest(resourceResourceType, resource, method);
             request.RequestFormat = DataFormat.Json;
             request.JsonSerializer = new AttributableJsonSerializer();
+            if (fields != null && fields.Any())
+            {
+                var fieldList = string.Join(",", fields.Select(f => f.Description()));
+                request.AddParameter("fields", fieldList);
+            }
             return request;
         }
     }

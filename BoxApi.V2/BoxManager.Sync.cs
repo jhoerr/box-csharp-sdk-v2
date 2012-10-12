@@ -10,26 +10,26 @@ namespace BoxApi.V2
     {
         private const int MaxFileGetAttempts = 4;
 
-        public Folder Get(Folder folder)
+        public Folder Get(Folder folder, Field[] fields)
         {
             GuardFromNull(folder, "folder");
-            return GetFolder(folder.Id);
+            return GetFolder(folder.Id, null);
         }
 
-        public Folder GetFolder(string id)
+        public Folder GetFolder(string id, Field[] fields)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public ItemCollection GetItems(Folder folder, Field[] fields = null)
+        public ItemCollection GetItems(Folder folder, Field[] fields)
         {
             GuardFromNull(folder, "folder");
             return GetItems(folder.Id, fields);
         }
 
-        public ItemCollection GetItems(string id, Field[] fields = null)
+        public ItemCollection GetItems(string id, Field[] fields)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id, fields);

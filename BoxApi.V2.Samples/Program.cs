@@ -43,7 +43,7 @@ namespace BoxApi.V2.Samples
             var boxManager = new BoxManager(apiKey, authToken);
 
             // Get all contents of the root folder
-            var rootFolder = boxManager.GetFolder(Folder.Root);
+            var rootFolder = boxManager.GetFolder(Folder.Root, null);
 
             // Find a file
             var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
