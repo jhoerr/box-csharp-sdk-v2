@@ -43,7 +43,7 @@ namespace BoxApi.V2
 
         public IRestRequest CreateFile(string parentId, string name, byte[] content)
         {
-            var request = JsonRequest(ResourceType.File, "data", Method.POST);
+            var request = JsonRequest(ResourceType.File, "content", Method.POST);
             request.AddFile("filename1", content, name);
             request.AddParameter("folder_id", parentId);
             return request;
@@ -124,14 +124,14 @@ namespace BoxApi.V2
 
         public IRestRequest Read(string id)
         {
-            var request = RawRequest(ResourceType.File, "{id}/data");
+            var request = RawRequest(ResourceType.File, "{id}/content");
             request.AddUrlSegment("id", id);
             return request;
         }
 
         public IRestRequest Write(string id, string name, string etag, byte[] content)
         {
-            var request = JsonRequest(ResourceType.File, "{id}/data", Method.POST);
+            var request = JsonRequest(ResourceType.File, "{id}/content", Method.POST);
             request.AddUrlSegment("id", id);
             request.AddHeader("If-Match", etag ?? string.Empty);
             request.AddFile("filename", content, name);
