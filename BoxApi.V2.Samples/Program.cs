@@ -57,7 +57,7 @@ namespace BoxApi.V2.Samples
             file = boxManager.Update(file);
 
             // Create a new subfolder
-            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
+            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder", null);
 
             // Move the file to the subfolder
             file = boxManager.Move(file, subfolder);

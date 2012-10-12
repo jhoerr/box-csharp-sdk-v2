@@ -103,13 +103,13 @@ namespace BoxApi.V2.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.Copy(file, RootId, copiedFile =>
-            {
-                // Assert
-                AssertFileConstraints(copiedFile, newItemName, RootId);
-                Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id)); 
-                callbackHit = true;
-            }, AbortOnFailure, newItemName);
+            Client.Copy(file, RootId, newItemName, null, copiedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(copiedFile, newItemName, RootId);
+                    Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id)); 
+                    callbackHit = true;
+                }, AbortOnFailure);
 
             do
             {
@@ -195,7 +195,7 @@ namespace BoxApi.V2.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName);
             string folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName);
+            Folder folder = Client.CreateFolder(RootId, folderName, null);
             // Act
             Client.Move(file, folder, movedFile =>
             {
@@ -260,7 +260,7 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
             string newDescription = "new description";
             string newFolder = TestItemName();
-            var folder = Client.CreateFolder(RootId, newFolder);
+            var folder = Client.CreateFolder(RootId, newFolder, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
             string newName = TestItemName();
             

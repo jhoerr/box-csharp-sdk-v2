@@ -35,7 +35,7 @@ namespace BoxApi.V2.Tests
         {
             const string name = "name";
             const string description = "description";
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
 
             var discussion = Client.CreateDiscussion(_folder.Id, name, description);
 
@@ -50,7 +50,7 @@ namespace BoxApi.V2.Tests
         {
             const string name = "name";
             const string description = "description";
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var discussion = Client.CreateDiscussion(_folder.Id, name, description);
 
             var actual = Client.GetDiscussion(discussion.Id);
@@ -66,7 +66,7 @@ namespace BoxApi.V2.Tests
         {
             const string firstName = "name the first";
             const string secondName = "name the second";
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             Client.CreateDiscussion(_folder.Id, firstName);
             Client.CreateDiscussion(_folder.Id, secondName);
 
@@ -84,7 +84,7 @@ namespace BoxApi.V2.Tests
         [Test, Description("Should result in a 404 on the Discussion"), ExpectedException(typeof (BoxException))]
         public void DeleteDiscussion()
         {
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var discussion = Client.CreateDiscussion(_folder.Id, "foo");
 
             Client.Delete(discussion);
@@ -96,7 +96,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void AddCommentToDiscussion()
         {
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var discussion = Client.CreateDiscussion(_folder.Id, "foo");
             const string message = "message";
 
@@ -112,7 +112,7 @@ namespace BoxApi.V2.Tests
         {
             const string firstMessage = "message the first";
             const string secondMessage = "message the second";
-            _folder = Client.CreateFolder(Folder.Root, TestItemName());
+            _folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var discussion = Client.CreateDiscussion(_folder.Id, "foo");
             Client.CreateComment(discussion, firstMessage);
             Client.CreateComment(discussion, secondMessage);

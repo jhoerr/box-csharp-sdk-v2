@@ -55,7 +55,7 @@ namespace BoxApi.V2.Tests
             var folderName = TestItemName();
             var callbackHit = false;
 
-            Client.CreateFolder(RootId, folderName, folder =>
+            Client.CreateFolder(RootId, folderName, null, folder =>
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, folderName, RootId);
@@ -79,7 +79,7 @@ namespace BoxApi.V2.Tests
         {
             var failureOccured = false;
 
-            Client.CreateFolder(RootId, "\\bad name:", folder => { }, (error) => failureOccured = true);
+            Client.CreateFolder(RootId, "\\bad name:", null, folder => { }, (error) => failureOccured = true);
 
             do
             {
@@ -97,7 +97,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             Client.DeleteFolder(folder.Id, true, response => callbackHit = true, AbortOnFailure);
 
             do
@@ -142,16 +142,16 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
-            var subfolder = Client.CreateFolder(folder.Id, "subfolder");
+            var folder = Client.CreateFolder(RootId, folderName, null);
+            var subfolder = Client.CreateFolder(folder.Id, "subfolder", null);
             var copyName = TestItemName();
-            Client.CopyFolder(folder.Id, RootId, copiedFolder =>
+            Client.CopyFolder(folder.Id, RootId, copyName, null, copiedFolder =>
                 {
                     callbackHit = true;
                     Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
                     Client.DeleteFolder(folder.Id, true);
                     Client.DeleteFolder(copiedFolder.Id, true);
-                }, AbortOnFailure, copyName );
+                }, AbortOnFailure);
 
             do
             {
@@ -169,7 +169,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { Preview = true, Download = true });
 
             Client.ShareFolderLink(folder.Id, sharedLink, copiedFolder =>
@@ -196,9 +196,9 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName);
+            Folder folder = Client.CreateFolder(RootId, folderName, null);
             var targetFolderName = TestItemName();
-            Folder targetFolder = Client.CreateFolder(RootId, targetFolderName);
+            Folder targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
 
             Client.MoveFolder(folder.Id, targetFolder.Id, movedFolder =>
             {
@@ -223,7 +223,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName);
+            Folder folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
 
             Client.Rename(folder, newName, renamedFolder =>
@@ -249,9 +249,9 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
 
-            var testFolder = Client.CreateFolder(RootId, TestItemName());
-            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName());
-            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName());
+            var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
+            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
+            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
        
             Client.GetItems(testFolder.Id, new[]{Field.Name,}, contents =>
             {
@@ -279,7 +279,7 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            var folder = Client.CreateFolder(RootId, TestItemName());
+            var folder = Client.CreateFolder(RootId, TestItemName(), null);
             string newDescription = "new description";
 
             // Act
@@ -313,10 +313,10 @@ namespace BoxApi.V2.Tests
             // Arrange
             var callbackHit = false;
             string fileName = TestItemName();
-            var folder = Client.CreateFolder(RootId, fileName);
+            var folder = Client.CreateFolder(RootId, fileName, null);
             string newDescription = "new description";
             string newFolder = TestItemName();
-            var newParent = Client.CreateFolder(RootId, newFolder);
+            var newParent = Client.CreateFolder(RootId, newFolder, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
             string newName = TestItemName();
 

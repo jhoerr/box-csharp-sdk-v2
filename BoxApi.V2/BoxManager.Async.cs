@@ -38,12 +38,12 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
-        public void CreateFolder(string parentId, string name, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void CreateFolder(string parentId, string name, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.CreateFolder(parentId, name);
+            var request = _requestHelper.CreateFolder(parentId, name, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -61,24 +61,24 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Copy(Folder folder, Folder newParent, Action<Folder> onSuccess, Action<Error> onFailure, string newName = null)
+        public void Copy(Folder folder, Folder newParent, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(newParent, "newParent");
-            Copy(folder, newParent.Id, onSuccess, onFailure, newName);
+            Copy(folder, newParent.Id, newName, fields, onSuccess, onFailure);
         }
 
-        public void Copy(Folder folder, string newParentId, Action<Folder> onSuccess, Action<Error> onFailure, string newName = null)
+        public void Copy(Folder folder, string newParentId, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            CopyFolder(folder.Id, newParentId, onSuccess, onFailure, newName);
+            CopyFolder(folder.Id, newParentId, newName, fields, onSuccess, onFailure);
         }
 
-        public void CopyFolder(string id, string newParentId, Action<Folder> onSuccess, Action<Error> onFailure, string newName = null)
+        public void CopyFolder(string id, string newParentId, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName);
+            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -363,25 +363,25 @@ namespace BoxApi.V2
             GuardFromNull(onFailure, "onFailure");
         }
 
-        public void Copy(File file, Folder newParent, Action<File> onSuccess, Action<Error> onFailure, string newName = null)
+        public void Copy(File file, Folder newParent, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
-            CopyFile(file.Id, newParent.Id, onSuccess, onFailure, newName);
+            CopyFile(file.Id, newParent.Id, newName, fields, onSuccess, onFailure);
         }
 
-        public void Copy(File file, string newParentId, Action<File> onSuccess, Action<Error> onFailure, string newName = null)
+        public void Copy(File file, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            CopyFile(file.Id, newParentId, onSuccess, onFailure, newName);
+            CopyFile(file.Id, newParentId, newName, fields, onSuccess, onFailure);
         }
 
-        public void CopyFile(string id, string newParentId, Action<File> onSuccess, Action<Error> onFailure, string newName = null)
+        public void CopyFile(string id, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName);
+            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

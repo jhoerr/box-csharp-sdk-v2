@@ -71,7 +71,7 @@ namespace BoxApi.V2.Tests
             File originalFile = Client.CreateFile(RootId, testItemName);
             // Act
             string newName = TestItemName();
-            File copyFile = Client.Copy(originalFile, RootId, newName);
+            File copyFile = Client.Copy(originalFile, RootId, newName, null);
             // Assert
             AssertFileConstraints(copyFile, newName, RootId);
             Assert.That(copyFile.Id, Is.Not.EqualTo(originalFile.Id));
@@ -88,7 +88,7 @@ namespace BoxApi.V2.Tests
             // Act
             try
             {
-                Client.Copy(originalFile, RootId);
+                Client.Copy(originalFile, RootId, null, null);
             }
             finally
             {
@@ -102,11 +102,11 @@ namespace BoxApi.V2.Tests
             string fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
             string folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             // Act
             try
             {
-                File copyFile = Client.Copy(file, folder);
+                File copyFile = Client.Copy(file, folder, null, null);
                 // Assert
                 AssertFileConstraints(copyFile, file.Name, folder.Id);
                 Assert.That(copyFile.Id, Is.Not.EqualTo(file.Id));
@@ -181,7 +181,7 @@ namespace BoxApi.V2.Tests
             string fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
             string newParent = TestItemName();
-            var folder = Client.CreateFolder(RootId, newParent);
+            var folder = Client.CreateFolder(RootId, newParent, null);
             // Act
             try
             {
@@ -240,7 +240,7 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
             string newDescription = "new description";
             string newFolder = TestItemName();
-            var folder = Client.CreateFolder(RootId, newFolder);
+            var folder = Client.CreateFolder(RootId, newFolder, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
             string newName = TestItemName();
             // Act

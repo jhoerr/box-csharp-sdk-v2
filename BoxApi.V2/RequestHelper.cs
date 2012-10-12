@@ -30,9 +30,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateFolder(string parentId, string name)
+        public IRestRequest CreateFolder(string parentId, string name, Field[] fields)
         {
-            var request = JsonRequest(ResourceType.Folder, null, Method.POST);
+            var request = JsonRequest(ResourceType.Folder, null, Method.POST, fields);
             request.AddBody(new {name, parent = new {id = parentId}});
             return request;
         }
@@ -78,9 +78,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name, Field[] fields)
         {
-            var request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST);
+            var request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
             request.AddUrlSegment("id", id);
             request.AddBody(new {parent = new {id = newParentId}, name});
             return request;

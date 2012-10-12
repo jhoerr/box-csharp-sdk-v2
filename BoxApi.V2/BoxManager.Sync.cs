@@ -36,11 +36,11 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
         }
 
-        public Folder CreateFolder(string parentId, string name)
+        public Folder CreateFolder(string parentId, string name, Field[] fields)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
-            var request = _requestHelper.CreateFolder(parentId, name);
+            var request = _requestHelper.CreateFolder(parentId, name, fields);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -63,44 +63,44 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public Folder Copy(Folder folder, Folder newParent, string newName = null)
+        public Folder Copy(Folder folder, Folder newParent, string newName, Field[] fields)
         {
             GuardFromNull(folder, "folder");
-            return CopyFolder(folder.Id, newParent.Id, newName);
+            return CopyFolder(folder.Id, newParent.Id, newName, fields);
         }
 
-        public Folder Copy(Folder folder, string newParentId, string newName = null)
+        public Folder Copy(Folder folder, string newParentId, string newName, Field[] fields)
         {
             GuardFromNull(folder, "folder");
-            return CopyFolder(folder.Id, newParentId, newName);
+            return CopyFolder(folder.Id, newParentId, newName, fields);
         }
 
-        public File Copy(File file, Folder folder, string newName = null)
+        public File Copy(File file, Folder folder, string newName, Field[] fields)
         {
             GuardFromNull(file, "file");
             GuardFromNull(folder, "folder");
-            return CopyFile(file.Id, folder.Id, newName);
+            return CopyFile(file.Id, folder.Id, newName, fields);
         }
 
-        public File Copy(File file, string newParentId, string newName = null)
+        public File Copy(File file, string newParentId, string newName, Field[] fields)
         {
             GuardFromNull(file, "file");
-            return CopyFile(file.Id, newParentId, newName);
+            return CopyFile(file.Id, newParentId, newName, fields);
         }
 
-        public Folder CopyFolder(string id, string newParentId, string newName = null)
+        public Folder CopyFolder(string id, string newParentId, string newName, Field[] fields)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName);
+            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName, fields);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File CopyFile(string id, string newParentId, string newName = null)
+        public File CopyFile(string id, string newParentId, string newName, Field[] fields)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName);
+            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 

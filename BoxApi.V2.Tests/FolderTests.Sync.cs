@@ -18,9 +18,9 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetFolderItems()
         {
-            var testFolder = Client.CreateFolder(RootId, TestItemName());
-            Client.CreateFolder(testFolder.Id, TestItemName());
-            Client.CreateFolder(testFolder.Id, TestItemName());
+            var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
+            Client.CreateFolder(testFolder.Id, TestItemName(), null);
+            Client.CreateFolder(testFolder.Id, TestItemName(), null);
 
             try
             {
@@ -52,7 +52,7 @@ namespace BoxApi.V2.Tests
         public void CreateFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             AssertFolderConstraints(folder, folderName, RootId);
             // clean up 
             Client.Delete(folder, true);
@@ -61,14 +61,14 @@ namespace BoxApi.V2.Tests
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFolderWithIllegalName()
         {
-            Client.CreateFolder(RootId, "\\bad name:");
+            Client.CreateFolder(RootId, "\\bad name:", null);
         }
 
         [Test]
         public void DeleteFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             Client.Delete(folder, true);
         }
 
@@ -76,8 +76,8 @@ namespace BoxApi.V2.Tests
         public void DeleteFolderRecursive()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
-            var subFolder = Client.CreateFolder(folder.Id, "subfolder");
+            var folder = Client.CreateFolder(RootId, folderName, null);
+            var subFolder = Client.CreateFolder(folder.Id, "subfolder", null);
             Client.Delete(folder, true);
         }
 
@@ -85,8 +85,8 @@ namespace BoxApi.V2.Tests
         public void DeleteNonEmptyFolderWithoutRecursiveBitSet()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
-            var subFolder = Client.CreateFolder(folder.Id, "subfolder");
+            var folder = Client.CreateFolder(RootId, folderName, null);
+            var subFolder = Client.CreateFolder(folder.Id, "subfolder", null);
             try
             {
                 // Should barf.
@@ -109,9 +109,9 @@ namespace BoxApi.V2.Tests
         public void CopyFolderToSameParentWithDifferentName()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var copyName = TestItemName();
-            var copy = Client.Copy(folder, RootId, copyName);
+            var copy = Client.Copy(folder, RootId, copyName, null);
             AssertFolderConstraints(copy, copyName, RootId);
             Assert.That(copy.Parent.Id, Is.EqualTo(RootId));
             Client.Delete(folder, true);
@@ -122,11 +122,11 @@ namespace BoxApi.V2.Tests
         public void CopyFolderToDifferentParentWithSameName()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var destinationName = TestItemName();
-            var destination = Client.CreateFolder(RootId, destinationName);
+            var destination = Client.CreateFolder(RootId, destinationName, null);
 
-            var copy = Client.Copy(folder, destination);
+            var copy = Client.Copy(folder, destination, null, null);
             AssertFolderConstraints(copy, folderName, destination.Id);
             Assert.That(copy.Parent.Id, Is.EqualTo(destination.Id));
             Client.Delete(folder, true);
@@ -137,10 +137,10 @@ namespace BoxApi.V2.Tests
         public void CopyRecursive()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
-            var subfolder = Client.CreateFolder(folder.Id, "subfolder");
+            var folder = Client.CreateFolder(RootId, folderName, null);
+            var subfolder = Client.CreateFolder(folder.Id, "subfolder", null);
             var copyName = TestItemName();
-            var copy = Client.Copy(folder, RootId, copyName);
+            var copy = Client.Copy(folder, RootId, copyName, null);
             Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
             Client.Delete(folder);
             Client.Delete(copy);
@@ -150,10 +150,10 @@ namespace BoxApi.V2.Tests
         public void CopyFolderFailsWhenSameParentAndNewNameNotProvided()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             try
             {
-                Client.Copy(folder, RootId);
+                Client.Copy(folder, RootId, null, null);
             }
             finally
             {
@@ -165,10 +165,10 @@ namespace BoxApi.V2.Tests
         public void CopyFolderFailsWhenSameParentAndNewNameIsSame()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             try
             {
-                Client.Copy(folder, RootId, folder.Name);
+                Client.Copy(folder, RootId, folder.Name, null);
             }
             finally
             {
@@ -180,7 +180,7 @@ namespace BoxApi.V2.Tests
         public void CreateSharedLink()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
             var update = Client.ShareLink(folder, sharedLink);
             AssertFolderConstraints(update, folderName, RootId, folder.Id);
@@ -192,9 +192,9 @@ namespace BoxApi.V2.Tests
         public void MoveFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var targetFolderName = TestItemName();
-            var targetFolder = Client.CreateFolder(RootId, targetFolderName);
+            var targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
             var moved = Client.Move(folder, targetFolder);
             AssertFolderConstraints(moved, folderName, targetFolder.Id, folder.Id);
             Client.Delete(targetFolder, true);
@@ -204,7 +204,7 @@ namespace BoxApi.V2.Tests
         public void MoveFolderToSameParent()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             try
             {
                 var moved = Client.Move(folder, RootId);
@@ -220,7 +220,7 @@ namespace BoxApi.V2.Tests
         public void RenameFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
             var moved = Client.Rename(folder, newName);
             AssertFolderConstraints(moved, newName, RootId, folder.Id);
@@ -231,7 +231,7 @@ namespace BoxApi.V2.Tests
         public void RenameFolderToSameName()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var moved = Client.Rename(folder, folderName);
             AssertFolderConstraints(moved, folderName, RootId, folder.Id);
             Client.Delete(folder, true);
@@ -242,7 +242,7 @@ namespace BoxApi.V2.Tests
         {
             var folderName = TestItemName();
             var newDescription = "new description";
-            var folder = Client.CreateFolder(RootId, folderName);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             // Act
             try
             {
@@ -260,9 +260,9 @@ namespace BoxApi.V2.Tests
         [Test]
         public void UpdateEverything()
         {
-            var folder = Client.CreateFolder(RootId, TestItemName());
+            var folder = Client.CreateFolder(RootId, TestItemName(), null);
             var newDescription = "new description";
-            var newParent = Client.CreateFolder(RootId, TestItemName());
+            var newParent = Client.CreateFolder(RootId, TestItemName(), null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
             var newName = TestItemName();
             // Act

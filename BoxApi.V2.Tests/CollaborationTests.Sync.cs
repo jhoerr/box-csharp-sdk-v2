@@ -11,7 +11,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Create()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             try
             {
                 var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, Role.Viewer);
@@ -29,7 +29,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Get()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, Role.Viewer);
             try
             {
@@ -48,7 +48,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetFolderCollaborations()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var view = Client.CreateCollaboration(folder, CollaboratingUser, Role.Viewer);
             
             try
@@ -67,7 +67,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Update()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, Role.Viewer);
             
             try
@@ -87,7 +87,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Delete()
         {
-            var folder = Client.CreateFolder(Folder.Root, TestItemName());
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, Role.Viewer);
 
             try
