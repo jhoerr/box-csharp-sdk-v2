@@ -23,21 +23,21 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetDiscussions(string folderId)
+        public IRestRequest GetDiscussions(string folderId, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET);
+            var request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET, fields);
             request.AddUrlSegment("id", folderId);
             return request;
         }
 
-        public IRestRequest CreateFolder(string parentId, string name, Field[] fields)
+        public IRestRequest CreateFolder(string parentId, string name, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.Folder, null, Method.POST, fields);
             request.AddBody(new {name, parent = new {id = parentId}});
             return request;
         }
 
-        public IRestRequest CreateFile(string parentId, string name, byte[] content, Field[] fields)
+        public IRestRequest CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.File, "content", Method.POST, fields);
             request.AddFile("filename1", content, name);
@@ -78,7 +78,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name, Field[] fields)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name, Field[] fields = null)
         {
             var request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
             request.AddUrlSegment("id", id);
@@ -150,9 +150,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateDiscussion(string parentId, string name, string description)
+        public IRestRequest CreateDiscussion(string parentId, string name, string description, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Discussion, null, Method.POST);
+            var request = JsonRequest(ResourceType.Discussion, null, Method.POST, fields);
             request.AddBody(new {parent = new {id = parentId}, name, description});
             return request;
         }

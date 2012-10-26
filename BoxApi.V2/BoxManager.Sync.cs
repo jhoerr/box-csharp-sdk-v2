@@ -456,17 +456,17 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
-        public Discussion CreateDiscussion(Folder parent, string name, string description = null)
+        public Discussion CreateDiscussion(Folder parent, string name, string description = null, Field[] fields = null)
         {
             GuardFromNull(parent, "parent");
-            return CreateDiscussion(parent.Id, name, description);
+            return CreateDiscussion(parent.Id, name, description, fields);
         }
 
-        public Discussion CreateDiscussion(string parentId, string name, string description = null)
+        public Discussion CreateDiscussion(string parentId, string name, string description = null, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
-            var request = _requestHelper.CreateDiscussion(parentId, name, description);
+            var request = _requestHelper.CreateDiscussion(parentId, name, description, fields);
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
@@ -483,23 +483,23 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public Discussion GetDiscussion(string id)
+        public Discussion GetDiscussion(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Discussion, id);
+            var request = _requestHelper.Get(ResourceType.Discussion, id, fields);
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
-        public DiscussionCollection GetDiscussions(Folder folder)
+        public DiscussionCollection GetDiscussions(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return GetDiscussions(folder.Id);
+            return GetDiscussions(folder.Id, fields);
         }
 
-        private DiscussionCollection GetDiscussions(string folderId)
+        private DiscussionCollection GetDiscussions(string folderId, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
-            var request = _requestHelper.GetDiscussions(folderId);
+            var request = _requestHelper.GetDiscussions(folderId, fields);
             return _restClient.ExecuteAndDeserialize<DiscussionCollection>(request);
         }
 

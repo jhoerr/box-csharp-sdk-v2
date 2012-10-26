@@ -445,18 +445,18 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void CreateDiscussion(Folder parent, string name, string description, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussion(Folder parent, string name, string description, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(parent, "parent");
-            CreateDiscussion(parent.Id, name, description, onSuccess, onFailure);
+            CreateDiscussion(parent.Id, name, description, fields, onSuccess, onFailure);
         }
 
-        public void CreateDiscussion(string parentId, string name, string description, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussion(string parentId, string name, string description, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            IRestRequest request = _requestHelper.CreateDiscussion(parentId, name, description);
+            IRestRequest request = _requestHelper.CreateDiscussion(parentId, name, description, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -503,25 +503,25 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetDiscussion(string id, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void GetDiscussion(string id, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            IRestRequest request = _requestHelper.Get(ResourceType.Discussion, id);
+            IRestRequest request = _requestHelper.Get(ResourceType.Discussion, id, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetDiscussions(Folder folder, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
+        public void GetDiscussions(Folder folder, Field[] fields, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            GetDiscussions(folder.Id, onSuccess, onFailure);
+            GetDiscussions(folder.Id, fields, onSuccess, onFailure);
         }
 
-        private void GetDiscussions(string folderId, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
+        private void GetDiscussions(string folderId, Field[] fields, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            IRestRequest request = _requestHelper.GetDiscussions(folderId);
+            IRestRequest request = _requestHelper.GetDiscussions(folderId, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
