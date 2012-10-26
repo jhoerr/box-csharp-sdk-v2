@@ -18,8 +18,8 @@ namespace BoxApi.V2.Model
         [Description("discussions")] Discussion,
         [Description("events")] Event,
         [Description("tokens")] Token,
-        [Description("collaborations")]Collaboration,
-        [Description("error")]Error,
+        [Description("collaborations")] Collaboration,
+        [Description("error")] Error,
     }
 
     public enum Field
@@ -28,13 +28,17 @@ namespace BoxApi.V2.Model
         [Description("created_by")] CreatedBy,
         [Description("description")] Description,
         [Description("etag")] Etag,
+        [Description("expires_at")] ExpiresAt,
+        [Description("is_reply_comment")] IsReplyComment,
+        [Description("message")] Message,
         [Description("modified_at")] ModifiedAt,
-        [Description("modified_bu")] ModifiedBy,
+        [Description("modified_by")] ModifiedBy,
         [Description("name")] Name,
         [Description("owned_by")] OwnedBy,
         [Description("parent")] Parent,
         [Description("path")] Path,
         [Description("path_id")] PathId,
+        [Description("role")] Role,
         [Description("sequence_id")] SequenceId,
         [Description("shared_link")] SharedLink,
         [Description("size")] Size,
@@ -53,9 +57,9 @@ namespace BoxApi.V2.Model
 
     public enum Status
     {
-        [Description("pending")]Pending,
-        [Description("accepted")]Accepted,
-        [Description("rejected")]Rejected,
+        [Description("pending")] Pending,
+        [Description("accepted")] Accepted,
+        [Description("rejected")] Rejected,
     }
 
     public static class EnumExtensions
