@@ -86,10 +86,10 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update(ResourceType resourceResourceType, string id, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null,
+        public IRestRequest Update(ResourceType resourceResourceType, string id, Field[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null,
                                    string message = null)
         {
-            var request = JsonRequest(resourceResourceType, "{id}", Method.PUT);
+            var request = JsonRequest(resourceResourceType, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", id);
             var body = new Dictionary<string, object>();
 

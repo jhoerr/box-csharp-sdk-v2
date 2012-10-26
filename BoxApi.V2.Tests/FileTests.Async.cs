@@ -135,7 +135,7 @@ namespace BoxApi.V2.Tests
             var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
             
             // Act
-            Client.ShareLink(file, expectedLink, sharedFile =>
+            Client.ShareLink(file, expectedLink, null, sharedFile =>
             {
                 // Assert
                 AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
@@ -166,7 +166,7 @@ namespace BoxApi.V2.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.Rename(file, newItemName, renamedFile =>
+            Client.Rename(file, newItemName, null, renamedFile =>
             {
                 // Assert
                 AssertFileConstraints(renamedFile, newItemName, RootId);
@@ -197,7 +197,7 @@ namespace BoxApi.V2.Tests
             string folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName, null);
             // Act
-            Client.Move(file, folder, movedFile =>
+            Client.Move(file, folder, null, movedFile =>
             {
                 // Assert
                 AssertFileConstraints(movedFile, testItemName, folder.Id, file.Id);
@@ -228,7 +228,7 @@ namespace BoxApi.V2.Tests
             string newDescription = "new description";
 
             // Act
-            Client.UpdateDescription(file, newDescription, updatedFile =>
+            Client.UpdateDescription(file, newDescription, null, updatedFile =>
             {
                 // Assert
                 AssertFileConstraints(updatedFile, file.Name, RootId, file.Id);
@@ -269,7 +269,7 @@ namespace BoxApi.V2.Tests
             file.Description = newDescription;
             file.Parent.Id = folder.Id;
             file.SharedLink = sharedLink;
-            Client.Update(file, updatedFile =>
+            Client.Update(file, null, updatedFile =>
             {
                 // Assert
                 AssertFileConstraints(updatedFile, newName, folder.Id, file.Id);

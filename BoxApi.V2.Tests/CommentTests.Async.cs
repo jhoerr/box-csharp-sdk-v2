@@ -116,7 +116,7 @@ namespace BoxApi.V2.Tests
             var comment = Client.CreateComment(file, "originalComment");
             comment.Message = newComment;
             // Act
-            Client.Update(comment, updatedComment =>
+            Client.Update(comment, null, updatedComment =>
                 {
                     // Assert
                     Assert.That(updatedComment, Is.Not.Null);

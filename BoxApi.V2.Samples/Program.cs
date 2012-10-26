@@ -43,7 +43,8 @@ namespace BoxApi.V2.Samples
             var boxManager = new BoxManager(apiKey, authToken);
 
             // Get all contents of the root folder
-            var rootFolder = boxManager.GetFolder(Folder.Root, null);
+            // Specify that we only want the Name, Etag, Size, CreatedAt properties returned for the folder contents.
+            var rootFolder = boxManager.GetFolder(Folder.Root, new[]{Field.Name, Field.Etag, Field.Size, Field.CreatedAt });
 
             // Find a file
             var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
@@ -54,10 +55,11 @@ namespace BoxApi.V2.Samples
 
             // Update the file
             // A new file object is always returned with an updated ETag.
+            // Specify that we only want the Name, Etag, and Size of the file returned.
             file = boxManager.Update(file);
 
             // Create a new subfolder
-            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder", null);
+            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
 
             // Move the file to the subfolder
             file = boxManager.Move(file, subfolder);

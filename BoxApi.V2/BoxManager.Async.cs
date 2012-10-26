@@ -82,155 +82,155 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void ShareLink(Folder folder, SharedLink sharedLink, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void ShareLink(Folder folder, SharedLink sharedLink, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            ShareFolderLink(folder.Id, sharedLink, onSuccess, onFailure);
+            ShareFolderLink(folder.Id, sharedLink, fields, onSuccess, onFailure);
         }
 
-        public void ShareLink(File file, SharedLink sharedLink, Action<File> onSuccess, Action<Error> onFailure)
+        public void ShareLink(File file, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            ShareFileLink(file.Id, sharedLink, onSuccess, onFailure);
+            ShareFileLink(file.Id, sharedLink, fields, onSuccess, onFailure);
         }
 
-        public void ShareFolderLink(string id, SharedLink sharedLink, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void ShareFolderLink(string id, SharedLink sharedLink, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, sharedLink: sharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void ShareFileLink(string id, SharedLink sharedLink, Action<File> onSuccess, Action<Error> onFailure)
+        public void ShareFileLink(string id, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, sharedLink: sharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Move(Folder folder, Folder newParent, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Move(Folder folder, Folder newParent, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(newParent, "newParent");
-            Move(folder, newParent.Id, onSuccess, onFailure);
+            Move(folder, newParent.Id, fields, onSuccess, onFailure);
         }
 
-        public void Move(Folder folder, string newParentId, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Move(Folder folder, string newParentId, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            MoveFolder(folder.Id, newParentId, onSuccess, onFailure);
+            MoveFolder(folder.Id, newParentId, fields, onSuccess, onFailure);
         }
 
-        public void MoveFolder(string id, string newParentId, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void MoveFolder(string id, string newParentId, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, newParentId);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, newParentId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Move(File file, Folder newParent, Action<File> onSuccess, Action<Error> onFailure)
+        public void Move(File file, Folder newParent, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(newParent, "newParent");
-            Move(file, newParent.Id, onSuccess, onFailure);
+            Move(file, newParent.Id, fields, onSuccess, onFailure);
         }
 
-        public void Move(File file, string newParentId, Action<File> onSuccess, Action<Error> onFailure)
+        public void Move(File file, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            MoveFile(file.Id, newParentId, onSuccess, onFailure);
+            MoveFile(file.Id, newParentId, fields, onSuccess, onFailure);
         }
 
-        public void MoveFile(string id, string newParentId, Action<File> onSuccess, Action<Error> onFailure)
+        public void MoveFile(string id, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, newParentId);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, newParentId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Rename(Folder folder, string newName, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Rename(Folder folder, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            RenameFolder(folder.Id, newName, onSuccess, onFailure);
+            RenameFolder(folder.Id, newName, fields, onSuccess, onFailure);
         }
 
-        public void Rename(File file, string newName, Action<File> onSuccess, Action<Error> onFailure)
+        public void Rename(File file, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            RenameFile(file.Id, newName, onSuccess, onFailure);
+            RenameFile(file.Id, newName, fields, onSuccess, onFailure);
         }
 
-        public void RenameFolder(string id, string newName, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void RenameFolder(string id, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, name: newName);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, name: newName);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void RenameFile(string id, string newName, Action<File> onSuccess, Action<Error> onFailure)
+        public void RenameFile(string id, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, name: newName);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, name: newName);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateDescription(Folder folder, string description, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void UpdateDescription(Folder folder, string description, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            UpdateFolderDescription(folder.Id, description, onSuccess, onFailure);
+            UpdateFolderDescription(folder.Id, description, fields, onSuccess, onFailure);
         }
 
-        private void UpdateFolderDescription(string id, string description, Action<Folder> onSuccess, Action<Error> onFailure)
+        private void UpdateFolderDescription(string id, string description, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.Folder, id, description: description);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, description: description);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateDescription(File file, string description, Action<File> onSuccess, Action<Error> onFailure)
+        public void UpdateDescription(File file, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            UpdateFileDescription(file.Id, description, onSuccess, onFailure);
+            UpdateFileDescription(file.Id, description, fields, onSuccess, onFailure);
         }
 
-        public void UpdateFileDescription(string id, string description, Action<File> onSuccess, Action<Error> onFailure)
+        public void UpdateFileDescription(string id, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, description: description);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(Folder folder, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Update(Folder folder, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
-            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, parentId, folder.Name, folder.Description, folder.SharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(File file, Action<File> onSuccess, Action<Error> onFailure)
+        public void Update(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(Comment comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void Update(Comment comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(comment, "comment");
-            var request = _requestHelper.Update(ResourceType.Comment, comment.Id, message: comment.Message);
+            var request = _requestHelper.Update(ResourceType.Comment, comment.Id, fields, message: comment.Message);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

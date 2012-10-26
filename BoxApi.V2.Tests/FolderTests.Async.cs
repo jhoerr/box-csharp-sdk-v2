@@ -172,7 +172,7 @@ namespace BoxApi.V2.Tests
             var folder = Client.CreateFolder(RootId, folderName, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { Preview = true, Download = true });
 
-            Client.ShareFolderLink(folder.Id, sharedLink, copiedFolder =>
+            Client.ShareFolderLink(folder.Id, sharedLink, null, copiedFolder =>
             {
                 callbackHit = true;
                 AssertFolderConstraints(folder, folderName, RootId);
@@ -200,7 +200,7 @@ namespace BoxApi.V2.Tests
             var targetFolderName = TestItemName();
             Folder targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
 
-            Client.MoveFolder(folder.Id, targetFolder.Id, movedFolder =>
+            Client.MoveFolder(folder.Id, targetFolder.Id, null, movedFolder =>
             {
                 callbackHit = true;
                 AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
@@ -226,7 +226,7 @@ namespace BoxApi.V2.Tests
             Folder folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
 
-            Client.Rename(folder, newName, renamedFolder =>
+            Client.Rename(folder, newName, null, renamedFolder =>
             {
                 callbackHit = true;
                 AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
@@ -284,7 +284,7 @@ namespace BoxApi.V2.Tests
 
             // Act
             folder.Description = newDescription;
-            Client.UpdateDescription(folder, newDescription, updatedFolder =>
+            Client.UpdateDescription(folder, newDescription, null, updatedFolder =>
             {
                 // Assert
                 AssertFolderConstraints(updatedFolder, folder.Name, folder.Parent.Id, folder.Id);
@@ -325,7 +325,7 @@ namespace BoxApi.V2.Tests
             folder.Description = newDescription;
             folder.Parent.Id = newParent.Id;
             folder.SharedLink = sharedLink;
-            Client.Update(folder, updatedFolder =>
+            Client.Update(folder, null, updatedFolder =>
             {
                 // Assert
                 AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);

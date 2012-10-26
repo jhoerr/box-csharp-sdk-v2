@@ -10,33 +10,33 @@ namespace BoxApi.V2
     {
         private const int MaxFileGetAttempts = 4;
 
-        public Folder Get(Folder folder, Field[] fields)
+        public Folder Get(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetFolder(folder.Id, null);
         }
 
-        public Folder GetFolder(string id, Field[] fields)
+        public Folder GetFolder(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(ResourceType.Folder, id, fields);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public ItemCollection GetItems(Folder folder, Field[] fields)
+        public ItemCollection GetItems(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetItems(folder.Id, fields);
         }
 
-        public ItemCollection GetItems(string id, Field[] fields)
+        public ItemCollection GetItems(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id, fields);
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
         }
 
-        public Folder CreateFolder(string parentId, string name, Field[] fields)
+        public Folder CreateFolder(string parentId, string name, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -63,32 +63,32 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public Folder Copy(Folder folder, Folder newParent, string newName, Field[] fields)
+        public Folder Copy(Folder folder, Folder newParent, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return CopyFolder(folder.Id, newParent.Id, newName, fields);
         }
 
-        public Folder Copy(Folder folder, string newParentId, string newName, Field[] fields)
+        public Folder Copy(Folder folder, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return CopyFolder(folder.Id, newParentId, newName, fields);
         }
 
-        public File Copy(File file, Folder folder, string newName, Field[] fields)
+        public File Copy(File file, Folder folder, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(folder, "folder");
             return CopyFile(file.Id, folder.Id, newName, fields);
         }
 
-        public File Copy(File file, string newParentId, string newName, Field[] fields)
+        public File Copy(File file, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             return CopyFile(file.Id, newParentId, newName, fields);
         }
 
-        public Folder CopyFolder(string id, string newParentId, string newName, Field[] fields)
+        public Folder CopyFolder(string id, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -96,7 +96,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File CopyFile(string id, string newParentId, string newName, Field[] fields)
+        public File CopyFile(string id, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -104,149 +104,149 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public Folder ShareLink(Folder folder, SharedLink sharedLink)
+        public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return ShareFolderLink(folder.Id, sharedLink);
+            return ShareFolderLink(folder.Id, sharedLink, fields);
         }
 
-        public Folder ShareFolderLink(string id, SharedLink sharedLink)
+        public Folder ShareFolderLink(string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
-            var request = _requestHelper.Update(ResourceType.Folder, id, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, sharedLink: sharedLink);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File ShareLink(File file, SharedLink sharedLink)
+        public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return ShareFileLink(file.Id, sharedLink);
+            return ShareFileLink(file.Id, sharedLink, fields);
         }
 
-        private File ShareFileLink(string id, SharedLink sharedLink)
+        private File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
-            var request = _requestHelper.Update(ResourceType.File, id, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, sharedLink: sharedLink);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public Folder Move(Folder folder, Folder newParent)
+        public Folder Move(Folder folder, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
-            return Move(folder, newParent.Id);
+            return Move(folder, newParent.Id, fields);
         }
 
-        public Folder Move(Folder folder, string newParentId)
+        public Folder Move(Folder folder, string newParentId, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return MoveFolder(folder.Id, newParentId);
+            return MoveFolder(folder.Id, newParentId, fields);
         }
 
-        public File Move(File file, Folder newParent)
+        public File Move(File file, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
-            return Move(file, newParent.Id);
+            return Move(file, newParent.Id, fields);
         }
 
-        public File Move(File file, string newParentId)
+        public File Move(File file, string newParentId, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return MoveFile(file.Id, newParentId);
+            return MoveFile(file.Id, newParentId, fields);
         }
 
-        public Folder MoveFolder(string id, string newParentId)
+        public Folder MoveFolder(string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Update(ResourceType.Folder, id, newParentId);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, newParentId);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File MoveFile(string id, string newParentId)
+        public File MoveFile(string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Update(ResourceType.File, id, newParentId);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, newParentId);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public Folder Rename(Folder folder, string newName)
+        public Folder Rename(Folder folder, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return RenameFolder(folder.Id, newName);
+            return RenameFolder(folder.Id, newName, fields);
         }
 
-        public File Rename(File file, string newName)
+        public File Rename(File file, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return RenameFile(file.Id, newName);
+            return RenameFile(file.Id, newName, fields);
         }
 
-        public File RenameFile(string id, string newName)
+        public File RenameFile(string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.File, id, name: newName);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, name: newName);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public Folder RenameFolder(string id, string newName)
+        public Folder RenameFolder(string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.Folder, id, name: newName);
+            var request = _requestHelper.Update(ResourceType.Folder, id,fields, name: newName);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public Folder UpdateDescription(Folder folder, string description)
+        public Folder UpdateDescription(Folder folder, string description, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return UpdateFolderDescription(folder.Id, description);
+            return UpdateFolderDescription(folder.Id, description, fields);
         }
 
-        public Folder UpdateFolderDescription(string id, string description)
+        public Folder UpdateFolderDescription(string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.Folder, id, description: description);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, description: description);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File UpdateDescription(File file, string description)
+        public File UpdateDescription(File file, string description, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return UpdateFileDescription(file.Id, description);
+            return UpdateFileDescription(file.Id, description, fields);
         }
 
-        public File UpdateFileDescription(string id, string description)
+        public File UpdateFileDescription(string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, description: description);
+            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public File Update(File file)
+        public File Update(File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public Folder Update(Folder folder)
+        public Folder Update(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
-            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, parentId, folder.Name, folder.Description, folder.SharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public Comment Update(Comment comment)
+        public Comment Update(Comment comment, Field[] fields = null)
         {
             GuardFromNull(comment, "comment");
-            var request = _requestHelper.Update(ResourceType.Comment, comment.Id, message: comment.Message);
+            var request = _requestHelper.Update(ResourceType.Comment, comment.Id, fields, message: comment.Message);
             return _restClient.ExecuteAndDeserialize<Comment>(request);
         }
 
