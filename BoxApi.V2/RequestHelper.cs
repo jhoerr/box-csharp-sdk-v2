@@ -37,9 +37,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateFile(string parentId, string name, byte[] content)
+        public IRestRequest CreateFile(string parentId, string name, byte[] content, Field[] fields)
         {
-            var request = JsonRequest(ResourceType.File, "content", Method.POST);
+            var request = JsonRequest(ResourceType.File, "content", Method.POST, fields);
             request.AddFile("filename1", content, name);
             request.AddParameter("folder_id", parentId);
             return request;

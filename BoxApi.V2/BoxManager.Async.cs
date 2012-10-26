@@ -234,23 +234,23 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Get(File file, Action<File> onSuccess, Action<Error> onFailure)
+        public void Get(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            GetFile(file.Id, onSuccess, onFailure);
+            GetFile(file.Id, fields, onSuccess, onFailure);
         }
 
-        public void GetFile(string id, Action<File> onSuccess, Action<Error> onFailure)
+        public void GetFile(string id, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
-            GetFile(id, 0, onSuccess, onFailure);
+            GetFile(id, 0, fields, onSuccess, onFailure);
         }
 
-        private void GetFile(string id, int attempt, Action<File> onSuccess, Action<Error> onFailure)
+        private void GetFile(string id, int attempt, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
 
-            var request = _requestHelper.Get(ResourceType.File, id);
+            var request = _requestHelper.Get(ResourceType.File, id, fields);
 
             Action<File> onSuccessWrapper = file =>
                 {
@@ -258,7 +258,7 @@ namespace BoxApi.V2
                     {
                         // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
                         Backoff(attempt);
-                        GetFile(id, attempt, onSuccess, onFailure);
+                        GetFile(id, attempt, fields, onSuccess, onFailure);
                     }
                     else
                     {
@@ -298,12 +298,29 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void CreateFile(string parentId, string name, Action<File> onSuccess, Action<Error> onFailure)
+        public void CreateFile(Folder folder, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            CreateFile(folder.Id, name, new byte[0], fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(Folder folder, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(folder, "folder");
+            CreateFile(folder.Id, name, content, fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(string parentId, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            CreateFile(parentId, name, new byte[0], fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(string parentId, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.CreateFile(parentId, name, new byte[0]);
+            var request = _requestHelper.CreateFile(parentId, name, content, fields);
 
             // TODO: There are two side effects to to deal with here:
             // 1. Box requires some non-trivial amount of time to calculate the file's etag.
@@ -311,7 +328,7 @@ namespace BoxApi.V2
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
 
-            Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, onSuccess, onFailure);
+            Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, fields, onSuccess, onFailure);
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 

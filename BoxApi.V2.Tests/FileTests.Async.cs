@@ -15,7 +15,7 @@ namespace BoxApi.V2.Tests
 
             var testItemName = TestItemName();
             File actual = null;
-            Client.CreateFile(RootId, testItemName, file =>
+            Client.CreateFile(RootId, testItemName, null, file =>
                 {
                     actual = file;
                     AssertFileConstraints(file, testItemName, RootId);

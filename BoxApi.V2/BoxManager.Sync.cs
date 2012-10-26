@@ -250,18 +250,18 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(request);
         }
 
-        public File Get(File file)
+        public File Get(File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return GetFile(file.Id);
+            return GetFile(file.Id, fields);
         }
 
-        public File GetFile(string id)
+        public File GetFile(string id, Field[] fields = null)
         {
-            return GetFile(id, 0);
+            return GetFile(id, 0, fields);
         }
 
-        private File GetFile(string id, int attempt)
+        private File GetFile(string id, int attempt, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
@@ -269,21 +269,32 @@ namespace BoxApi.V2
             {
                 Backoff(attempt);
             }
-            var request = _requestHelper.Get(ResourceType.File, id);
+            var request = _requestHelper.Get(ResourceType.File, id, fields);
             var file = _restClient.ExecuteAndDeserialize<File>(request);
-            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, attempt++) : file;
+            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, fields) : file;
         }
 
-        public File CreateFile(string parentId, string name)
+        public File CreateFile(Folder parent, string name, Field[] fields = null)
         {
-            return CreateFile(parentId, name, new byte[0]);
+            return CreateFile(parent, name, new byte[0], fields);
         }
 
-        public File CreateFile(string parentId, string name, byte[] content)
+        public File CreateFile(string parentId, string name, Field[] fields = null)
+        {
+            return CreateFile(parentId, name, new byte[0], fields);
+        }
+
+        public File CreateFile(Folder parent, string name, byte[] content, Field[] fields = null)
+        {
+            GuardFromNull(parent, "folder");
+            return CreateFile(parent.Id, name, content, fields);
+        }
+
+        public File CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentFolderId");
             GuardFromNull(name, "name");
-            var request = _requestHelper.CreateFile(parentId, name, content);
+            var request = _requestHelper.CreateFile(parentId, name, content, fields);
             return WriteFile(request);
         }
 
