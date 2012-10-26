@@ -33,6 +33,12 @@ namespace BoxApi.V2
             }
         }
 
+        private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
+        {
+            GuardFromNull(onSuccess, "onSuccess");
+            GuardFromNull(onFailure, "onFailure");
+        }
+
         private static void Backoff(int attempt)
         {
             Thread.Sleep((int) Math.Pow(2, attempt)*100);

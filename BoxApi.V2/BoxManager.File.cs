@@ -9,6 +9,8 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
+        private const int MaxFileGetAttempts = 4;
+      
         public File CreateFile(Folder parent, string name, Field[] fields = null)
         {
             return CreateFile(parent, name, new byte[0], fields);
@@ -33,6 +35,40 @@ namespace BoxApi.V2
             return WriteFile(request);
         }
 
+        public void CreateFile(Folder parent, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(parent, "folder");
+            CreateFile(parent.Id, name, new byte[0], fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(string parentId, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            CreateFile(parentId, name, new byte[0], fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(Folder parent, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(parent, "folder");
+            CreateFile(parent.Id, name, content, fields, onSuccess, onFailure);
+        }
+
+        public void CreateFile(string parentId, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(parentId, "parentId");
+            GuardFromNull(name, "name");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.CreateFile(parentId, name, content, fields);
+
+            // TODO: There are two side effects to to deal with here:
+            // 1. Box requires some non-trivial amount of time to calculate the file's etag.
+            // 2. This calculation is not performed before the 'upload file' request returns.
+            // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
+            // As a result we must wait a bit and then re-fetch the file from the server.
+
+            Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, fields, onSuccess, onFailure);
+            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
+        }
+
         public File Get(File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -44,7 +80,7 @@ namespace BoxApi.V2
             return GetFile(id, 0, fields);
         }
 
-        private File GetFile(string id, int attempt, Field[] fields = null)
+        public File GetFile(string id, int attempt, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
@@ -68,7 +104,7 @@ namespace BoxApi.V2
             GetFile(id, 0, fields, onSuccess, onFailure);
         }
 
-        private void GetFile(string id, int attempt, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void GetFile(string id, int attempt, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -158,7 +194,7 @@ namespace BoxApi.V2
             return WriteFile(request);
         }
 
-        private File WriteFile(IRestRequest request)
+        public File WriteFile(IRestRequest request)
         {
             var itemCollection = _restClient.ExecuteAndDeserialize<ItemCollection>(request);
 
@@ -219,13 +255,35 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
+        public void Copy(File file, Folder newParent, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(file, "file");
+            GuardFromNull(newParent, "folder");
+            CopyFile(file.Id, newParent.Id, newName, fields, onSuccess, onFailure);
+        }
+
+        public void Copy(File file, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(file, "file");
+            CopyFile(file.Id, newParentId, newName, fields, onSuccess, onFailure);
+        }
+
+        public void CopyFile(string id, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
         public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             return ShareFileLink(file.Id, sharedLink, fields);
         }
 
-        private File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
+        public File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");

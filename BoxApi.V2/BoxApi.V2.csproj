@@ -68,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxAuthenticator.cs" />
+    <Compile Include="BoxManager.Collaboration.cs" />
+    <Compile Include="BoxManager.Comment.cs" />
+    <Compile Include="BoxManager.Discussion.cs" />
     <Compile Include="BoxManager.File.cs" />
     <Compile Include="BoxRestClient.cs" />
     <Compile Include="Model\Collaboration.cs" />
@@ -79,9 +82,7 @@
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
-    <Compile Include="BoxManager.Async.cs" />
     <Compile Include="BoxManager.cs" />
-    <Compile Include="BoxManager.Sync.cs" />
     <Compile Include="Model\BoxAuthToken.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Enums.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoxManager.Folder.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
