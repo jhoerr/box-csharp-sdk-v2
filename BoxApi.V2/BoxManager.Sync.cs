@@ -503,70 +503,70 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<DiscussionCollection>(request);
         }
 
-        public Collaboration CreateCollaboration(Folder folder, string userId, Role role)
+        public Collaboration CreateCollaboration(Folder folder, string userId, Role role, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return CreateCollaboration(folder.Id, userId, role);
+            return CreateCollaboration(folder.Id, userId, role, fields);
         }
 
-        public Collaboration CreateCollaboration(string folderId, string userId, Role role)
+        public Collaboration CreateCollaboration(string folderId, string userId, Role role, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(userId, "userId");
             GuardFromNull(role, "role");
-            var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description());
+            var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description(), fields);
             return _restClient.ExecuteAndDeserialize<Collaboration>(request);
         }
 
-        public Collaboration Get(Collaboration collaboration)
+        public Collaboration Get(Collaboration collaboration, Field[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
-            return GetCollaboration(collaboration.Id);
+            return GetCollaboration(collaboration.Id, fields);
         }
 
-        private Collaboration GetCollaboration(string collaborationId)
+        private Collaboration GetCollaboration(string collaborationId, Field[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
-            var request = _requestHelper.GetCollaboration(collaborationId);
+            var request = _requestHelper.GetCollaboration(collaborationId, fields);
             return _restClient.ExecuteAndDeserialize<Collaboration>(request);
         }
 
-        public CollaborationCollection GetCollaborations(Folder folder, bool onlyPending = false)
+        public CollaborationCollection GetCollaborations(Folder folder, bool pendingCollaborationsOnly = false, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return GetCollaborations(folder.Id, onlyPending);
+            return GetCollaborations(folder.Id, pendingCollaborationsOnly, fields);
         }
 
-        private CollaborationCollection GetCollaborations(string folderId, bool onlyPending = false)
+        private CollaborationCollection GetCollaborations(string folderId, bool pendingCollaborationsOnly = false, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
-            var request = _requestHelper.GetCollaborations(folderId, onlyPending);
-            return _restClient.ExecuteAndDeserialize<CollaborationCollection>(request); ;
+            var request = _requestHelper.GetCollaborations(folderId, pendingCollaborationsOnly, fields);
+            return _restClient.ExecuteAndDeserialize<CollaborationCollection>(request);
         }
 
-        public Collaboration Update(Collaboration collaboration, Role role)
+        public Collaboration Update(Collaboration collaboration, Role role, Field[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
-            return UpdateCollaboration(collaboration.Id, role);
+            return UpdateCollaboration(collaboration.Id, role, fields);
         }
 
-        public Collaboration Update(Collaboration collaboration, Role role, Status status)
+        public Collaboration Update(Collaboration collaboration, Role role, Status status, Field[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
-            return UpdateCollaboration(collaboration.Id, role, status);
+            return UpdateCollaboration(collaboration.Id, role, status, fields);
         }
 
-        private Collaboration UpdateCollaboration(string collaborationId, Role role)
+        private Collaboration UpdateCollaboration(string collaborationId, Role role, Field[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
-            var request = _requestHelper.UpdateCollaboration(collaborationId, role);
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role, fields);
             return _restClient.ExecuteAndDeserialize<Collaboration>(request);
         }
 
-        private Collaboration UpdateCollaboration(string collaborationId, Role role, Status status)
+        private Collaboration UpdateCollaboration(string collaborationId, Role role, Status status, Field[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
-            var request = _requestHelper.UpdateCollaboration(collaborationId, role, status);
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role, status, fields);
             return _restClient.ExecuteAndDeserialize<Collaboration>(request);
         }
 

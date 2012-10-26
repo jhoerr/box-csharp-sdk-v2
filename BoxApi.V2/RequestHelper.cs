@@ -157,23 +157,23 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateCollaboration(string folderId, string userId, string role)
+        public IRestRequest CreateCollaboration(string folderId, string userId, string role, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Collaboration, null, Method.POST);
+            var request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
             request.AddBody(new {item = new {type="folder", id = folderId}, accessible_by = new {id = userId}, role});
             return request;
         }
 
-        public IRestRequest GetCollaboration(string collaborationId)
+        public IRestRequest GetCollaboration(string collaborationId, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET);
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET, fields);
             request.AddUrlSegment("id", collaborationId);
             return request;
         }
 
-        public IRestRequest GetCollaborations(string folderId, bool onlyPending)
+        public IRestRequest GetCollaborations(string folderId, bool onlyPending, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Folder, "{id}/collaborations", Method.GET);
+            var request = JsonRequest(ResourceType.Folder, "{id}/collaborations", Method.GET, fields);
             request.AddUrlSegment("id", folderId);
             if (onlyPending)
             {
@@ -182,17 +182,17 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, Role role)
+        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT);
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);
             request.AddBody(new { role = role.Description() });
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Status status)
+        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Status status, Field[] fields = null)
         {
-            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT);
+            var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);
             request.AddBody(new { role = role.Description(), status = status.Description() });
             return request;

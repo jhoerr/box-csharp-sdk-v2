@@ -525,66 +525,66 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void CreateCollaboration(Folder folder, string userId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        public void CreateCollaboration(Folder folder, string userId, Role role, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            CreateCollaboration(folder.Id, userId, role, onSuccess, onFailure);
+            CreateCollaboration(folder.Id, userId, role, fields, onSuccess, onFailure);
         }
 
-        public void CreateCollaboration(string folderId, string userId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        public void CreateCollaboration(string folderId, string userId, Role role, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(userId, "userId");
             GuardFromNull(role, "role");
-            var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description());
+            var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description(), fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        private void GetCollaboration(string collaborationId, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        private void GetCollaboration(string collaborationId, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(collaborationId, "collaborationId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.GetCollaboration(collaborationId);
+            var request = _requestHelper.GetCollaboration(collaborationId, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetCollaborations(Folder folder, Action<CollaborationCollection> onSuccess, Action<Error> onFailure, bool onlyPending = false)
+        public void GetCollaborations(Folder folder, bool pendingCollaborationsOnly, Field[] fields, Action<CollaborationCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
-            GetCollaborations(folder.Id, onSuccess, onFailure, onlyPending);
+            GetCollaborations(folder.Id, pendingCollaborationsOnly, fields, onSuccess, onFailure);
         }
 
-        private void GetCollaborations(string folderId, Action<CollaborationCollection> onSuccess, Action<Error> onFailure, bool onlyPending = false)
+        private void GetCollaborations(string folderId, bool pendingCollaborationsOnly, Field[] fields, Action<CollaborationCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.GetCollaborations(folderId, onlyPending);
+            var request = _requestHelper.GetCollaborations(folderId, pendingCollaborationsOnly, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(Collaboration collaboration, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        public void Update(Collaboration collaboration, Role role, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(collaboration, "collaboration");
-            UpdateCollaboration(collaboration.Id, role, onSuccess, onFailure);
+            UpdateCollaboration(collaboration.Id, role, fields, onSuccess, onFailure);
         }
 
-        public void Update(Collaboration collaboration, Role role, Status status, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        public void Update(Collaboration collaboration, Role role, Status status, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(collaboration, "collaboration");
-            UpdateCollaboration(collaboration.Id, role, status, onSuccess, onFailure);
+            UpdateCollaboration(collaboration.Id, role, status, fields, onSuccess, onFailure);
         }
 
-        private void UpdateCollaboration(string collaborationId, Role role, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        private void UpdateCollaboration(string collaborationId, Role role, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(collaborationId, "collaborationId");
-            var request = _requestHelper.UpdateCollaboration(collaborationId, role);
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        private void UpdateCollaboration(string collaborationId, Role role, Status status, Action<Collaboration> onSuccess, Action<Error> onFailure)
+        private void UpdateCollaboration(string collaborationId, Role role, Status status, Field[] fields, Action<Collaboration> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(collaborationId, "collaborationId");
-            var request = _requestHelper.UpdateCollaboration(collaborationId, role, status);
+            var request = _requestHelper.UpdateCollaboration(collaborationId, role, status, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
