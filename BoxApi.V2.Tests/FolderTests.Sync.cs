@@ -42,6 +42,32 @@ namespace BoxApi.V2.Tests
             }
         }
 
+        [Test]
+        public void FieldsWorksOnGetFolder()
+        {
+            var testFile = Client.CreateFile(RootId, "file", new byte[] {0x00, 0x01, 0x02, 0x03});
+
+            try
+            {
+                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, Field.CreatedAt, Field.ModifiedAt });
+                var actual = folder.Files.Single(f => f.Id.Equals(testFile.Id));
+                // expect present
+                Assert.That(actual, Is.Not.Null);
+                Assert.That(actual.Name, Is.EqualTo(testFile.Name));
+                Assert.That(actual.Size, Is.EqualTo(testFile.Size));
+                Assert.That(actual.Etag, Is.EqualTo(testFile.Etag));
+                Assert.That(actual.CreatedAt, Is.EqualTo(testFile.CreatedAt));
+                Assert.That(actual.ModifiedAt, Is.EqualTo(testFile.ModifiedAt));
+                // expect empty
+                Assert.That(actual.CreatedBy, Is.Null);
+                Assert.That(actual.OwnedBy, Is.Null);
+            }
+            finally
+            {
+                Client.Delete(testFile);
+            }
+        }
+
         [Test, ExpectedException(typeof (BoxException))]
         public void GetNonExistentFolder()
         {
