@@ -389,70 +389,70 @@ namespace BoxApi.V2
             return GetFile(itemCollection.Entries.Single().Id);
         }
 
-        public Comment CreateComment(File file, string comment)
+        public Comment CreateComment(File file, string comment, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return CreateFileComment(file.Id, comment);
+            return CreateFileComment(file.Id, comment, fields);
         }
 
-        public Comment CreateFileComment(string fileId, string comment)
+        public Comment CreateFileComment(string fileId, string comment, Field[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
-            var restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment);
+            var restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment, fields);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
-        public CommentCollection GetComments(Discussion discussion)
+        public CommentCollection GetComments(Discussion discussion, Field[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
-            return GetDiscussionComments(discussion.Id);
+            return GetDiscussionComments(discussion.Id, fields);
         }
 
-        public CommentCollection GetDiscussionComments(string discussionId)
+        public CommentCollection GetDiscussionComments(string discussionId, Field[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
-            var restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
+            var restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId, fields);
             return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
         }
 
-        public Comment CreateComment(Discussion discussion, string comment)
+        public Comment CreateComment(Discussion discussion, string comment, Field[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
-            return CreateDiscussionComment(discussion.Id, comment);
+            return CreateDiscussionComment(discussion.Id, comment, fields);
         }
 
-        public Comment CreateDiscussionComment(string discussionId, string comment)
+        public Comment CreateDiscussionComment(string discussionId, string comment, Field[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNull(comment, "comment");
-            var restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment);
+            var restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment, fields);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
-        public CommentCollection GetComments(File file)
+        public CommentCollection GetComments(File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            return GetFileComments(file.Id);
+            return GetFileComments(file.Id, fields);
         }
 
-        public CommentCollection GetFileComments(string fileId)
+        public CommentCollection GetFileComments(string fileId, Field[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
-            var restRequest = _requestHelper.GetComments(ResourceType.File, fileId);
+            var restRequest = _requestHelper.GetComments(ResourceType.File, fileId, fields);
             return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
         }
 
-        public Comment GetComment(Comment comment)
+        public Comment GetComment(Comment comment, Field[] fields = null)
         {
             GuardFromNull(comment, "comment");
-            return GetComment(comment.Id);
+            return GetComment(comment.Id, fields);
         }
 
-        private Comment GetComment(string id)
+        private Comment GetComment(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
-            var restRequest = _requestHelper.Get(ResourceType.Comment, id);
+            var restRequest = _requestHelper.Get(ResourceType.Comment, id, fields);
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 

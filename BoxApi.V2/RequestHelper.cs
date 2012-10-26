@@ -135,17 +135,17 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateComment(ResourceType resourceType, string id, string message)
+        public IRestRequest CreateComment(ResourceType resourceType, string id, string message, Field[] fields = null)
         {
-            var request = JsonRequest(resourceType, "{id}/comments", Method.POST);
+            var request = JsonRequest(resourceType, "{id}/comments", Method.POST, fields);
             request.AddUrlSegment("id", id);
             request.AddBody(new {message});
             return request;
         }
 
-        public IRestRequest GetComments(ResourceType resourceResourceType, string id)
+        public IRestRequest GetComments(ResourceType resourceResourceType, string id, Field[] fields = null)
         {
-            var request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET);
+            var request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET, fields);
             request.AddUrlSegment("id", id);
             return request;
         }

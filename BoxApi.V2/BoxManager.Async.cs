@@ -402,46 +402,46 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void CreateComment(File file, string comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateComment(File file, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            CreateFileComment(file.Id, comment, onSuccess, onFailure);
+            CreateFileComment(file.Id, comment, fields, onSuccess, onFailure);
         }
 
-        private void CreateFileComment(string fileId, string comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        private void CreateFileComment(string fileId, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment);
+            var restRequest = _requestHelper.CreateComment(ResourceType.File, fileId, comment, fields);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void GetComment(Comment comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void GetComment(Comment comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(comment, "comment");
-            GetComment(comment.Id, onSuccess, onFailure);
+            GetComment(comment.Id, fields, onSuccess, onFailure);
         }
 
-        private void GetComment(string commentId, Action<Comment> onSuccess, Action<Error> onFailure)
+        private void GetComment(string commentId, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(commentId, "commentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var restRequest = _requestHelper.Get(ResourceType.Comment, commentId);
+            var restRequest = _requestHelper.Get(ResourceType.Comment, commentId, fields);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void GetComments(File file, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetComments(File file, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(file, "file");
-            GetFileComments(file.Id, onSuccess, onFailure);
+            GetFileComments(file.Id, fields, onSuccess, onFailure);
         }
 
-        private void GetFileComments(string fileId, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        private void GetFileComments(string fileId, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var restRequest = _requestHelper.GetComments(ResourceType.File, fileId);
+            var restRequest = _requestHelper.GetComments(ResourceType.File, fileId, fields);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
@@ -460,32 +460,32 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void GetComments(Discussion discussion, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetComments(Discussion discussion, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(discussion, "discussion");
-            GetDiscussionComments(discussion.Id);
+            GetDiscussionComments(discussion.Id, fields, onSuccess, onFailure);
         }
 
-        public void GetDiscussionComments(string discussionId, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetDiscussionComments(string discussionId, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId);
+            IRestRequest restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId, fields);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void CreateComment(Discussion discussion, string comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateComment(Discussion discussion, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(discussion, "discussion");
-            CreateDiscussionComment(discussion.Id, comment, onSuccess, onFailure);
+            CreateDiscussionComment(discussion.Id, comment, fields, onSuccess, onFailure);
         }
 
-        public void CreateDiscussionComment(string discussionId, string comment, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussionComment(string discussionId, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNull(comment, "comment");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment);
+            IRestRequest restRequest = _requestHelper.CreateComment(ResourceType.Discussion, discussionId, comment, fields);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 

@@ -16,7 +16,7 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
 
             // Act
-            Client.CreateComment(file, comment, newComment =>
+            Client.CreateComment(file, comment, null, newComment =>
                 {
                     // Assert
                     Assert.That(newComment, Is.Not.Null);
@@ -49,7 +49,7 @@ namespace BoxApi.V2.Tests
             var comment = Client.CreateComment(file, message);
 
             // Act
-            Client.GetComment(comment, gotComment =>
+            Client.GetComment(comment, null, gotComment =>
                 {
                     // Assert
                     Assert.That(gotComment, Is.Not.Null);
@@ -84,7 +84,7 @@ namespace BoxApi.V2.Tests
             Client.CreateComment(file, message2);
 
             // Act
-            Client.GetComments(file, comments =>
+            Client.GetComments(file, null, comments =>
                 {
                     // Assert
                     Assert.That(comments, Is.Not.Null);
