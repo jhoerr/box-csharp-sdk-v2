@@ -75,19 +75,6 @@ namespace BoxApi.V2
             return CopyFolder(folder.Id, newParentId, newName, fields);
         }
 
-        public File Copy(File file, Folder folder, string newName, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            GuardFromNull(folder, "folder");
-            return CopyFile(file.Id, folder.Id, newName, fields);
-        }
-
-        public File Copy(File file, string newParentId, string newName, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return CopyFile(file.Id, newParentId, newName, fields);
-        }
-
         public Folder CopyFolder(string id, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -96,14 +83,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File CopyFile(string id, string newParentId, string newName, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
+       
         public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -118,20 +98,6 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return ShareFileLink(file.Id, sharedLink, fields);
-        }
-
-        private File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(sharedLink, "sharedLink");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, sharedLink: sharedLink);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
         public Folder Move(Folder folder, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -144,18 +110,6 @@ namespace BoxApi.V2
             return MoveFolder(folder.Id, newParentId, fields);
         }
 
-        public File Move(File file, Folder newParent, Field[] fields = null)
-        {
-            GuardFromNull(newParent, "newParent");
-            return Move(file, newParent.Id, fields);
-        }
-
-        public File Move(File file, string newParentId, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return MoveFile(file.Id, newParentId, fields);
-        }
-
         public Folder MoveFolder(string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -163,40 +117,17 @@ namespace BoxApi.V2
             var request = _requestHelper.Update(ResourceType.Folder, id, fields, newParentId);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
-
-        public File MoveFile(string id, string newParentId, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, newParentId);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
         public Folder Rename(Folder folder, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return RenameFolder(folder.Id, newName, fields);
         }
 
-        public File Rename(File file, string newName, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return RenameFile(file.Id, newName, fields);
-        }
-
-        public File RenameFile(string id, string newName, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, name: newName);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
         public Folder RenameFolder(string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.Folder, id,fields, name: newName);
+            var request = _requestHelper.Update(ResourceType.Folder, id, fields, name: newName);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -214,27 +145,6 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public File UpdateDescription(File file, string description, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return UpdateFileDescription(file.Id, description, fields);
-        }
-
-        public File UpdateFileDescription(string id, string description, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
-        public File Update(File file, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
         public Folder Update(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -250,68 +160,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(request);
         }
 
-        public File Get(File file, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return GetFile(file.Id, fields);
-        }
-
-        public File GetFile(string id, Field[] fields = null)
-        {
-            return GetFile(id, 0, fields);
-        }
-
-        private File GetFile(string id, int attempt, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
-            if (attempt > 0)
-            {
-                Backoff(attempt);
-            }
-            var request = _requestHelper.Get(ResourceType.File, id, fields);
-            var file = _restClient.ExecuteAndDeserialize<File>(request);
-            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, fields) : file;
-        }
-
-        public File CreateFile(Folder parent, string name, Field[] fields = null)
-        {
-            return CreateFile(parent, name, new byte[0], fields);
-        }
-
-        public File CreateFile(string parentId, string name, Field[] fields = null)
-        {
-            return CreateFile(parentId, name, new byte[0], fields);
-        }
-
-        public File CreateFile(Folder parent, string name, byte[] content, Field[] fields = null)
-        {
-            GuardFromNull(parent, "folder");
-            return CreateFile(parent.Id, name, content, fields);
-        }
-
-        public File CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
-        {
-            GuardFromNull(parentId, "parentFolderId");
-            GuardFromNull(name, "name");
-            var request = _requestHelper.CreateFile(parentId, name, content, fields);
-            return WriteFile(request);
-        }
-
-        public void Delete(File file)
-        {
-            GuardFromNull(file, "file");
-            DeleteFile(file.Id, file.Etag);
-        }
-
-        public void DeleteFile(string id, string etag)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(etag, "etag");
-            var request = _requestHelper.DeleteFile(id, etag);
-            _restClient.Execute(request);
-        }
-
+      
         public void Delete(Comment comment)
         {
             GuardFromNull(comment, "comment");
@@ -325,69 +174,7 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public byte[] Read(File file)
-        {
-            GuardFromNull(file, "file");
-            return Read(file.Id);
-        }
-
-        public byte[] Read(string id)
-        {
-            GuardFromNull(id, "id");
-            var request = _requestHelper.Read(id);
-            return _restClient.Execute(request).RawBytes;
-        }
-
-        public void Read(File file, Stream output)
-        {
-            GuardFromNull(file, "file");
-            Read(file.Id, output);
-        }
-
-        public void Read(string id, Stream output)
-        {
-            GuardFromNull(id, "id");
-            var buffer = Read(id);
-            output.Write(buffer, 0, buffer.Length);
-        }
-
-        public File Write(File file, Stream content)
-        {
-            return Write(file, ReadFully(content));
-        }
-
-        public File Write(File file, byte[] content)
-        {
-            GuardFromNull(file, "file");
-            return Write(file.Id, file.Name, file.Etag, content);
-        }
-
-        public File Write(string id, string name, string etag, Stream content)
-        {
-            return Write(id, name, etag, ReadFully(content));
-        }
-
-        public File Write(string id, string name, string etag, byte[] content)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(name, "name");
-            GuardFromNull(etag, "etag");
-            var request = _requestHelper.Write(id, name, etag, content);
-            return WriteFile(request);
-        }
-
-        private File WriteFile(IRestRequest request)
-        {
-            var itemCollection = _restClient.ExecuteAndDeserialize<ItemCollection>(request);
-
-            // TODO: There are two side effects to to deal with here:
-            // 1. Box requires some non-trivial amount of time to calculate the file's etag.
-            // 2. This calculation is not performed before the 'upload file' request returns.
-            // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
-            // As a result we must wait a bit and then re-fetch the file from the server.
-
-            return GetFile(itemCollection.Entries.Single().Id);
-        }
+    
 
         public Comment CreateComment(File file, string comment, Field[] fields = null)
         {

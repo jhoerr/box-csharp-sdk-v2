@@ -88,27 +88,12 @@ namespace BoxApi.V2
             ShareFolderLink(folder.Id, sharedLink, fields, onSuccess, onFailure);
         }
 
-        public void ShareLink(File file, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            ShareFileLink(file.Id, sharedLink, fields, onSuccess, onFailure);
-        }
-
         public void ShareFolderLink(string id, SharedLink sharedLink, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(ResourceType.Folder, id, fields, sharedLink: sharedLink);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
-        public void ShareFileLink(string id, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(sharedLink, "sharedLink");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, fields, sharedLink: sharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -133,37 +118,10 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Move(File file, Folder newParent, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(newParent, "newParent");
-            Move(file, newParent.Id, fields, onSuccess, onFailure);
-        }
-
-        public void Move(File file, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            MoveFile(file.Id, newParentId, fields, onSuccess, onFailure);
-        }
-
-        public void MoveFile(string id, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(newParentId, "newParentId");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, fields, newParentId);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
         public void Rename(Folder folder, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
             RenameFolder(folder.Id, newName, fields, onSuccess, onFailure);
-        }
-
-        public void Rename(File file, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            RenameFile(file.Id, newName, fields, onSuccess, onFailure);
         }
 
         public void RenameFolder(string id, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
@@ -172,15 +130,6 @@ namespace BoxApi.V2
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(ResourceType.Folder, id, fields, name: newName);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
-        public void RenameFile(string id, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(newName, "newName");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, fields, name: newName);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -198,32 +147,11 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void UpdateDescription(File file, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            UpdateFileDescription(file.Id, description, fields, onSuccess, onFailure);
-        }
-
-        public void UpdateFileDescription(string id, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
         public void Update(Folder folder, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
             var request = _requestHelper.Update(ResourceType.Folder, folder.Id, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
-        public void Update(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -234,55 +162,6 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Get(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            GetFile(file.Id, fields, onSuccess, onFailure);
-        }
-
-        public void GetFile(string id, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GetFile(id, 0, fields, onSuccess, onFailure);
-        }
-
-        private void GetFile(string id, int attempt, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-
-            var request = _requestHelper.Get(ResourceType.File, id, fields);
-
-            Action<File> onSuccessWrapper = file =>
-                {
-                    if (String.IsNullOrEmpty(file.Etag) && attempt++ < MaxFileGetAttempts)
-                    {
-                        // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
-                        Backoff(attempt);
-                        GetFile(id, attempt, fields, onSuccess, onFailure);
-                    }
-                    else
-                    {
-                        onSuccess(file);
-                    }
-                };
-
-            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
-        }
-
-        public void Delete(File file, Action<IRestResponse> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            DeleteFile(file.Id, file.Etag, onSuccess, onFailure);
-        }
-
-        public void DeleteFile(string id, string etag, Action<IRestResponse> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(etag, "etag");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.DeleteFile(id, etag);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
 
         public void Delete(Comment comment, Action<IRestResponse> onSuccess, Action<Error> onFailure)
         {
@@ -332,47 +211,7 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
-        public void Read(File file, Action<byte[]> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            Read(file.Id, onSuccess, onFailure);
-        }
-
-        public void Read(string id, Action<byte[]> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Read(id);
-            Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
-            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
-        }
-
-        public void Write(File file, Stream content, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            Write(file, ReadFully(content), onSuccess, onFailure);
-        }
-
-        public void Write(File file, byte[] content, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(file, "file");
-            Write(file.Id, file.Name, file.Etag, content, onSuccess, onFailure);
-        }
-
-        public void Write(string id, string name, string etag, Stream content, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(content, "content");
-            Write(id, name, etag, ReadFully(content), onSuccess, onFailure);
-        }
-
-        public void Write(string id, string name, string etag, byte[] content, Action<File> onSuccess, Action<Error> onFailure)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(content, "content");
-            GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Write(id, name, etag, content);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
+     
 
         private static void GuardFromNullCallbacks(object onSuccess, object onFailure)
         {
