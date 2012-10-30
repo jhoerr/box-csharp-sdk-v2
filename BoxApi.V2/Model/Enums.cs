@@ -64,9 +64,18 @@ namespace BoxApi.V2.Model
 
     public enum StreamType
     {
+        /// <summary>
+        /// Returns all event types
+        /// </summary>
         [Description("all")] All,
-        [Description("changes")] Changes,
-        [Description("sync")] Sync,
+        /// <summary>
+        /// Returns tree changes
+        /// </summary>
+        [Description("changes")] TreeChanges,
+        /// <summary>
+        /// Returns tree changes only for sync folders
+        /// </summary>
+        [Description("sync")] SyncFolderChanges,
     }
 
     public static class EnumExtensions

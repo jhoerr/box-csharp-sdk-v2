@@ -35,5 +35,22 @@ namespace BoxApi.V2.Tests
             }
         }
 
+        [Test]
+        public void NonHierarchyEventsCanBeExcluded()
+        {
+            var testFile = Client.CreateFile(RootId, TestItemName());
+            var latestPosition = Client.GetCurrentStreamPosition();
+            Client.CreateComment(testFile, "comment!");
+            try
+            {
+                Event events = Client.GetEvents(latestPosition, StreamType.TreeChanges, 100);
+                Assert.That(events.ChunkSize, Is.EqualTo(0));
+                Assert.That(events.Entries.Count, Is.EqualTo(0));
+            }
+            catch (Exception)
+            {
+                Client.Delete(testFile);
+            }
+        }
     }
 }
