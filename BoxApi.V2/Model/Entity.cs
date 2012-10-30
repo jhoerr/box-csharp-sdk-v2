@@ -2,13 +2,16 @@ using System.Text;
 
 namespace BoxApi.V2.Model
 {
-    public class Entity
+    public class EntityBase
     {
         /// <summary>
         /// Type of item.  One of: File, Folder, Comment, Discussion, Event, Token
         /// </summary>
         public string Type { get; set; }
+    }
 
+    public class Entity : EntityBase
+    {
         /// <summary>
         /// The items's ID
         /// </summary>
@@ -24,7 +27,7 @@ namespace BoxApi.V2.Model
         /// </summary>
         public string Name { get; set; }
 
-      
+
         public override string ToString()
         {
             var sb = new StringBuilder();

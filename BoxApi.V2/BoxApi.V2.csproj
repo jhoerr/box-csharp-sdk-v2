@@ -80,6 +80,8 @@
     <Compile Include="Model\Discussion.cs" />
     <Compile Include="Model\DiscussionCollection.cs" />
     <Compile Include="Model\ErrorCollection.cs" />
+    <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\EventEntry.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.cs" />
