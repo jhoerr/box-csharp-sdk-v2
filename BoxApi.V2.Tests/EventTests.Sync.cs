@@ -22,7 +22,7 @@ namespace BoxApi.V2.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             try
             {
-                Event events = Client.GetEvents(latestPosition, StreamType.All, 100);
+                Event events = Client.GetUserEvents(latestPosition, StreamType.All, 100);
                 Assert.That(events.ChunkSize, Is.EqualTo(1));
                 Assert.That(events.Entries.Count, Is.EqualTo(1));
                 var entry = events.Entries.Single();
@@ -43,7 +43,7 @@ namespace BoxApi.V2.Tests
             Client.CreateComment(testFile, "comment!");
             try
             {
-                Event events = Client.GetEvents(latestPosition, StreamType.TreeChanges, 100);
+                Event events = Client.GetUserEvents(latestPosition, StreamType.TreeChanges, 100);
                 Assert.That(events.ChunkSize, Is.EqualTo(0));
                 Assert.That(events.Entries.Count, Is.EqualTo(0));
             }
