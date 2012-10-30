@@ -62,6 +62,13 @@ namespace BoxApi.V2.Model
         [Description("rejected")] Rejected,
     }
 
+    public enum StreamType
+    {
+        [Description("all")] All,
+        [Description("changes")] Changes,
+        [Description("sync")] Sync,
+    }
+
     public static class EnumExtensions
     {
         public static string Name(this Enum value)

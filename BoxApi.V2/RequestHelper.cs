@@ -204,6 +204,15 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetEvents(string streamPosition, StreamType streamType, int limit)
+        {
+            var request = JsonRequest(ResourceType.Event, null, Method.GET);
+            request.AddParameter("stream_position", streamPosition);
+            request.AddParameter("stream_type", streamType.Description());
+            request.AddParameter("limit", limit);
+            return request;
+        }
+
         public IRestRequest GetTicket(string apiKey)
         {
             var restRequest = new RestRequest("1.0/rest");

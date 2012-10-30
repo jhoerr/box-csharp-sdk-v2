@@ -55,6 +55,7 @@
     <Compile Include="CommentTests.Sync.cs" />
     <Compile Include="CommentTests.Async.cs" />
     <Compile Include="DiscussionTests.Sync.cs" />
+    <Compile Include="EventTests.Sync.cs" />
     <Compile Include="FileTests.Async.cs" />
     <Compile Include="FileTests.Sync.cs" />
     <Compile Include="FolderTests.Async.cs" />

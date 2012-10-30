@@ -71,6 +71,7 @@
     <Compile Include="BoxManager.Collaboration.cs" />
     <Compile Include="BoxManager.Comment.cs" />
     <Compile Include="BoxManager.Discussion.cs" />
+    <Compile Include="BoxManager.Event.cs" />
     <Compile Include="BoxManager.File.cs" />
     <Compile Include="BoxRestClient.cs" />
     <Compile Include="Model\Collaboration.cs" />
