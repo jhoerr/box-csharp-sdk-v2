@@ -53,5 +53,12 @@ namespace BoxApi.V2.Tests
                 Client.Delete(testFile);
             }
         }
+
+        [Test, Ignore("Requires Box enterprise admin account.")]
+        public void CanGetEventForEnterprise()
+        {
+            // Not even really sure what to look for here...
+            var events = Client.GetEnterpriseEvents(0, 100, DateTime.Now.AddDays(-1), DateTime.Now);
+        }
     }
 }

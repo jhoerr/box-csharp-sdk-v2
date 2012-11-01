@@ -236,6 +236,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest CreateToken(string emailAddress)
+        {
+            var request = JsonRequest(ResourceType.Token, null, Method.POST);
+            request.AddBody(new {email = emailAddress});
+            return request;
+        }
+
         public IRestRequest GetTicket(string apiKey)
         {
             var restRequest = new RestRequest("1.0/rest");
