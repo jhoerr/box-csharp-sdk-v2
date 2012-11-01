@@ -20,10 +20,11 @@ Support currently exists for:
 * Comments
 * Discussions
 * Collaborations
+* Events (User and Enterprise)
 
 Support is planned but not yet implemented for:
 
-* Events
+* Events (Long-polling)
 * Tokens
 * Users
 
