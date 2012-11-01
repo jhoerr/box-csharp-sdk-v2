@@ -13,7 +13,7 @@ namespace BoxApi.V2.Model
     public class Entity : EntityBase
     {
         /// <summary>
-        /// The items's ID
+        /// The item's ID
         /// </summary>
         public string Id { get; set; }
 

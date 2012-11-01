@@ -18,9 +18,9 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetFolderItems()
         {
-            var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
-            Client.CreateFolder(testFolder.Id, TestItemName(), null);
-            Client.CreateFolder(testFolder.Id, TestItemName(), null);
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
 
             try
             {
@@ -29,7 +29,6 @@ namespace BoxApi.V2.Tests
                 Assert.That(items.TotalCount, Is.EqualTo("2"));
                 // expected present
                 Assert.That(items.Entries.All(e => e.Id != null));
-                Assert.That(items.Entries.All(e => e.Type != null));
                 Assert.That(items.Entries.All(e => e.Name != null));
                 Assert.That(items.Entries.All(e => e.CreatedAt != null));
                 // expected empty
@@ -78,7 +77,7 @@ namespace BoxApi.V2.Tests
         public void CreateFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
+            var folder = Client.CreateFolder(RootId, folderName);
             AssertFolderConstraints(folder, folderName, RootId);
             // clean up 
             Client.Delete(folder, true);
@@ -87,14 +86,14 @@ namespace BoxApi.V2.Tests
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFolderWithIllegalName()
         {
-            Client.CreateFolder(RootId, "\\bad name:", null);
+            Client.CreateFolder(RootId, "\\bad name:");
         }
 
         [Test]
         public void DeleteFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
+            var folder = Client.CreateFolder(RootId, folderName);
             Client.Delete(folder, true);
         }
 
