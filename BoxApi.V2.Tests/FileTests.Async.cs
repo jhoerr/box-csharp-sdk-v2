@@ -15,12 +15,12 @@ namespace BoxApi.V2.Tests
 
             var testItemName = TestItemName();
             File actual = null;
-            Client.CreateFile(RootId, testItemName, null, file =>
+            Client.CreateFile(file =>
                 {
                     actual = file;
                     AssertFileConstraints(file, testItemName, RootId);
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, RootId, testItemName, null);
 
             do
             {
@@ -46,11 +46,11 @@ namespace BoxApi.V2.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName, expected);
             
-            Client.Read(file, readBytes =>
-            {
-                Assert.That(readBytes, Is.EqualTo(expected));
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.Read(readBytes =>
+                {
+                    Assert.That(readBytes, Is.EqualTo(expected));
+                    callbackHit = true;
+                }, AbortOnFailure, file);
 
             do
             {
@@ -73,12 +73,12 @@ namespace BoxApi.V2.Tests
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName);
             // Act
-            Client.Write(file, expected, updatedFile =>
+            Client.Write(updatedFile =>
                 {
                     byte[] actual = Client.Read(file.Id);
                     Assert.That(actual, Is.EqualTo(expected));
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, file, expected);
 
             do
             {
@@ -103,13 +103,13 @@ namespace BoxApi.V2.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.Copy(file, RootId, newItemName, null, copiedFile =>
+            Client.Copy(copiedFile =>
                 {
                     // Assert
                     AssertFileConstraints(copiedFile, newItemName, RootId);
                     Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id)); 
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, file, RootId, newItemName, null);
 
             do
             {
@@ -135,13 +135,13 @@ namespace BoxApi.V2.Tests
             var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
             
             // Act
-            Client.ShareLink(file, expectedLink, null, sharedFile =>
-            {
-                // Assert
-                AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
-                AssertSharedLink(sharedFile.SharedLink, expectedLink);
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.ShareLink(sharedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
+                    AssertSharedLink(sharedFile.SharedLink, expectedLink);
+                    callbackHit = true;
+                }, AbortOnFailure, file, expectedLink, null);
 
             do
             {
@@ -166,12 +166,12 @@ namespace BoxApi.V2.Tests
             File file = Client.CreateFile(RootId, testItemName);
             string newItemName = TestItemName();
             // Act
-            Client.Rename(file, newItemName, null, renamedFile =>
-            {
-                // Assert
-                AssertFileConstraints(renamedFile, newItemName, RootId);
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.Rename(renamedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(renamedFile, newItemName, RootId);
+                    callbackHit = true;
+                }, AbortOnFailure, file, newItemName, null);
 
             do
             {
@@ -197,12 +197,12 @@ namespace BoxApi.V2.Tests
             string folderName = TestItemName();
             Folder folder = Client.CreateFolder(RootId, folderName, null);
             // Act
-            Client.Move(file, folder, null, movedFile =>
-            {
-                // Assert
-                AssertFileConstraints(movedFile, testItemName, folder.Id, file.Id);
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.Move(movedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(movedFile, testItemName, folder.Id, file.Id);
+                    callbackHit = true;
+                }, AbortOnFailure, file, folder, null);
 
             do
             {
@@ -228,13 +228,13 @@ namespace BoxApi.V2.Tests
             string newDescription = "new description";
 
             // Act
-            Client.UpdateDescription(file, newDescription, null, updatedFile =>
-            {
-                // Assert
-                AssertFileConstraints(updatedFile, file.Name, RootId, file.Id);
-                Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.UpdateDescription(updatedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(updatedFile, file.Name, RootId, file.Id);
+                    Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
+                    callbackHit = true;
+                }, AbortOnFailure, file, newDescription, null);
 
             do
             {
@@ -269,14 +269,14 @@ namespace BoxApi.V2.Tests
             file.Description = newDescription;
             file.Parent.Id = folder.Id;
             file.SharedLink = sharedLink;
-            Client.Update(file, null, updatedFile =>
-            {
-                // Assert
-                AssertFileConstraints(updatedFile, newName, folder.Id, file.Id);
-                AssertSharedLink(sharedLink, updatedFile.SharedLink);
-                Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.Update(updatedFile =>
+                {
+                    // Assert
+                    AssertFileConstraints(updatedFile, newName, folder.Id, file.Id);
+                    AssertSharedLink(sharedLink, updatedFile.SharedLink);
+                    Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
+                    callbackHit = true;
+                }, AbortOnFailure, file, null);
 
             do
             {

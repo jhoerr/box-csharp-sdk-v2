@@ -35,24 +35,24 @@ namespace BoxApi.V2
             return WriteFile(request);
         }
 
-        public void CreateFile(Folder parent, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Field[] fields = null)
         {
             GuardFromNull(parent, "folder");
-            CreateFile(parent.Id, name, new byte[0], fields, onSuccess, onFailure);
+            CreateFile(onSuccess, onFailure, parent.Id, name, new byte[0], fields);
         }
 
-        public void CreateFile(string parentId, string name, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
         {
-            CreateFile(parentId, name, new byte[0], fields, onSuccess, onFailure);
+            CreateFile(onSuccess, onFailure, parentId, name, new byte[0], fields);
         }
 
-        public void CreateFile(Folder parent, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, byte[] content, Field[] fields = null)
         {
             GuardFromNull(parent, "folder");
-            CreateFile(parent.Id, name, content, fields, onSuccess, onFailure);
+            CreateFile(onSuccess, onFailure, parent.Id, name, content, fields);
         }
 
-        public void CreateFile(string parentId, string name, byte[] content, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, byte[] content, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -65,7 +65,7 @@ namespace BoxApi.V2
             // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
             // As a result we must wait a bit and then re-fetch the file from the server.
 
-            Action<ItemCollection> onSuccessWrapper = items => GetFile(items.Entries.Single().Id, fields, onSuccess, onFailure);
+            Action<ItemCollection> onSuccessWrapper = items => GetFile(onSuccess, onFailure, items.Entries.Single().Id, fields);
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
@@ -93,18 +93,18 @@ namespace BoxApi.V2
             return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, fields) : file;
         }
 
-        public void Get(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            GetFile(file.Id, fields, onSuccess, onFailure);
+            GetFile(onSuccess, onFailure, file.Id, fields);
         }
 
-        public void GetFile(string id, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
-            GetFile(id, 0, fields, onSuccess, onFailure);
+            GetFile(onSuccess, onFailure, id, 0, fields);
         }
 
-        public void GetFile(string id, int attempt, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -117,7 +117,7 @@ namespace BoxApi.V2
                     {
                         // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
                         Backoff(attempt);
-                        GetFile(id, attempt, fields, onSuccess, onFailure);
+                        GetFile(onSuccess, onFailure, id, attempt, fields);
                     }
                     else
                     {
@@ -154,13 +154,13 @@ namespace BoxApi.V2
             output.Write(buffer, 0, buffer.Length);
         }
 
-        public void Read(File file, Action<byte[]> onSuccess, Action<Error> onFailure)
+        public void Read(Action<byte[]> onSuccess, Action<Error> onFailure, File file)
         {
             GuardFromNull(file, "file");
-            Read(file.Id, onSuccess, onFailure);
+            Read(onSuccess, onFailure, file.Id);
         }
 
-        public void Read(string id, Action<byte[]> onSuccess, Action<Error> onFailure)
+        public void Read(Action<byte[]> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -207,25 +207,25 @@ namespace BoxApi.V2
             return GetFile(itemCollection.Entries.Single().Id);
         }
 
-        public void Write(File file, Stream content, Action<File> onSuccess, Action<Error> onFailure)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, Stream content)
         {
             GuardFromNull(file, "file");
-            Write(file, ReadFully(content), onSuccess, onFailure);
+            Write(onSuccess, onFailure, file, ReadFully(content));
         }
 
-        public void Write(File file, byte[] content, Action<File> onSuccess, Action<Error> onFailure)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, byte[] content)
         {
             GuardFromNull(file, "file");
-            Write(file.Id, file.Name, file.Etag, content, onSuccess, onFailure);
+            Write(onSuccess, onFailure, file.Id, file.Name, file.Etag, content);
         }
 
-        public void Write(string id, string name, string etag, Stream content, Action<File> onSuccess, Action<Error> onFailure)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, Stream content)
         {
             GuardFromNull(content, "content");
-            Write(id, name, etag, ReadFully(content), onSuccess, onFailure);
+            Write(onSuccess, onFailure, id, name, etag, ReadFully(content));
         }
 
-        public void Write(string id, string name, string etag, byte[] content, Action<File> onSuccess, Action<Error> onFailure)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, byte[] content)
         {
             GuardFromNull(id, "id");
             GuardFromNull(content, "content");
@@ -255,20 +255,20 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public void Copy(File file, Folder newParent, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
-            CopyFile(file.Id, newParent.Id, newName, fields, onSuccess, onFailure);
+            CopyFile(onSuccess, onFailure, file.Id, newParent.Id, newName, fields);
         }
 
-        public void Copy(File file, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            CopyFile(file.Id, newParentId, newName, fields, onSuccess, onFailure);
+            CopyFile(onSuccess, onFailure, file.Id, newParentId, newName, fields);
         }
 
-        public void CopyFile(string id, string newParentId, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -291,13 +291,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public void ShareLink(File file, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            ShareFileLink(file.Id, sharedLink, fields, onSuccess, onFailure);
+            ShareFileLink(onSuccess, onFailure, file.Id, sharedLink, fields);
         }
 
-        public void ShareFileLink(string id, SharedLink sharedLink, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -326,19 +326,19 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public void Move(File file, Folder newParent, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
-            Move(file, newParent.Id, fields, onSuccess, onFailure);
+            Move(onSuccess, onFailure, file, newParent.Id, fields);
         }
 
-        public void Move(File file, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            MoveFile(file.Id, newParentId, fields, onSuccess, onFailure);
+            MoveFile(onSuccess, onFailure, file.Id, newParentId, fields);
         }
 
-        public void MoveFile(string id, string newParentId, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -361,13 +361,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public void Rename(File file, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            RenameFile(file.Id, newName, fields, onSuccess, onFailure);
+            RenameFile(onSuccess, onFailure, file.Id, newName, fields);
         }
 
-        public void RenameFile(string id, string newName, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -397,13 +397,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-        public void UpdateDescription(File file, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            UpdateFileDescription(file.Id, description, fields, onSuccess, onFailure);
+            UpdateFileDescription(onSuccess, onFailure, file.Id, description, fields);
         }
 
-        public void UpdateFileDescription(string id, string description, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -411,7 +411,7 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(File file, Field[] fields, Action<File> onSuccess, Action<Error> onFailure)
+        public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
@@ -432,13 +432,13 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public void Delete(File file, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, File file)
         {
             GuardFromNull(file, "file");
-            DeleteFile(file.Id, file.Etag, onSuccess, onFailure);
+            DeleteFile(onSuccess, onFailure, file.Id, file.Etag);
         }
 
-        public void DeleteFile(string id, string etag, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void DeleteFile(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, string etag)
         {
             GuardFromNull(id, "id");
             GuardFromNull(etag, "etag");
