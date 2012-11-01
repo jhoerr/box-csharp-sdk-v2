@@ -9,13 +9,13 @@ namespace BoxApi.V2
         public Folder Get(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            return GetFolder(folder.Id, null);
+            return GetFolder(folder.Id, fields);
         }
 
-        public void Get(Folder folder, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            GetFolder(folder.Id, null, onSuccess, onFailure);
+            GetFolder(onSuccess, onFailure, folder.Id, fields);
         }
 
         public Folder GetFolder(string id, Field[] fields = null)
@@ -25,7 +25,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void GetFolder(string id, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -46,13 +46,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
         }
 
-        public void GetItems(Folder folder, Field[] fields, Action<ItemCollection> onSuccess, Action<Error> onFailure)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            GetItems(folder.Id, fields, onSuccess, onFailure);
+            GetItems(onSuccess, onFailure, folder.Id, fields);
         }
 
-        public void GetItems(string id, Field[] fields, Action<ItemCollection> onSuccess, Action<Error> onFailure)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(fields, "fields");
@@ -69,7 +69,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void CreateFolder(string parentId, string name, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -97,13 +97,13 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public void Delete(Folder folder, bool recursive, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Folder folder, bool recursive)
         {
             GuardFromNull(folder, "folder");
-            DeleteFolder(folder.Id, recursive, onSuccess, onFailure);
+            DeleteFolder(onSuccess, onFailure, folder.Id, recursive);
         }
 
-        public void DeleteFolder(string id, bool recursive, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void DeleteFolder(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, bool recursive)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -131,19 +131,19 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void Copy(Folder folder, Folder newParent, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, string newName, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
-            Copy(folder, newParent.Id, newName, fields, onSuccess, onFailure);
+            Copy(onSuccess, onFailure, folder, newParent.Id, newName, fields);
         }
 
-        public void Copy(Folder folder, string newParentId, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            CopyFolder(folder.Id, newParentId, newName, fields, onSuccess, onFailure);
+            CopyFolder(onSuccess, onFailure, folder.Id, newParentId, newName, fields);
         }
 
-        public void CopyFolder(string id, string newParentId, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -166,13 +166,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void ShareLink(Folder folder, SharedLink sharedLink, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            ShareFolderLink(folder.Id, sharedLink, fields, onSuccess, onFailure);
+            ShareFolderLink(onSuccess, onFailure, folder.Id, sharedLink, fields);
         }
 
-        public void ShareFolderLink(string id, SharedLink sharedLink, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -201,19 +201,19 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void Move(Folder folder, Folder newParent, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
-            Move(folder, newParent.Id, fields, onSuccess, onFailure);
+            Move(onSuccess, onFailure, folder, newParent.Id, fields);
         }
 
-        public void Move(Folder folder, string newParentId, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            MoveFolder(folder.Id, newParentId, fields, onSuccess, onFailure);
+            MoveFolder(onSuccess, onFailure, folder.Id, newParentId, fields);
         }
 
-        public void MoveFolder(string id, string newParentId, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -236,13 +236,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void Rename(Folder folder, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            RenameFolder(folder.Id, newName, fields, onSuccess, onFailure);
+            RenameFolder(onSuccess, onFailure, folder.Id, newName, fields);
         }
 
-        public void RenameFolder(string id, string newName, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -273,13 +273,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
-        public void UpdateDescription(Folder folder, string description, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            UpdateFolderDescription(folder.Id, description, fields, onSuccess, onFailure);
+            UpdateFolderDescription(onSuccess, onFailure, folder.Id, description, fields);
         }
 
-        private void UpdateFolderDescription(string id, string description, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -287,7 +287,7 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public void Update(Folder folder, Field[] fields, Action<Folder> onSuccess, Action<Error> onFailure)
+        public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;

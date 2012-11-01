@@ -15,11 +15,11 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
 
-            Client.GetFolder(RootId, null, folder =>
+            Client.GetFolder(folder =>
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, "All Files", null, RootId);
-                }, AbortOnFailure);
+                }, AbortOnFailure, RootId, null);
 
             do
             {
@@ -36,7 +36,7 @@ namespace BoxApi.V2.Tests
         public void GetNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.GetFolder("abc", null, folder => { }, (error) => { failureOccured = true; });
+            Client.GetFolder(folder => { }, (error) => { failureOccured = true; }, "abc", null);
 
             do
             {
@@ -55,13 +55,13 @@ namespace BoxApi.V2.Tests
             var folderName = TestItemName();
             var callbackHit = false;
 
-            Client.CreateFolder(RootId, folderName, null, folder =>
+            Client.CreateFolder(folder =>
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, folderName, RootId);
                     // clean up 
                     Client.DeleteFolder(folder.Id, true);
-                }, AbortOnFailure);
+                }, AbortOnFailure, RootId, folderName, null);
 
             do
             {
@@ -79,7 +79,7 @@ namespace BoxApi.V2.Tests
         {
             var failureOccured = false;
 
-            Client.CreateFolder(RootId, "\\bad name:", null, folder => { }, (error) => failureOccured = true);
+            Client.CreateFolder(folder => { }, (error) => failureOccured = true, RootId, "\\bad name:", null);
 
             do
             {
@@ -98,7 +98,7 @@ namespace BoxApi.V2.Tests
             var callbackHit = false;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
-            Client.DeleteFolder(folder.Id, true, response => callbackHit = true, AbortOnFailure);
+            Client.DeleteFolder(response => callbackHit = true, AbortOnFailure, folder.Id, true);
 
             do
             {
@@ -124,7 +124,7 @@ namespace BoxApi.V2.Tests
         public void DeleteNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.DeleteFolder("abc", true, response => { }, (error) => { failureOccured = true; });
+            Client.DeleteFolder(response => { }, (error) => { failureOccured = true; }, "abc", true);
 
             do
             {
@@ -145,13 +145,13 @@ namespace BoxApi.V2.Tests
             var folder = Client.CreateFolder(RootId, folderName, null);
             var subfolder = Client.CreateFolder(folder.Id, "subfolder", null);
             var copyName = TestItemName();
-            Client.CopyFolder(folder.Id, RootId, copyName, null, copiedFolder =>
+            Client.CopyFolder(copiedFolder =>
                 {
                     callbackHit = true;
                     Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
                     Client.DeleteFolder(folder.Id, true);
                     Client.DeleteFolder(copiedFolder.Id, true);
-                }, AbortOnFailure);
+                }, AbortOnFailure, folder.Id, RootId, copyName, null);
 
             do
             {
@@ -172,13 +172,13 @@ namespace BoxApi.V2.Tests
             var folder = Client.CreateFolder(RootId, folderName, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { Preview = true, Download = true });
 
-            Client.ShareFolderLink(folder.Id, sharedLink, null, copiedFolder =>
-            {
-                callbackHit = true;
-                AssertFolderConstraints(folder, folderName, RootId);
-                AssertSharedLink(folder.SharedLink, sharedLink);
-                Client.DeleteFolder(folder.Id, true);
-            }, AbortOnFailure);
+            Client.ShareFolderLink(copiedFolder =>
+                {
+                    callbackHit = true;
+                    AssertFolderConstraints(folder, folderName, RootId);
+                    AssertSharedLink(folder.SharedLink, sharedLink);
+                    Client.DeleteFolder(folder.Id, true);
+                }, AbortOnFailure, folder.Id, sharedLink, null);
 
             do
             {
@@ -200,12 +200,12 @@ namespace BoxApi.V2.Tests
             var targetFolderName = TestItemName();
             Folder targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
 
-            Client.MoveFolder(folder.Id, targetFolder.Id, null, movedFolder =>
-            {
-                callbackHit = true;
-                AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
-                Client.DeleteFolder(targetFolder.Id, true);
-            }, AbortOnFailure);
+            Client.MoveFolder(movedFolder =>
+                {
+                    callbackHit = true;
+                    AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
+                    Client.DeleteFolder(targetFolder.Id, true);
+                }, AbortOnFailure, folder.Id, targetFolder.Id, null);
 
             do
             {
@@ -226,12 +226,12 @@ namespace BoxApi.V2.Tests
             Folder folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
 
-            Client.Rename(folder, newName, null, renamedFolder =>
-            {
-                callbackHit = true;
-                AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
-                Client.DeleteFolder(renamedFolder.Id, true);
-            }, AbortOnFailure);
+            Client.Rename(renamedFolder =>
+                {
+                    callbackHit = true;
+                    AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
+                    Client.DeleteFolder(renamedFolder.Id, true);
+                }, AbortOnFailure, folder, newName, null);
 
             do
             {
@@ -253,15 +253,15 @@ namespace BoxApi.V2.Tests
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
        
-            Client.GetItems(testFolder.Id, new[]{Field.Name,}, contents =>
-            {
-                callbackHit = true;
-                Assert.That(contents, Is.Not.Null);
-                Assert.That(contents.TotalCount, Is.EqualTo("2"));
-                Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
-                Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-                Client.DeleteFolder(testFolder.Id, true);
-            }, AbortOnFailure);
+            Client.GetItems(contents =>
+                {
+                    callbackHit = true;
+                    Assert.That(contents, Is.Not.Null);
+                    Assert.That(contents.TotalCount, Is.EqualTo("2"));
+                    Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+                    Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
+                    Client.DeleteFolder(testFolder.Id, true);
+                }, AbortOnFailure, testFolder.Id, new[]{Field.Name,});
 
             do
             {
@@ -284,13 +284,13 @@ namespace BoxApi.V2.Tests
 
             // Act
             folder.Description = newDescription;
-            Client.UpdateDescription(folder, newDescription, null, updatedFolder =>
-            {
-                // Assert
-                AssertFolderConstraints(updatedFolder, folder.Name, folder.Parent.Id, folder.Id);
-                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.UpdateDescription(updatedFolder =>
+                {
+                    // Assert
+                    AssertFolderConstraints(updatedFolder, folder.Name, folder.Parent.Id, folder.Id);
+                    Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+                    callbackHit = true;
+                }, AbortOnFailure, folder, newDescription, null);
 
             do
             {
@@ -325,14 +325,14 @@ namespace BoxApi.V2.Tests
             folder.Description = newDescription;
             folder.Parent.Id = newParent.Id;
             folder.SharedLink = sharedLink;
-            Client.Update(folder, null, updatedFolder =>
-            {
-                // Assert
-                AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
-                AssertSharedLink(sharedLink, updatedFolder.SharedLink);
-                Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
-                callbackHit = true;
-            }, AbortOnFailure);
+            Client.Update(updatedFolder =>
+                {
+                    // Assert
+                    AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
+                    AssertSharedLink(sharedLink, updatedFolder.SharedLink);
+                    Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
+                    callbackHit = true;
+                }, AbortOnFailure, folder, null);
 
             do
             {
