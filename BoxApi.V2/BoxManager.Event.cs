@@ -29,7 +29,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<UserEventCollection>(request);
         }
 
-        public void GetUserEvents(long streamPosition, StreamType streamType, int limit, Action<UserEventCollection> onSuccess, Action<Error> onFailure)
+        public void GetUserEvents(Action<UserEventCollection> onSuccess, Action<Error> onFailure, long streamPosition = 0, StreamType streamType = StreamType.All, int limit = 100)
         {
             var request = _requestHelper.GetUserEvents(streamPosition.ToString(CultureInfo.InvariantCulture), streamType, limit);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
