@@ -33,7 +33,7 @@ namespace BoxApi.V2.Model
         public ModifiableEntity Source { get; set; }
     }
 
-    public class StandardEvent : Event
+    public class UserEvent : Event
     {
         /// <summary>
         /// The nature of the event

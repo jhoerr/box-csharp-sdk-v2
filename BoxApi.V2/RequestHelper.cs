@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BoxApi.V2.Model;
@@ -204,12 +205,34 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetEvents(string streamPosition, StreamType streamType, int limit)
+        public IRestRequest GetUserEvents(string streamPosition, StreamType streamType, int limit)
         {
             var request = JsonRequest(ResourceType.Event, null, Method.GET);
             request.AddParameter("stream_position", streamPosition);
             request.AddParameter("stream_type", streamType.Description());
             request.AddParameter("limit", limit);
+            return request;
+        }
+
+        public IRestRequest GetEnterpriseEvents(int offset, int limit, DateTime? createdAfter, DateTime? createdBefore, EnterpriseEventType[] eventTypes)
+        {
+            var request = JsonRequest(ResourceType.Event, null, Method.GET);
+            request.AddParameter("stream_type", StreamType.AdminLogs.Description());
+            request.AddParameter("offset", offset);
+            request.AddParameter("limit", limit);
+            if (createdAfter.HasValue)
+            {
+                request.AddParameter("created_after", createdAfter);
+            }
+            if (createdAfter.HasValue)
+            {
+                request.AddParameter("created_before", createdBefore);
+            }
+            if (eventTypes != null && eventTypes.Any())
+            {
+                var eventTypeList = string.Join(",", eventTypes.Select(f => f.Description()));
+                request.AddParameter("event_type", eventTypeList);
+            }
             return request;
         }
 

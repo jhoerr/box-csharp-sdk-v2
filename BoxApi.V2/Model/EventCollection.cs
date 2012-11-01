@@ -25,7 +25,7 @@ namespace BoxApi.V2.Model
         public List<T> Entries { get; set; }
     }
 
-    public class StandardEventCollection : EventCollection<StandardEvent>
+    public class UserEventCollection : EventCollection<UserEvent>
     {
     }
 
