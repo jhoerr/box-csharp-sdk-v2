@@ -18,15 +18,15 @@ namespace BoxApi.V2.Model
 
         public IEnumerable<File> Files
         {
-            get { return FromEntriesGetAll("file").Cast<File>(); }
+            get { return FromEntriesGetAll(ResourceType.File); }
         }
 
         public IEnumerable<Folder> Folders
         {
-            get { return FromEntriesGetAll("folder"); }
+            get { return FromEntriesGetAll(ResourceType.Folder); }
         }
 
-        private IEnumerable<Folder> FromEntriesGetAll(string value)
+        private IEnumerable<Folder> FromEntriesGetAll(ResourceType value)
         {
             return ItemCollection.Entries.Where(i => i.Type.Equals(value));
         }
