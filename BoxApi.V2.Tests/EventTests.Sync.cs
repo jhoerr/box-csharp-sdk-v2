@@ -22,10 +22,11 @@ namespace BoxApi.V2.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             try
             {
-                Event events = Client.GetUserEvents(latestPosition, StreamType.All, 100);
+                StandardEventCollection events = Client.GetUserEvents(latestPosition);
                 Assert.That(events.ChunkSize, Is.EqualTo(1));
                 Assert.That(events.Entries.Count, Is.EqualTo(1));
                 var entry = events.Entries.Single();
+                Assert.That(entry.EventType, Is.EqualTo(StandardEventType.ItemCreate));
                 Assert.That(entry.Source.Id, Is.EqualTo(testFolder.Id));
                 Assert.That(entry.Source.CreatedAt, Is.EqualTo(testFolder.CreatedAt));
             }
@@ -43,7 +44,7 @@ namespace BoxApi.V2.Tests
             Client.CreateComment(testFile, "comment!");
             try
             {
-                Event events = Client.GetUserEvents(latestPosition, StreamType.TreeChanges, 100);
+                StandardEventCollection events = Client.GetUserEvents(latestPosition, StreamType.Changes);
                 Assert.That(events.ChunkSize, Is.EqualTo(0));
                 Assert.That(events.Entries.Count, Is.EqualTo(0));
             }

@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace BoxApi.V2.Model
 {
@@ -19,7 +20,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         /// The level of access this user has
         /// </summary>
-        public string Role { get; set; }
+        public Role Role { get; set; }
 
         /// <summary>
         /// The folder this discussion is related to
@@ -32,6 +33,6 @@ namespace BoxApi.V2.Model
         [JsonProperty(PropertyName = "acknowledged_at")]
         public DateTime? AcknowledgedAt{ get; set; }
 
-        public string Status { get; set; }
+        public Status Status { get; set; }
     }
 }

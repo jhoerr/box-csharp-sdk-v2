@@ -36,15 +36,15 @@ namespace BoxApi.V2.Tests
 
         protected static void AssertFolderConstraints(Folder folder, string expectedName, string expectedParentId, string expectedId = null)
         {
-            AssertEntityConstraints(folder, "folder", expectedName, expectedParentId, expectedId);
+            AssertEntityConstraints(folder, ResourceType.Folder, expectedName, expectedParentId, expectedId);
         }
 
         protected static void AssertFileConstraints(File file, string expectedName, string expectedParentId, string expectedId = null)
         {
-            AssertEntityConstraints(file, "file", expectedName, expectedParentId, expectedId);
+            AssertEntityConstraints(file, ResourceType.File, expectedName, expectedParentId, expectedId);
         }
 
-        private static void AssertEntityConstraints(File item, string expectedType, string expectedName, string expectedParentId, string expectedId)
+        private static void AssertEntityConstraints(File item, ResourceType expectedType, string expectedName, string expectedParentId, string expectedId)
         {
             Assert.That(item, Is.Not.Null);
             Assert.That(item.Type, Is.EqualTo(expectedType));

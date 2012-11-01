@@ -7,7 +7,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         /// Type of item.  One of: File, Folder, Comment, Discussion, Event, Token
         /// </summary>
-        public string Type { get; set; }
+        public ResourceType Type { get; set; }
     }
 
     public class Entity : EntityBase

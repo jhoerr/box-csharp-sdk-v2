@@ -18,7 +18,7 @@ namespace BoxApi.V2.Tests
                 Assert.That(collaboration, Is.Not.Null);
                 Assert.That(collaboration.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(collaboration.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
-                Assert.That(collaboration.Role, Is.EqualTo(Role.Viewer.Description()));
+                Assert.That(collaboration.Role, Is.EqualTo(Role.Viewer));
             }
             finally
             {
@@ -37,7 +37,7 @@ namespace BoxApi.V2.Tests
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(actual.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
-                Assert.That(actual.Role, Is.EqualTo(Role.Viewer.Description()));
+                Assert.That(actual.Role, Is.EqualTo(Role.Viewer));
             }
             finally
             {
@@ -76,7 +76,7 @@ namespace BoxApi.V2.Tests
                 Assert.That(updated, Is.Not.Null);
                 Assert.That(updated.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(updated.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
-                Assert.That(updated.Role, Is.EqualTo(Role.Editor.Description()));
+                Assert.That(updated.Role, Is.EqualTo(Role.Editor));
             }
             finally
             {

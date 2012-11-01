@@ -14,22 +14,22 @@ namespace BoxApi.V2
         public void GetCurrentStreamPosition(Action<long> onSuccess, Action<Error> onFailure)
         {
             var request = _requestHelper.GetEvents("now", StreamType.All, 1);
-            Action<Event> onSuccessWrapper = e => onSuccess(e.NextStreamPosition);
+            Action<StandardEventCollection> onSuccessWrapper = e => onSuccess(e.NextStreamPosition);
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
-        public Event GetUserEvents(long streamPosition = 0, StreamType streamType = StreamType.All, int limit = 100)
+        public StandardEventCollection GetUserEvents(long streamPosition = 0, StreamType streamType = StreamType.All, int limit = 100)
         {
             return GetUserEvents(streamPosition.ToString(CultureInfo.InvariantCulture), streamType, limit);
         }
 
-        private Event GetUserEvents(string streamPosition, StreamType streamType, int limit)
+        private StandardEventCollection GetUserEvents(string streamPosition, StreamType streamType, int limit)
         {
             var request = _requestHelper.GetEvents(streamPosition, streamType, limit);
-            return _restClient.ExecuteAndDeserialize<Event>(request);
+            return _restClient.ExecuteAndDeserialize<StandardEventCollection>(request);
         }
 
-        public void GetUserEvents(long streamPosition, StreamType streamType, int limit, Action<Event> onSuccess, Action<Error> onFailure)
+        public void GetUserEvents(long streamPosition, StreamType streamType, int limit, Action<StandardEventCollection> onSuccess, Action<Error> onFailure)
         {
             var request = _requestHelper.GetEvents(streamPosition.ToString(CultureInfo.InvariantCulture), streamType, limit);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);

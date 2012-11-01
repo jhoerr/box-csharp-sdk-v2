@@ -1,27 +1,51 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 
 namespace BoxApi.V2.Model
 {
     /// <summary>
-    /// A collection of 
+    /// Information on a specific event that occured.
     /// </summary>
-    public class Event
+    public class Event : EntityBase
     {
         /// <summary>
-        /// The number of event records returned
+        /// The id of the event, used for de-duplication purposes
         /// </summary>
-        public int ChunkSize { get; set; }
+        public string EventId { get; set; }
 
         /// <summary>
-        /// The next position in the event stream that you should request in order to get the next events
+        /// The user that performed the action
         /// </summary>
-        public long NextStreamPosition { get; set; }
+        public UserEntity CreatedBy { get; set; }
 
         /// <summary>
-        /// A collection of events that occured
+        /// The time this item was created
         /// </summary>
-        public List<EventEntry> Entries { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
+        /// <summary>
+        /// The session of the user that performed the action
+        /// </summary>
+        public string SessionId { get; set; }
+
+        /// <summary>
+        /// Information about the object that was modified.  This may be a subset of all properties that exist for a particular type of object.
+        /// </summary>
+        public ModifiableEntity Source { get; set; }
+    }
+
+    public class StandardEvent : Event
+    {
+        /// <summary>
+        /// The nature of the event
+        /// </summary>
+        public StandardEventType EventType { get; set; }
+    }
+
+    public class EnterpriseEvent : Event
+    {
+        /// <summary>
+        /// The nature of the event
+        /// </summary>
+        public EnterpriseEventType EventType { get; set; }
     }
 }
