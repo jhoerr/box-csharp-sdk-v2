@@ -205,7 +205,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(newParent, "newParent");
             Move(onSuccess, onFailure, folder, newParent.Id, fields);
-        }
+        }   
 
         public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null)
         {

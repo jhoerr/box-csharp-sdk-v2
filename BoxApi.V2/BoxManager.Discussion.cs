@@ -23,13 +23,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
-        public void CreateDiscussion(Folder parent, string name, string description, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder parent, string name, string description = null, Field[] fields = null)
         {
             GuardFromNull(parent, "parent");
-            CreateDiscussion(parent.Id, name, description, fields, onSuccess, onFailure);
+            CreateDiscussion(onSuccess, onFailure, parent.Id, name, description, fields);
         }
 
-        public void CreateDiscussion(string parentId, string name, string description, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string parentId, string name, string description = null, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -45,7 +45,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
-        public void GetDiscussion(string id, Field[] fields, Action<Discussion> onSuccess, Action<Error> onFailure)
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -66,13 +66,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<DiscussionCollection>(request);
         }
 
-        public void GetDiscussions(Folder folder, Field[] fields, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
+        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
-            GetDiscussions(folder.Id, fields, onSuccess, onFailure);
+            GetDiscussions(onSuccess, onFailure, folder.Id, fields);
         }
 
-        public void GetDiscussions(string folderId, Field[] fields, Action<DiscussionCollection> onSuccess, Action<Error> onFailure)
+        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, string folderId, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -93,13 +93,13 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public void Delete(Discussion discussion, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Discussion discussion)
         {
             GuardFromNull(discussion, "discussion");
-            DeleteDiscussion(discussion.Id, onSuccess, onFailure);
+            DeleteDiscussion(onSuccess, onFailure, discussion.Id);
         }
 
-        public void DeleteDiscussion(string id, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void DeleteDiscussion(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
