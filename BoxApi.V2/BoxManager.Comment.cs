@@ -34,13 +34,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
-        public void CreateComment(Discussion discussion, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, Discussion discussion, string comment, Field[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
-            CreateDiscussionComment(discussion.Id, comment, fields, onSuccess, onFailure);
+            CreateDiscussionComment(onSuccess, onFailure, discussion.Id, comment, fields);
         }
 
-        public void CreateDiscussionComment(string discussionId, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateDiscussionComment(Action<Comment> onSuccess, Action<Error> onFailure, string discussionId, string comment, Field[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNull(comment, "comment");
@@ -49,13 +49,13 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void CreateComment(File file, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, File file, string comment, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            CreateFileComment(file.Id, comment, fields, onSuccess, onFailure);
+            CreateFileComment(onSuccess, onFailure, file.Id, comment, fields);
         }
 
-        public void CreateFileComment(string fileId, string comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void CreateFileComment(Action<Comment> onSuccess, Action<Error> onFailure, string fileId, string comment, Field[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(comment, "comment");
@@ -77,13 +77,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(restRequest);
         }
 
-        public void GetComment(Comment comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, Field[] fields = null)
         {
             GuardFromNull(comment, "comment");
-            GetComment(comment.Id, fields, onSuccess, onFailure);
+            GetComment(onSuccess, onFailure, comment.Id, fields);
         }
 
-        public void GetComment(string commentId, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, string commentId, Field[] fields = null)
         {
             GuardFromNull(commentId, "commentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -117,13 +117,13 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<CommentCollection>(restRequest);
         }
 
-        public void GetComments(File file, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            GetFileComments(file.Id, fields, onSuccess, onFailure);
+            GetFileComments(onSuccess, onFailure, file.Id, fields);
         }
 
-        public void GetFileComments(string fileId, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetFileComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string fileId, Field[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -131,13 +131,13 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
 
-        public void GetComments(Discussion discussion, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, Discussion discussion, Field[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
-            GetDiscussionComments(discussion.Id, fields, onSuccess, onFailure);
+            GetDiscussionComments(onSuccess, onFailure, discussion.Id, fields);
         }
 
-        public void GetDiscussionComments(string discussionId, Field[] fields, Action<CommentCollection> onSuccess, Action<Error> onFailure)
+        public void GetDiscussionComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string discussionId, Field[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -152,7 +152,7 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Comment>(request);
         }
 
-        public void Update(Comment comment, Field[] fields, Action<Comment> onSuccess, Action<Error> onFailure)
+        public void Update(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, Field[] fields = null)
         {
             GuardFromNull(comment, "comment");
             var request = _requestHelper.Update(ResourceType.Comment, comment.Id, fields, message: comment.Message);
@@ -172,13 +172,13 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
-        public void Delete(Comment comment, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Comment comment)
         {
             GuardFromNull(comment, "comment");
-            DeleteComment(comment.Id, onSuccess, onFailure);
+            DeleteComment(onSuccess, onFailure, comment.Id);
         }
 
-        public void DeleteComment(string id, Action<IRestResponse> onSuccess, Action<Error> onFailure)
+        public void DeleteComment(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);

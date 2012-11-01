@@ -16,13 +16,13 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
 
             // Act
-            Client.CreateComment(file, comment, null, newComment =>
+            Client.CreateComment(newComment =>
                 {
                     // Assert
                     Assert.That(newComment, Is.Not.Null);
                     Assert.That(newComment.Message, Is.EqualTo(comment));
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, file, comment, null);
 
             do
             {
@@ -49,13 +49,13 @@ namespace BoxApi.V2.Tests
             var comment = Client.CreateComment(file, message);
 
             // Act
-            Client.GetComment(comment, null, gotComment =>
+            Client.GetComment(gotComment =>
                 {
                     // Assert
                     Assert.That(gotComment, Is.Not.Null);
                     Assert.That(gotComment.Message, Is.EqualTo(message));
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, comment, null);
 
             do
             {
@@ -84,13 +84,13 @@ namespace BoxApi.V2.Tests
             Client.CreateComment(file, message2);
 
             // Act
-            Client.GetComments(file, null, comments =>
+            Client.GetComments(comments =>
                 {
                     // Assert
                     Assert.That(comments, Is.Not.Null);
                     Assert.That(comments.TotalCount, Is.EqualTo("2"));
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, file, null);
 
             do
             {
@@ -116,13 +116,13 @@ namespace BoxApi.V2.Tests
             var comment = Client.CreateComment(file, "originalComment");
             comment.Message = newComment;
             // Act
-            Client.Update(comment, null, updatedComment =>
+            Client.Update(updatedComment =>
                 {
                     // Assert
                     Assert.That(updatedComment, Is.Not.Null);
                     Assert.That(updatedComment.Message, Is.EqualTo(newComment));
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, comment, null);
 
             do
             {
@@ -146,13 +146,13 @@ namespace BoxApi.V2.Tests
             var comment = Client.CreateComment(file, "originalComment");
 
             // Act
-            Client.Delete(comment, response =>
+            Client.Delete(response =>
                 {
                     var commentCollection = Client.GetComments(file);
                     Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
 
                     callbackHit = true;
-                }, AbortOnFailure);
+                }, AbortOnFailure, comment);
 
             do
             {
