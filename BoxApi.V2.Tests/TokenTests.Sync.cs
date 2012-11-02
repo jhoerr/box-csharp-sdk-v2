@@ -8,7 +8,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetToken()
         {
-            var boxToken = Client.CreateToken("jhoerr@gmail.com");
+            var boxToken = Client.CreateToken("box.tokens.test@gmail.com");
             Assert.That(boxToken.Token, Is.Not.Null);
         }
     }
