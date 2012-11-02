@@ -18,23 +18,16 @@ namespace BoxApi.V2.Samples
             TestTicketBasedAuth();
         }
 
-
-        private static void TestTokenBasedAuth()
-        {
-            var boxAuth = new BoxAuthenticator("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1");
-            var authToken = boxAuth.GetAppAuthTokenForUser("carsongross_test1@gmail.com");
-            Console.WriteLine("Auth token : " + authToken);
-        }
-
         private static void TestTicketBasedAuth()
         {
-            var boxAuth = new BoxAuthenticator("shh8qvbfbv53vsbmtmvkzdydbf9vvcu1");
+            var boxAuth = new BoxAuthenticator("s7oea2zglx69sizi2qy5ku8j744bvn7z");
             var authURL = boxAuth.GetAuthorizationUrl();
             Console.WriteLine("Got ticket " + boxAuth.Ticket);
             Console.WriteLine("Please accept the token request in the browser and hit enter...");
             OpenUrl(authURL);
             Console.ReadLine();
             Console.WriteLine("Auth token : " + boxAuth.GetAuthorizationToken());
+            Console.ReadLine();
         }
 
         private static void ExecuteAPIMethods(string apiKey, string authToken)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BoxApi.V2.Model
 {
-    class BoxAuthToken
+    public class BoxAuthToken
     {
         /// <summary>
         /// Status of the auth token request

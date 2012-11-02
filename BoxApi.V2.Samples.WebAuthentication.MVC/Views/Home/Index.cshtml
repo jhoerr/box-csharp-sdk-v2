@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Authorization Flow</h2>
+
+<p>This site demonstrates how to get an authorization token for a user given your API key. Your API Key can be found on the <em>Edit a Box Application</em> page for your app.</p>
+
+<p>The first step is to enter your API key (below).  The site will then generate a ticket and redirect you to Box, where you will enter your credentials.  
+    You will then be redirected back to this site with your authorization token in the query string, which will be parsed out and presented to you.</p>
+
+<p>In order for this to work properly, you will need to ensure two things:</p>
+<ol>
+    <li>You have created a Box application at the <a href="https://developers.box.com/">Box Developer site</a>.  (Click the 'Get Api Key' link at the top right.)</li>
+    <li>Once your application is created, you must list <strong>http://localhost:8088/Home/Authorize</strong> as the <em>Redirect url</em>.</li>
+</ol>
+
+<div style="margin-top: 10px;">
+    @using (Html.BeginForm("InitiateAuthorization", "Home", FormMethod.Post))
+    {
+        <input type="text" name="apiKey" id="apiKey" style="width: 300px" value="Your API Key..."/>
+        <input type="submit" value="Authorize Me"/>
+    }
+</div>

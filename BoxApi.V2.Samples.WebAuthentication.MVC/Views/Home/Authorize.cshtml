@@ -1,0 +1,12 @@
+﻿@model BoxApi.V2.Model.BoxAuthToken
+
+@{
+    ViewBag.Title = "Authorize";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Authorization Complete</h2>
+
+<p>Your authorization token is: <strong>@Model.AuthToken</strong></p>
+
+<p>Keep it secret.  Keep it safe. &lt;/gandalf&gt;</p>
