@@ -22,6 +22,12 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<UserCollection>(request);
         }
 
+        public void GetUsers(Action<UserCollection> onSuccess, Action<Error> onFailure, string filterTerm = null, int? limit = null, int? offset = null, Field[] fields = null)
+        {
+            IRestRequest request = _requestHelper.GetEnterpriseUsers(filterTerm, limit, offset, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
         public User GetUser(User user, Field[] fields = null)
         {
             GuardFromNull(user, "user");
@@ -33,6 +39,19 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             IRestRequest request = _requestHelper.GetEnterpriseUser(id, fields);
             return _restClient.ExecuteAndDeserialize<User>(request);
+        }
+
+        public void GetUser(Action<User> onSuccess, Action<Error> onFailure, User user, Field[] fields = null)
+        {
+            GuardFromNull(user, "user");
+            GetUser(onSuccess, onFailure, user.Id, fields);
+        }
+
+        public void GetUser(Action<User> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.GetEnterpriseUser(id, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
     }
 }
