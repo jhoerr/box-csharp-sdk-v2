@@ -7,7 +7,7 @@ using RestSharp;
 
 namespace BoxApi.V2
 {
-    public class RequestHelper
+    internal class RequestHelper
     {
         public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null)
         {
@@ -274,6 +274,18 @@ namespace BoxApi.V2
             request.AddUrlSegment("id", id);
             request.AddParameter("notify", notify);
             request.AddParameter("force", force);
+            return request;
+        }
+
+        public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify, Field[] fields = null)
+        {
+            var request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, fields);
+            request.AddUrlSegment("userId", currentOwnerId);
+            request.AddUrlSegment("folderType", ResourceType.Folder.Description());
+            request.AddUrlSegment("folderId", folderId);
+            // Notify URL parameter seems to result in a 400..
+            // request.AddParameter("notify", notify);
+            request.AddBody(new {owned_by = new {id = newOwnerId} });
             return request;
         }
 

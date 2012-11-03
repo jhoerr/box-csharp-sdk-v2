@@ -80,6 +80,34 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        public Folder MoveRootFolderToAnotherUser(User currentOwner, User newOwner, bool notify = true, Field[] fields = null)
+        {
+            GuardFromNull(currentOwner, "currentOwner");
+            GuardFromNull(newOwner, "newOwner");
+            return MoveRootFolderToAnotherUser(currentOwner.Id, newOwner.Id, notify, fields);
+        }
 
+        public Folder MoveRootFolderToAnotherUser(string currentOwnerId, string newOwnerId, bool notify = true, Field[] fields = null)
+        {
+            GuardFromNull(currentOwnerId, "currentOwnerId");
+            GuardFromNull(newOwnerId, "newOwnerId");
+            IRestRequest request = _requestHelper.MoveFolderToAnotherUser(currentOwnerId, Folder.Root, newOwnerId, notify, fields);
+            return _restClient.ExecuteAndDeserialize<Folder>(request);
+        }
+
+        public void MoveRootFolderToAnotherUser(Action<Folder> onSuccess, Action<Error> onFailure, User currentOwner, User newOwner, bool notify = true, Field[] fields = null)
+        {
+            GuardFromNull(currentOwner, "currentOwner");
+            GuardFromNull(newOwner, "newOwner");
+            MoveRootFolderToAnotherUser(onSuccess, onFailure, currentOwner.Id, newOwner.Id, notify, fields);
+        }
+
+        public void MoveRootFolderToAnotherUser(Action<Folder> onSuccess, Action<Error> onFailure, string currentOwnerId, string newOwnerId, bool notify = true, Field[] fields = null)
+        {
+            GuardFromNull(currentOwnerId, "currentOwnerId");
+            GuardFromNull(newOwnerId, "newOwnerId");
+            IRestRequest request = _requestHelper.MoveFolderToAnotherUser(currentOwnerId, Folder.Root, newOwnerId, notify, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
     }
 }

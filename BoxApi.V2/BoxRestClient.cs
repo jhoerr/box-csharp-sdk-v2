@@ -7,7 +7,7 @@ using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
-    public class BoxRestClient : RestClient
+    internal class BoxRestClient : RestClient
     {
         private const string ServiceUrl = "https://www.box.com/api/";
         public const string JsonMimeType = "application/json";
