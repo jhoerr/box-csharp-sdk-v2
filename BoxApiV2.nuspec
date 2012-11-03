@@ -3,7 +3,7 @@
   <metadata>
     <id>Box.v2.SDK</id>
     <title>Box.com SDK (API v2)</title>
-    <version>0.9</version>
+    <version>0.10</version>
     <authors>John Hoerr, Carson Gross, Box</authors>
     <owners>John Hoerr, Carson Gross, Box</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -11,15 +11,17 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A client SDK for Box.com (API v2).  (http://developers.box.com/docs/).  Both this project and the new Box API are still in beta.  Expect frequent and breaking changes until version 1.0.</description>
     <releaseNotes>
-	    0.9: Implemented Events (User and Enterprise).
-	    0.8: Added fields support Files/Folders/Comments/Discussions/Collaborations
-	    0.7: Implemented Collaborations
-	    0.6: Implemented Discussions
-	    0.5: Updated for recent API changes
-	    0.4: Simplifying namespaces
-	    0.3: Added support for 'fields' when getting folder items; Bug fixes
-	    0.2: Implemented Authorization workflow and Comments
-	    0.1: Implemented Files and Folder.
+	    0.10: Implemented Tokens and Users
+	    **Breaking Change** Async method signatures were rearranged in order to allow for optional parameters. All onSuccess and OnFailure actions were moved from the end of the signature list to the beginning.
+	    0.9:  Implemented Events (User and Enterprise).
+	    0.8:  Added fields support Files/Folders/Comments/Discussions/Collaborations
+	    0.7:  Implemented Collaborations
+	    0.6:  Implemented Discussions
+	    0.5:  Updated for recent API changes
+	    0.4:  Simplifying namespaces
+	    0.3:  Added support for 'fields' when getting folder items; Bug fixes
+	    0.2:  Implemented Authorization workflow and Comments
+	    0.1:  Implemented Files and Folder.
     </releaseNotes>
     <copyright>Copyright 2012 John Hoerr, Carson Gross, The Trustees of Indiana University (www.iu.edu)</copyright>
     <tags>Box Box.com</tags>
