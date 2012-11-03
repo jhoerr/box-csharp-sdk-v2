@@ -1,7 +1,7 @@
 ﻿@model BoxApi.V2.Model.BoxAuthToken
 
 @{
-    ViewBag.Title = "Authorize";
+    ViewBag.Title = "Authorization Complete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,4 +9,6 @@
 
 <p>Your authorization token is: <strong>@Model.AuthToken</strong></p>
 
-<p>Keep it secret.  Keep it safe. &lt;/gandalf&gt;</p>
+<p>You can use these credentials to run the unit tests.  @Html.ActionLink("Save the credentials", "Save") and copy the resulting <strong>test_info.json</strong> file into the root of the BoxApi.V2.Tests folder, alongside the <em>.csproj</em> file.</p>
+
+
