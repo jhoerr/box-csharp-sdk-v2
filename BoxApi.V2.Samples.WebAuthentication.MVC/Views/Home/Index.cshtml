@@ -10,7 +10,7 @@
 <p>The first step is to enter your API key (below).  The site will then generate a ticket and redirect you to Box, where you will enter your credentials.  
     You will then be redirected back to this site with your authorization token in the query string, which will be parsed out and presented to you.</p>
 
-<div style="margin-top: 10px;">
+<div style="margin: 2em 0em;">
     @using (Html.BeginForm("InitiateAuthorization", "Home", FormMethod.Post))
     {
         <input type="text" name="apiKey" id="apiKey" style="width: 300px" value="Your API Key..."/>
@@ -18,12 +18,13 @@
     }
 </div>
 
-<h3>Please Note...</h3>
+<h3>Brand new to Box?</h3>
 
-<p>In order for this to work properly, you must first <a href="http://box.com/developers/services/edit/">create a Box application</a>.  Once that's done you can <a href="http://box.com/developers/services">edit your application</a>, where you'll need to do two things:</p>
+<p>Ok! In order to interact with the Box API you must first <a href="http://box.com/developers/services/edit/">create a Box application</a>.  Once that's done you can <a href="http://box.com/developers/services">edit your application</a>, where you'll need to do two things:</p>
 <ol>
     <li>Find your API Key, which you'll enter above.</li>
-    <li>List <strong>http://localhost:8088/Home/Authorize</strong> as the <em>Redirect url</em>. This tells Box where to send the user after they've been authenticated.  In a production application, you'll need to change the host to one for your own domain.</li>
+    <li>Change the <em>Redirect url</em> to <strong>http://localhost:8088/Home/Authorize</strong>. This tells Box where to send the user after they've been authenticated.  We'll use localhost for development, but in a production application, you'll need to change the host to one for your own domain.</li>
+    <li>Save your changes.</li>
 </ol>
 
 <div style="padding:2px; border: 1px solid silver; width:751px;">
