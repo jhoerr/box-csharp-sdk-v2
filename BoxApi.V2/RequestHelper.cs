@@ -243,6 +243,31 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetEnterpriseUsers(string filterTerm, int? limit, int? offset, Field[] fields = null)
+        {
+            var request = JsonRequest(ResourceType.User, null, Method.GET, fields);
+            if (!string.IsNullOrWhiteSpace(filterTerm))
+            {
+                request.AddParameter("filter_term", filterTerm);
+            }
+            if (limit.HasValue)
+            {
+                request.AddParameter("limit", limit);
+            }
+            if (offset.HasValue)
+            {
+                request.AddParameter("offset", offset);
+            }
+            return request;
+        }
+
+        public IRestRequest GetEnterpriseUser(string id, Field[] fields = null)
+        {
+            var request = JsonRequest(ResourceType.User, "{id}", Method.GET, fields);
+            request.AddUrlSegment("id", id);
+            return request;
+        }
+
         public IRestRequest GetTicket(string apiKey)
         {
             var restRequest = new RestRequest("1.0/rest");

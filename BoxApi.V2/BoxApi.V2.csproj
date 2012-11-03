@@ -74,6 +74,7 @@
     <Compile Include="BoxManager.Event.cs" />
     <Compile Include="BoxManager.File.cs" />
     <Compile Include="BoxManager.Token.cs" />
+    <Compile Include="BoxManager.User.cs" />
     <Compile Include="BoxRestClient.cs" />
     <Compile Include="Model\Collaboration.cs" />
     <Compile Include="Model\CollaborationCollection.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\UserCollection.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.cs" />

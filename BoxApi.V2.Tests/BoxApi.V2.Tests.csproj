@@ -67,6 +67,7 @@
     <Compile Include="TestConfig.Designer.cs">
       <DependentUpon>TestConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

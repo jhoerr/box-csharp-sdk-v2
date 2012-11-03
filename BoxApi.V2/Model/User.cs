@@ -1,30 +1,22 @@
+using System;
+using System.Collections.Generic;
+
 namespace BoxApi.V2.Model
 {
     /// <summary>
     ///   Represents Box.NET user entity
     /// </summary>
-    public class User
+    public class User : UserEntity
     {
         /// <summary>
-        /// The login/email address of the user
+        ///   The time this item was created
         /// </summary>
-        public string Login { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        ///   The user's email address
+        ///   The time this item was modified
         /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        ///   The unique ID of the user
-        /// </summary>
-        public int UserId { get; set; }
-
-        /// <summary>
-        ///   If the user is a guest, the AccessID will be the ID of the guest's parent.
-        ///   If this is a full user, the AccessID will be the same as the ID property
-        /// </summary>
-        public int AccessId { get; set; }
+        public DateTime ModifiedAt { get; set; }
 
         /// <summary>
         ///   The total amount of space allocated to that account
@@ -41,9 +33,17 @@ namespace BoxApi.V2.Model
         /// </summary>
         public long MaxUploadSize { get; set; }
 
-        /// <summary>
-        ///   Whether file sharing is disabled for the user
-        /// </summary>
-        public bool SharingDisabled { get; set; }
+        public string Role { get; set; }
+        public string Language { get; set; }
+        public List<string> TrackingCodes { get; set; }
+        public bool SeeManagedUsers { get; set; }
+        public bool IsSyncEnabled { get; set; }
+        public string Status { get; set; }
+        public string JobTitle { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string AvatarUrl { get; set; }
+        public bool IsExemptFromDeviceLimits { get; set; }
+        public bool IsExemptFromLoginVerification { get; set; }
     }
 }
