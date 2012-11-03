@@ -21,12 +21,12 @@ Support currently exists for:
 * Discussions
 * Collaborations
 * Events (User and Enterprise)
+* Tokens
+* Users
 
 Support is planned but not yet implemented for:
 
 * Events (Long-polling)
-* Tokens
-* Users
 
 ## Usage
 
