@@ -243,7 +243,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetEnterpriseUsers(string filterTerm, int? limit, int? offset, Field[] fields = null)
+        public IRestRequest GetUsers(string filterTerm, int? limit, int? offset, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.User, null, Method.GET, fields);
             if (!string.IsNullOrWhiteSpace(filterTerm))
@@ -261,10 +261,19 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetEnterpriseUser(string id, Field[] fields = null)
+        public IRestRequest GetUser(string id, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.User, "{id}", Method.GET, fields);
             request.AddUrlSegment("id", id);
+            return request;
+        }
+
+        public IRestRequest DeleteUser(string id, bool notify, bool force)
+        {
+            var request = JsonRequest(ResourceType.User, "{id}", Method.DELETE);
+            request.AddUrlSegment("id", id);
+            request.AddParameter("notify", notify);
+            request.AddParameter("force", force);
             return request;
         }
 

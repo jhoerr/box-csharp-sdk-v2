@@ -18,17 +18,17 @@ namespace BoxApi.V2
         /// <returns></returns>
         public UserCollection GetUsers(string filterTerm = null, int? limit = null, int? offset = null, Field[] fields = null)
         {
-            IRestRequest request = _requestHelper.GetEnterpriseUsers(filterTerm, limit, offset, fields);
+            IRestRequest request = _requestHelper.GetUsers(filterTerm, limit, offset, fields);
             return _restClient.ExecuteAndDeserialize<UserCollection>(request);
         }
 
         public void GetUsers(Action<UserCollection> onSuccess, Action<Error> onFailure, string filterTerm = null, int? limit = null, int? offset = null, Field[] fields = null)
         {
-            IRestRequest request = _requestHelper.GetEnterpriseUsers(filterTerm, limit, offset, fields);
+            IRestRequest request = _requestHelper.GetUsers(filterTerm, limit, offset, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        public User GetUser(User user, Field[] fields = null)
+        public User Get(User user, Field[] fields = null)
         {
             GuardFromNull(user, "user");
             return GetUser(user.Id, fields);
@@ -37,11 +37,11 @@ namespace BoxApi.V2
         public User GetUser(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
-            IRestRequest request = _requestHelper.GetEnterpriseUser(id, fields);
+            IRestRequest request = _requestHelper.GetUser(id, fields);
             return _restClient.ExecuteAndDeserialize<User>(request);
         }
 
-        public void GetUser(Action<User> onSuccess, Action<Error> onFailure, User user, Field[] fields = null)
+        public void Get(Action<User> onSuccess, Action<Error> onFailure, User user, Field[] fields = null)
         {
             GuardFromNull(user, "user");
             GetUser(onSuccess, onFailure, user.Id, fields);
@@ -50,8 +50,36 @@ namespace BoxApi.V2
         public void GetUser(Action<User> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
-            IRestRequest request = _requestHelper.GetEnterpriseUser(id, fields);
+            IRestRequest request = _requestHelper.GetUser(id, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
+
+        public void Delete(User user, bool notify = true, bool force = false)
+        {
+            GuardFromNull(user, "user");
+            DeleteUser(user.Id, notify, force);
+        }
+
+        public void DeleteUser(string id, bool notify = true, bool force = false)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DeleteUser(id, notify, force);
+            _restClient.Execute(request);
+        }
+
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, User user, bool notify = true, bool force = false)
+        {
+            GuardFromNull(user, "user");
+            DeleteUser(onSuccess, onFailure, user.Id, notify, force);
+        }
+
+        public void DeleteUser(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, bool notify = true, bool force = false)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DeleteUser(id, notify, force);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+
     }
 }
