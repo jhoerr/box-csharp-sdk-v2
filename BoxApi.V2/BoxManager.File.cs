@@ -297,7 +297,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the file stream</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to read</param>
-        public void Read(Action<Stream> onSuccess, Action<Error> onFailure, File file)
+        public void ReadToStream(Action<Stream> onSuccess, Action<Error> onFailure, File file)
         {
             GuardFromNull(file, "file");
             Read(onSuccess, onFailure, file.Id);
@@ -309,7 +309,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the file stream</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to read</param>
-        public void Read(Action<Stream> onSuccess, Action<Error> onFailure, string id)
+        public void ReadToStream(Action<Stream> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
