@@ -68,8 +68,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Creates a new file with the provided content in the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take with the created File</param>
-        /// <param name="onFailure">Action to take following a failed File creation</param>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
@@ -82,8 +82,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Creates a new file with the provided content in the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take with the created File</param>
-        /// <param name="onFailure">Action to take following a failed File creation</param>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
@@ -95,8 +95,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Creates a new file with the provided content in the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take with the created File</param>
-        /// <param name="onFailure">Action to take following a failed File creation</param>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
@@ -110,8 +110,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Creates a new file with the provided content in the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take with the created File</param>
-        /// <param name="onFailure">Action to take following a failed File creation</param>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
@@ -172,8 +172,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Retrieves a File object representing the requested file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the retrieved File</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the retrieved File</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to get</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
@@ -185,8 +185,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Gets a File object representing the requested file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the retrieved File</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the retrieved File</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
@@ -267,8 +267,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Retrieve the contents of the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the file contents</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the file contents</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to read</param>
         public void Read(Action<byte[]> onSuccess, Action<Error> onFailure, File file)
         {
@@ -279,8 +279,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Retrieve the contents of the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the file contents</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the file contents</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to read</param>
         public void Read(Action<byte[]> onSuccess, Action<Error> onFailure, string id)
         {
@@ -294,8 +294,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Retrieve the contents of the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the file stream</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the file stream</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to read</param>
         public void Read(Action<Stream> onSuccess, Action<Error> onFailure, File file)
         {
@@ -306,8 +306,8 @@ namespace BoxApi.V2
         /// <summary>
         /// Retrieve the contents of the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take with the file stream</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
+        /// <param name="onSuccess">Action to perform with the file stream</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to read</param>
         public void Read(Action<Stream> onSuccess, Action<Error> onFailure, string id)
         {
@@ -325,22 +325,22 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="content">The file's data</param>
-        /// <returns></returns>
+        /// <param name="file">The file to update</param>
+        /// <param name="content">A stream containing the file's data</param>
+        /// <returns>An updated file object</returns>
         public File Write(File file, Stream content)
         {
             return Write(file, ReadFully(content));
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">The file to update</param>
         /// <param name="content">The file's data</param>
-        /// <returns></returns>
+        /// <returns>An updated file object</returns>
         public File Write(File file, byte[] content)
         {
             GuardFromNull(file, "file");
@@ -348,26 +348,26 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag"></param>
-        /// <param name="content">The file's data</param>
-        /// <returns></returns>
+        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
+        /// <param name="content">A stream containing the file's data</param>
+        /// <returns>An updated file object</returns>
         public File Write(string id, string name, string etag, Stream content)
         {
             return Write(id, name, etag, ReadFully(content));
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag"></param>
+        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">The file's data</param>
-        /// <returns></returns>
+        /// <returns>An updated file object</returns>
         public File Write(string id, string name, string etag, byte[] content)
         {
             GuardFromNull(id, "id");
@@ -396,12 +396,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="content">The file's data</param>
+        /// <param name="onSuccess">Action to perform with the successfully written file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to update</param>
+        /// <param name="content">A stream containing the file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, Stream content)
         {
             GuardFromNull(file, "file");
@@ -409,11 +409,11 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
+        /// <param name="onSuccess">Action to perform with the successfully written file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to update</param>
         /// <param name="content">The file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, byte[] content)
         {
@@ -422,14 +422,14 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
+        /// <param name="onSuccess">Action to perform with the successfully written file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag"></param>
-        /// <param name="content">The file's data</param>
+        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
+        /// <param name="content">A stream containing the file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, Stream content)
         {
             GuardFromNull(content, "content");
@@ -437,13 +437,13 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates the content of a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
+        /// <param name="onSuccess">Action to perform with the successfully written file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag"></param>
+        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">The file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, byte[] content)
         {
@@ -455,43 +455,43 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="folder"></param>
-        /// <param name="newName"></param>
+        /// <param name="file">The file to copy</param>
+        /// <param name="newParent">The destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
-        public File Copy(File file, Folder folder, string newName, Field[] fields = null)
+        /// <returns>A file object representing the copied file</returns>
+        public File Copy(File file, Folder newParent, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
-            GuardFromNull(folder, "folder");
-            return CopyFile(file.Id, folder.Id, newName, fields);
+            GuardFromNull(newParent, "folder");
+            return CopyFile(file.Id, newParent.Id, newName, fields);
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="newParentId"></param>
-        /// <param name="newName"></param>
+        /// <param name="file">The file to copy</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
-        public File Copy(File file, string newParentId, string newName, Field[] fields = null)
+        /// <returns>A file object representing the copied file</returns>
+        public File Copy(File file, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             return CopyFile(file.Id, newParentId, newName, fields);
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="newParentId"></param>
-        /// <param name="newName"></param>
+        /// <param name="id">The ID of the file to copy</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
-        public File CopyFile(string id, string newParentId, string newName, Field[] fields = null)
+        /// <returns>A file object representing the copied file</returns>
+        public File CopyFile(string id, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -500,15 +500,15 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="newParent"></param>
-        /// <param name="newName"></param>
+        /// <param name="onSuccess">Action to perform with the copied file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to copy</param>
+        /// <param name="newParent">The destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName, Field[] fields = null)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
@@ -516,30 +516,30 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="newParentId"></param>
-        /// <param name="newName"></param>
+        /// <param name="onSuccess">Action to perform following a successful File operation</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to copy</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName, Field[] fields = null)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
             CopyFile(onSuccess, onFailure, file.Id, newParentId, newName, fields);
         }
 
         /// <summary>
-        /// 
+        /// Copies a file to the specified folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="newParentId"></param>
-        /// <param name="newName"></param>
+        /// <param name="onSuccess">Action to perform following a successful File operation</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to copy</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName, Field[] fields = null)
+        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -549,12 +549,13 @@ namespace BoxApi.V2
         }
         
         /// <summary>
-        /// 
+        /// Creates a shared link to the specified file
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="sharedLink"></param>
+        /// <param name="file">The file for which to create a shared link</param>
+        /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object populated with the shared link</returns>
+        /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -562,12 +563,13 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Creates a shared link to the specified file
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="sharedLink"></param>
+        /// <param name="id">The ID of the file for which to create a shared link</param>
+        /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object populated with the shared link</returns>
+        /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -577,13 +579,14 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Creates a shared link to the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="sharedLink"></param>
+        /// <param name="onSuccess">Action to perform with the linked file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file for which to create a shared link</param>
+        /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -591,13 +594,14 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Creates a shared link to the specified file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="sharedLink"></param>
+        /// <param name="onSuccess">Action to perform with the linked file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file for which to create a shared link</param>
+        /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -608,12 +612,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="newParent"></param>
+        /// <param name="file">The file to move</param>
+        /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the moved file</returns>
         public File Move(File file, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -621,12 +625,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="newParentId"></param>
+        /// <param name="file">The file to move</param>
+        /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the moved file</returns>
         public File Move(File file, string newParentId, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -634,12 +638,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="newParentId"></param>
+        /// <param name="id">The ID of the file to move</param>
+        /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the moved file</returns>
         public File MoveFile(string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -649,12 +653,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="newParent"></param>
+        /// <param name="onSuccess">Action to perform with the moved file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to move</param>
+        /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, Field[] fields = null)
         {
@@ -663,12 +667,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="newParentId"></param>
+        /// <param name="onSuccess">Action to perform with the moved file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to move</param>
+        /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, Field[] fields = null)
         {
@@ -677,12 +681,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Moves a file to the specified parent folder
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="newParentId"></param>
+        /// <param name="onSuccess">Action to perform with the moved file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to move</param>
+        /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
         {
@@ -694,12 +698,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Renames a file
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="newName"></param>
+        /// <param name="file">The file to rename</param>
+        /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the renamed file</returns>
         public File Rename(File file, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -707,12 +711,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Renames a file
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="newName"></param>
+        /// <param name="id">The ID of the file to rename</param>
+        /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the renamed file</returns>
         public File RenameFile(string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -722,12 +726,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Renames a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="newName"></param>
+        /// <param name="onSuccess">Action to perform with the renamed file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to rename</param>
+        /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, Field[] fields = null)
         {
@@ -736,12 +740,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Renames a file
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="newName"></param>
+        /// <param name="onSuccess">Action to perform with the renamed file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to rename</param>
+        /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
         {
@@ -753,12 +757,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates a file's description
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="description"></param>
+        /// <param name="file">The file to update</param>
+        /// <param name="description">The new description for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the updated file</returns>
         public File UpdateDescription(File file, string description, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -766,12 +770,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates a file's description
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="description"></param>
+        /// <param name="id">The ID of the file to update</param>
+        /// <param name="description">The new description for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the updated file</returns>
         public File UpdateFileDescription(string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -781,11 +785,11 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">The file to update</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
-        /// <returns></returns>
+        /// <returns>A file object representing the updated file</returns>
         public File Update(File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -794,12 +798,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates a file's description
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
-        /// <param name="description"></param>
+        /// <param name="onSuccess">Action to perform with the update file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to update</param>
+        /// <param name="description">The new description for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null)
         {
@@ -808,12 +812,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Updates a file's description
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="description"></param>
+        /// <param name="onSuccess">Action to perform with the update file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to update</param>
+        /// <param name="description">The new description for the file</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
         {
@@ -824,11 +828,11 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
+        /// <param name="onSuccess">Action to perform with the update file</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to update</param>
         /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
         public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
@@ -838,9 +842,9 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Deletes a file from the user's Box
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="file">The file to delete</param>
         public void Delete(File file)
         {
             GuardFromNull(file, "file");
@@ -848,10 +852,10 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Deletes a file from the user's Box
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="etag"></param>
+        /// <param name="id">The ID of the file to delete</param>
+        /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
         public void DeleteFile(string id, string etag)
         {
             GuardFromNull(id, "id");
@@ -861,11 +865,11 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Deletes a file from the user's Box
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="file"></param>
+        /// <param name="onSuccess">Action to perform following a successful delete</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file to delete</param>
         public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, File file)
         {
             GuardFromNull(file, "file");
@@ -873,12 +877,12 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
+        /// Deletes a file from the user's Box
         /// </summary>
-        /// <param name="onSuccess">Action to take following a successful File operation</param>
-        /// <param name="onFailure">Action to take following a failed File operation</param>
-        /// <param name="id"></param>
-        /// <param name="etag"></param>
+        /// <param name="onSuccess">Action to perform following a successful delete</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to delete</param>
+        /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
         public void DeleteFile(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, string etag)
         {
             GuardFromNull(id, "id");
