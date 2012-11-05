@@ -20,7 +20,7 @@ namespace BoxApi.V2
         {
             var request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id);
-           
+
             return request;
         }
 
@@ -79,11 +79,18 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name, Field[] fields = null)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, Field[] fields = null)
         {
             var request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
             request.AddUrlSegment("id", id);
-            request.AddBody(new {parent = new {id = newParentId}, name});
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                request.AddBody(new {parent = new {id = newParentId}});
+            }
+            else
+            {
+                request.AddBody(new {parent = new {id = newParentId}, name});
+            }
             return request;
         }
 
@@ -161,7 +168,7 @@ namespace BoxApi.V2
         public IRestRequest CreateCollaboration(string folderId, string userId, string role, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
-            request.AddBody(new {item = new {type="folder", id = folderId}, accessible_by = new {id = userId}, role});
+            request.AddBody(new {item = new {type = "folder", id = folderId}, accessible_by = new {id = userId}, role});
             return request;
         }
 
@@ -187,7 +194,7 @@ namespace BoxApi.V2
         {
             var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);
-            request.AddBody(new { role = role.Description() });
+            request.AddBody(new {role = role.Description()});
             return request;
         }
 
@@ -195,7 +202,7 @@ namespace BoxApi.V2
         {
             var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);
-            request.AddBody(new { role = role.Description(), status = status.Description() });
+            request.AddBody(new {role = role.Description(), status = status.Description()});
             return request;
         }
 
@@ -285,7 +292,7 @@ namespace BoxApi.V2
             request.AddUrlSegment("folderId", folderId);
             // Notify URL parameter seems to result in a 400..
             // request.AddParameter("notify", notify);
-            request.AddBody(new {owned_by = new {id = newOwnerId} });
+            request.AddBody(new {owned_by = new {id = newOwnerId}});
             return request;
         }
 
