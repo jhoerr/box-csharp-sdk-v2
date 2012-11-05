@@ -15,7 +15,7 @@ namespace BoxApi.V2
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
 
-        public BoxRestClient(IAuthenticator authenticator = null, IWebProxy proxy = null):
+        public BoxRestClient(IAuthenticator authenticator = null, IWebProxy proxy = null) :
             base(ServiceUrl)
         {
             Authenticator = authenticator;
@@ -42,7 +42,6 @@ namespace BoxApi.V2
 
         public T ExecuteAndDeserialize<T>(IRestRequest request) where T : class, new()
         {
-
             var restResponse = base.Execute<T>(request);
             return restResponse.Data;
         }
@@ -50,59 +49,94 @@ namespace BoxApi.V2
 
         public void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action<Error> onFailure) where T : class, new()
         {
-            if (onSuccess == null)
-            {
-                throw new ArgumentException("onSuccess can not be null");
-            }
-
-            base.ExecuteAsync<T>(request, (response, handle) => 
+            AssertUsableActions(onSuccess, onFailure);
+            base.ExecuteAsync<T>(request, (response, handle) =>
                 {
                     Error error;
                     if (WasSuccessful(response, out error))
                     {
                         onSuccess(response.Data);
+                        return;
                     }
-                    else if (onFailure != null)
-                    {
-                        handle.Abort();
-                        onFailure(error);
-                    }
+                    HandleFailure(onFailure, handle, error);
                 });
         }
 
         public void ExecuteAsync(IRestRequest request, Action<IRestResponse> onSuccess, Action<Error> onFailure)
         {
-            if (onSuccess == null)
-            {
-                throw new ArgumentException("callback can not be null");
-            }
-
-            base.ExecuteAsync(request, (response, handle) => 
+            AssertUsableActions(onSuccess, onFailure);
+            base.ExecuteAsync(request, (response, handle) =>
                 {
                     Error error;
                     if (WasSuccessful(response, out error))
                     {
                         onSuccess(response);
+                        return;
                     }
-                    else if (onFailure != null)
-                    {
-                        handle.Abort();
-                        onFailure(error);
-                    }
+                    HandleFailure(onFailure, handle, error);
                 });
+        }
+
+        public void ExecuteAsync(IRestRequest request, Action onSuccess, Action<Error> onFailure)
+        {
+            AssertUsableActions(onSuccess, onFailure);
+            base.ExecuteAsync(request, (response, handle) =>
+                {
+                    Error error;
+                    if (WasSuccessful(response, out error))
+                    {
+                        onSuccess();
+                        return;
+                    }
+                    HandleFailure(onFailure, handle, error);
+                });
+        }
+
+        private static void AssertUsableActions<T>(Action<T> onSuccess, Action<Error> onFailure)
+        {
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("success callback can not be null", "onSuccess");
+            }
+
+            AssertUsableFailureAction(onFailure);
+        }
+
+        private static void HandleFailure(Action<Error> onFailure, RestRequestAsyncHandle handle, Error error)
+        {
+            handle.Abort();
+            onFailure(error);
+        }
+
+        private static void AssertUsableActions(Action onSuccess, Action<Error> onFailure)
+        {
+            if (onSuccess == null)
+            {
+                throw new ArgumentException("success callback can not be null", "onSuccess");
+            }
+
+            AssertUsableFailureAction(onFailure);
+        }
+
+        private static void AssertUsableFailureAction(Action<Error> onFailure)
+        {
+            if (onFailure == null)
+            {
+                throw new ArgumentException("failure callback can not be null", "onFailure");
+            }
         }
 
         public bool WasSuccessful(IRestResponse restResponse, out Error error)
         {
             error = null;
-            bool success = true;
+            var success = true;
             if (restResponse == null)
             {
                 success = false;
             }
-            else if(restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
             {
-                error = new Error() { Code = "Internal Server Error", Status = "500" };
+                error = new Error {Code = "Internal Server Error", Status = "500"};
                 success = false;
             }
             else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
@@ -120,7 +154,6 @@ namespace BoxApi.V2
                 }
             }
             return success;
-
         }
     }
 }
