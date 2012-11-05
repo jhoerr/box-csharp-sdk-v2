@@ -870,7 +870,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to delete</param>
-        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, File file)
+        public void Delete(Action onSuccess, Action<Error> onFailure, File file)
         {
             GuardFromNull(file, "file");
             DeleteFile(onSuccess, onFailure, file.Id, file.Etag);
@@ -883,7 +883,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to delete</param>
         /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
-        public void DeleteFile(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, string etag)
+        public void DeleteFile(Action onSuccess, Action<Error> onFailure, string id, string etag)
         {
             GuardFromNull(id, "id");
             GuardFromNull(etag, "etag");
