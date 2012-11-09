@@ -16,7 +16,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the created file.</returns>
         public File CreateFile(Folder parent, string name, Field[] fields = null)
         {
@@ -28,7 +28,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the created file.</returns>
         public File CreateFile(string parentId, string name, Field[] fields = null)
         {
@@ -41,7 +41,7 @@ namespace BoxApi.V2
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the created file.</returns>
         public File CreateFile(Folder parent, string name, byte[] content, Field[] fields = null)
         {
@@ -55,7 +55,7 @@ namespace BoxApi.V2
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the created file.</returns>
         public File CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
         {
@@ -72,7 +72,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Field[] fields = null)
         {
             GuardFromNull(parent, "folder");
@@ -86,7 +86,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File creation</param>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parentId, name, new byte[0], fields);
@@ -100,7 +100,7 @@ namespace BoxApi.V2
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, byte[] content, Field[] fields = null)
         {
             GuardFromNull(parent, "folder");
@@ -115,7 +115,7 @@ namespace BoxApi.V2
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, byte[] content, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
@@ -137,7 +137,7 @@ namespace BoxApi.V2
         /// Retrieves a file
         /// </summary>
         /// <param name="file">The file to get</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the fetched file.</returns>
         public File Get(File file, Field[] fields = null)
         {
@@ -149,7 +149,7 @@ namespace BoxApi.V2
         /// Retrieves a file
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the fetched file.</returns>
         public File GetFile(string id, Field[] fields = null)
         {
@@ -175,7 +175,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to get</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -188,7 +188,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GetFile(onSuccess, onFailure, id, 0, fields);
@@ -460,7 +460,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to copy</param>
         /// <param name="newParent">The destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the copied file</returns>
         public File Copy(File file, Folder newParent, string newName = null, Field[] fields = null)
         {
@@ -475,7 +475,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the copied file</returns>
         public File Copy(File file, string newParentId, string newName = null, Field[] fields = null)
         {
@@ -489,7 +489,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the copied file</returns>
         public File CopyFile(string id, string newParentId, string newName = null, Field[] fields = null)
         {
@@ -507,7 +507,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to copy</param>
         /// <param name="newParent">The destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -523,7 +523,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -538,7 +538,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -553,7 +553,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null)
@@ -567,7 +567,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null)
@@ -585,7 +585,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, Field[] fields = null)
         {
@@ -600,7 +600,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
         {
@@ -616,7 +616,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to move</param>
         /// <param name="newParent">The destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the moved file</returns>
         public File Move(File file, Folder newParent, Field[] fields = null)
         {
@@ -629,7 +629,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the moved file</returns>
         public File Move(File file, string newParentId, Field[] fields = null)
         {
@@ -642,7 +642,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the moved file</returns>
         public File MoveFile(string id, string newParentId, Field[] fields = null)
         {
@@ -659,7 +659,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to move</param>
         /// <param name="newParent">The destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -673,7 +673,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -687,7 +687,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -702,7 +702,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to rename</param>
         /// <param name="newName">The new name for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the renamed file</returns>
         public File Rename(File file, string newName, Field[] fields = null)
         {
@@ -715,7 +715,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to rename</param>
         /// <param name="newName">The new name for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the renamed file</returns>
         public File RenameFile(string id, string newName, Field[] fields = null)
         {
@@ -732,7 +732,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to rename</param>
         /// <param name="newName">The new name for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -746,7 +746,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to rename</param>
         /// <param name="newName">The new name for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -761,7 +761,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the updated file</returns>
         public File UpdateDescription(File file, string description, Field[] fields = null)
         {
@@ -774,7 +774,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the updated file</returns>
         public File UpdateFileDescription(string id, string description, Field[] fields = null)
         {
@@ -788,7 +788,7 @@ namespace BoxApi.V2
         /// Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
         /// <param name="file">The file to update</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A file object representing the updated file</returns>
         public File Update(File file, Field[] fields = null)
         {
@@ -804,7 +804,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
         /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -817,7 +817,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the update file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
         {
             GuardFromNull(file, "file");
@@ -832,7 +832,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The values that should be populated on the returned File object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");

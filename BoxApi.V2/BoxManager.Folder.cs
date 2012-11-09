@@ -11,7 +11,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="parent">The folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created folder.</returns>
         public Folder CreateFolder(Folder parent, string name, Field[] fields = null)
         {
@@ -24,7 +24,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="parentId">The ID of the folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created folder.</returns>
         public Folder CreateFolder(string parentId, string name, Field[] fields = null)
         {
@@ -41,7 +41,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Folder creation</param>
         /// <param name="parent">The folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, Folder parent, string name, Field[] fields = null)
         {
             GuardFromNull(parent, "parent");
@@ -55,7 +55,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed folder creation</param>
         /// <param name="parentId">The ID of he folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
@@ -69,7 +69,7 @@ namespace BoxApi.V2
         /// Retrieves a folder
         /// </summary>
         /// <param name="folder">The folder to get</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The fetched folder.</returns>
         public Folder Get(Folder folder, Field[] fields = null)
         {
@@ -83,7 +83,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to get</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -94,7 +94,7 @@ namespace BoxApi.V2
         /// Retrieves a folder
         /// </summary>
         /// <param name="id">The ID of the folder to get</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The fetched folder.</returns>
         public Folder GetFolder(string id, Field[] fields = null)
         {
@@ -109,7 +109,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to get</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -122,7 +122,7 @@ namespace BoxApi.V2
         /// Retrieve a folder's items
         /// </summary>
         /// <param name="folder">The folder containing the items to retrieve</param>
-        /// <param name="fields">The values that should be populated on the returned items.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
         public ItemCollection GetItems(Folder folder, Field[] fields = null)
         {
@@ -134,7 +134,7 @@ namespace BoxApi.V2
         /// Retrieve a folder's items
         /// </summary>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
-        /// <param name="fields">The values that should be populated on the returned items.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
         public ItemCollection GetItems(string id, Field[] fields = null)
         {
@@ -149,7 +149,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder containing the items to retrieve</param>
-        /// <param name="fields">The values that should be populated on the returned items.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -162,7 +162,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
-        /// <param name="fields">The values that should be populated on the returned items.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -233,7 +233,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParent">The destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
         public Folder Copy(Folder folder, Folder newParent, string newName = null, Field[] fields = null)
         {
@@ -247,7 +247,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
         public Folder Copy(Folder folder, string newParentId, string newName = null, Field[] fields = null)
         {
@@ -261,7 +261,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
         public Folder CopyFolder(string id, string newParentId, string newName = null, Field[] fields = null)
         {
@@ -279,7 +279,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParent">The destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, string newName = null, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -294,7 +294,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -309,7 +309,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -324,7 +324,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null)
@@ -338,7 +338,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public Folder ShareFolderLink(string id, SharedLink sharedLink, Field[] fields = null)
@@ -356,7 +356,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, Field[] fields = null)
         {
@@ -371,7 +371,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
         {
@@ -387,7 +387,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The moved folder</returns>
         public Folder Move(Folder folder, Folder newParent, Field[] fields = null)
         {
@@ -400,7 +400,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The moved folder</returns>
         public Folder Move(Folder folder, string newParentId, Field[] fields = null)
         {
@@ -413,7 +413,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The moved folder</returns>
         public Folder MoveFolder(string id, string newParentId, Field[] fields = null)
         {
@@ -430,7 +430,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, Field[] fields = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -444,7 +444,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -458,7 +458,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -473,7 +473,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The renamed folder</returns>
         public Folder Rename(Folder folder, string newName, Field[] fields = null)
         {
@@ -486,7 +486,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The renamed folder</returns>
         public Folder RenameFolder(string id, string newName, Field[] fields = null)
         {
@@ -503,7 +503,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -517,7 +517,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -532,7 +532,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated folder</returns>
         public Folder UpdateDescription(Folder folder, string description, Field[] fields = null)
         {
@@ -545,7 +545,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated folder</returns>
         public Folder UpdateFolderDescription(string id, string description, Field[] fields = null)
         {
@@ -562,7 +562,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -576,7 +576,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -589,7 +589,7 @@ namespace BoxApi.V2
         /// Update one or more of a folder's name, description, parent, or shared link.
         /// </summary>
         /// <param name="folder">The folder to update</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated folder</returns>
         public Folder Update(Folder folder, Field[] fields = null)
         {
@@ -605,7 +605,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the updated folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
-        /// <param name="fields">The values that should be populated on the returned Folder object.  Type and Id are always populated.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
