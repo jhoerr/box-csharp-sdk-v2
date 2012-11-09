@@ -9,35 +9,88 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
-        public Discussion CreateDiscussion(Folder parent, string name, string description = null, Field[] fields = null)
+        /// <summary>
+        /// Creates a new discussion for a folder
+        /// </summary>
+        /// <param name="folder">The folder for which to create a discussion</param>
+        /// <param name="name">The name of the discussion</param>
+        /// <param name="description">An optional discription of the discussion</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new discussion</returns>
+        public Discussion CreateDiscussion(Folder folder, string name, string description = null, Field[] fields = null)
         {
-            GuardFromNull(parent, "parent");
-            return CreateDiscussion(parent.Id, name, description, fields);
+            GuardFromNull(folder, "folder");
+            return CreateDiscussion(folder.Id, name, description, fields);
         }
 
-        public Discussion CreateDiscussion(string parentId, string name, string description = null, Field[] fields = null)
+        /// <summary>
+        /// Creates a new discussion for a folder
+        /// </summary>
+        /// <param name="folderId">The ID of the folder for which to create a discussion</param>
+        /// <param name="name">The name of the discussion</param>
+        /// <param name="description">An optional discription of the discussion</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new discussion</returns>
+        public Discussion CreateDiscussion(string folderId, string name, string description = null, Field[] fields = null)
         {
-            GuardFromNull(parentId, "parentId");
+            GuardFromNull(folderId, "folderId");
             GuardFromNull(name, "name");
-            var request = _requestHelper.CreateDiscussion(parentId, name, description, fields);
+            var request = _requestHelper.CreateDiscussion(folderId, name, description, fields);
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
-        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder parent, string name, string description = null, Field[] fields = null)
+        /// <summary>
+        /// Creates a new discussion for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the new discussion</param>
+        /// <param name="onFailure">Action to perform following a failed creation</param>
+        /// <param name="folder">The folder for which to create a discussion</param>
+        /// <param name="name">The name of the discussion</param>
+        /// <param name="description">An optional discription of the discussion</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder folder, string name, string description = null, Field[] fields = null)
         {
-            GuardFromNull(parent, "parent");
-            CreateDiscussion(onSuccess, onFailure, parent.Id, name, description, fields);
+            GuardFromNull(folder, "folder");
+            CreateDiscussion(onSuccess, onFailure, folder.Id, name, description, fields);
         }
 
-        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string parentId, string name, string description = null, Field[] fields = null)
+        /// <summary>
+        /// Creates a new discussion for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the new discussion</param>
+        /// <param name="onFailure">Action to perform following a failed creation</param>
+        /// <param name="folderId">The ID of the folder for which to create a discussion</param>
+        /// <param name="name">The name of the discussion</param>
+        /// <param name="description">An optional discription of the discussion</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string folderId, string name, string description = null, Field[] fields = null)
         {
-            GuardFromNull(parentId, "parentId");
+            GuardFromNull(folderId, "folderId");
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.CreateDiscussion(parentId, name, description, fields);
+            var request = _requestHelper.CreateDiscussion(folderId, name, description, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
-        
+
+        /// <summary>
+        /// Retrieves an existing discussion
+        /// </summary>
+        /// <param name="discussion">The discussion to retrieve</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The retrieved discussion</returns>
+        public Discussion GetDiscussion(Discussion discussion, Field[] fields = null)
+        {
+            GuardFromNull(discussion, "discussion");
+            var request = _requestHelper.Get(ResourceType.Discussion, discussion.Id, fields);
+            return _restClient.ExecuteAndDeserialize<Discussion>(request);
+        }
+
+        /// <summary>
+        /// Retrieves an existing discussion
+        /// </summary>
+        /// <param name="id">The ID of the discussion to retrieve</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The retrieved discussion</returns>
         public Discussion GetDiscussion(string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -45,6 +98,28 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<Discussion>(request);
         }
 
+        /// <summary>
+        /// Retrieves an existing discussion
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved discussion</param>
+        /// <param name="onFailure">Action to perform following a failed retrieval</param>
+        /// <param name="discussion">The discussion to retrieve</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, Field[] fields = null)
+        {
+            GuardFromNull(discussion, "discussion");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Get(ResourceType.Discussion, discussion.Id, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieves an existing discussion
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved discussion</param>
+        /// <param name="onFailure">Action to perform following a failed retrieval</param>
+        /// <param name="id">The ID of the discussion to retrieve</param>
+        /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
             GuardFromNull(id, "id");
@@ -53,12 +128,24 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        /// <summary>
+        /// Retrieves all discussions for the specified folder
+        /// </summary>
+        /// <param name="folder">The folder whose dicussions should be retrieved</param>
+        /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The folder's dicussions</returns>
         public DiscussionCollection GetDiscussions(Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetDiscussions(folder.Id, fields);
         }
 
+        /// <summary>
+        /// Retrieves all discussions for the specified folder
+        /// </summary>
+        /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
+        /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The folder's dicussions</returns>
         public DiscussionCollection GetDiscussions(string folderId, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -66,12 +153,26 @@ namespace BoxApi.V2
             return _restClient.ExecuteAndDeserialize<DiscussionCollection>(request);
         }
 
+        /// <summary>
+        /// Retrieves all discussions for the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the folder's discussions</param>
+        /// <param name="onFailure">Action to perform following a failed retrieval</param>
+        /// <param name="folder">The folder whose dicussions should be retrieved</param>
+        /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
         {
             GuardFromNull(folder, "folder");
             GetDiscussions(onSuccess, onFailure, folder.Id, fields);
         }
 
+        /// <summary>
+        /// Retrieves all discussions for the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the folder's discussions</param>
+        /// <param name="onFailure">Action to perform following a failed retrieval</param>
+        /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
+        /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, string folderId, Field[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -80,12 +181,20 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
+        /// <summary>
+        /// Deletes a discussion from a folder
+        /// </summary>
+        /// <param name="discussion">The discussion to delete</param>
         public void Delete(Discussion discussion)
         {
             GuardFromNull(discussion, "discussion");
             DeleteDiscussion(discussion.Id);
         }
 
+        /// <summary>
+        /// Deletes a discussion from a folder
+        /// </summary>
+        /// <param name="id">The ID of the discussion to delete</param>
         public void DeleteDiscussion(string id)
         {
             GuardFromNull(id, "id");
@@ -93,12 +202,24 @@ namespace BoxApi.V2
             _restClient.Execute(request);
         }
 
+        /// <summary>
+        /// Deletes a discussion from a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform following a successful delete</param>
+        /// <param name="onFailure">Action to perform following a failed delete</param>
+        /// <param name="discussion">The discussion to delete</param>
         public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Discussion discussion)
         {
             GuardFromNull(discussion, "discussion");
             DeleteDiscussion(onSuccess, onFailure, discussion.Id);
         }
 
+        /// <summary>
+        /// Deletes a discussion from a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform following a successful delete</param>
+        /// <param name="onFailure">Action to perform following a failed delete</param>
+        /// <param name="id">The ID of the discussion to delete</param>
         public void DeleteDiscussion(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
@@ -106,7 +227,5 @@ namespace BoxApi.V2
             var request = _requestHelper.DeleteDiscussion(id);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
-
-
     }
 }
