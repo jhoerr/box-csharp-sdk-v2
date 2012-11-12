@@ -17,6 +17,7 @@ Support currently exists for:
 * Authentication
 * Files
 * Folders
+* Shared Items
 * Comments
 * Discussions
 * Collaborations
