@@ -49,7 +49,6 @@ namespace BoxApi.V2
             return restResponse.Data;
         }
 
-
         public void ExecuteAsync<T>(IRestRequest request, Action<T> onSuccess, Action<Error> onFailure) where T : class, new()
         {
             AssertUsableActions(onSuccess, onFailure);
@@ -134,7 +133,7 @@ namespace BoxApi.V2
             error = null;
             var success = true;
 
-            ((IBoxAuthenticator)Authenticator).ClearSharedLink();
+            TryClearSharedLink();
 
             if (restResponse == null)
             {
@@ -160,6 +159,14 @@ namespace BoxApi.V2
                 }
             }
             return success;
+        }
+
+        private void TryClearSharedLink()
+        {
+            if (Authenticator != null)
+            {
+                ((IBoxAuthenticator) Authenticator).ClearSharedLink();
+            }
         }
 
         public BoxRestClient WithSharedLink(string sharedLink)

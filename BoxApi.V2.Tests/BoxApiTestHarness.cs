@@ -14,6 +14,7 @@ namespace BoxApi.V2.Tests
     public class BoxApiTestHarness
     {
         protected readonly BoxManager Client;
+        protected readonly BoxManager UnauthenticatedClient;
 
         protected const string RootId = "0";
         protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
@@ -25,6 +26,7 @@ namespace BoxApi.V2.Tests
         {
             var testInfo = GetTestInfo();
             Client = new BoxManager(testInfo.AppKey, testInfo.AuthKey);
+            UnauthenticatedClient = new BoxManager(testInfo.AppKey);
             CollaboratingUser = testInfo.CollaboratingUser;
             MaxWaitInSeconds = 5;
         }

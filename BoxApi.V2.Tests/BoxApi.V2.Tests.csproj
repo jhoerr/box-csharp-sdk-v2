@@ -61,6 +61,7 @@
     <Compile Include="FolderTests.Async.cs" />
     <Compile Include="FolderTests.Sync.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharedItemTests.cs" />
     <Compile Include="TestConfig.cs">
       <SubType>Form</SubType>
     </Compile>
