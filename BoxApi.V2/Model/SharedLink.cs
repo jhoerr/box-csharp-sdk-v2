@@ -9,10 +9,19 @@ namespace BoxApi.V2.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class SharedLink
     {
+        /// <summary>
+        /// Parameterless constructor required for deserialization
+        /// </summary>
         public SharedLink()
         {
         }
 
+        /// <summary>
+        /// Creates a SharedLink to associate with a File or folder
+        /// </summary>
+        /// <param name="access">With whom the item should be shared</param>
+        /// <param name="unsharedAt">Automatically stop sharing at this time</param>
+        /// <param name="permissions">The </param>
         public SharedLink(Access access, DateTime unsharedAt, Permissions permissions)
         {
             Access = access.Name();
@@ -32,22 +41,33 @@ namespace BoxApi.V2.Model
         public DateTime UnsharedAt { get; set; }
 
         /// <summary>
-        ///   The set of permissions that apply to this link
+        ///   The set of permissions that apply to this shared item
         /// </summary>
         public Permissions Permissions { get; set; }
 
+        /// <summary>
+        /// The URL to be used when requesting information about this item.
+        /// </summary>
         public string Url { get; set; }
 
-        [JsonProperty(PropertyName = "download_url")]
+        /// <summary>
+        /// The URL from which this item can be downloaded.
+        /// </summary>
         public string DownloadUrl { get; set; }
 
-        [JsonProperty(PropertyName = "password_enabled")]
+        /// <summary>
+        /// Whether this item is password-protected
+        /// </summary>
         public bool PasswordEnabled { get; set; }
 
-        [JsonProperty(PropertyName = "download_count")]
+        /// <summary>
+        /// The number of times this item has been downloaded
+        /// </summary>
         public int DownloadCount { get; set; }
         
-        [JsonProperty(PropertyName = "preview_count")]
+        /// <summary>
+        /// The number of times this item has been previewed
+        /// </summary>
         public int PreviewCount { get; set; }
     }
 }
