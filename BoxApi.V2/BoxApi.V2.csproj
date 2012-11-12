@@ -73,6 +73,7 @@
     <Compile Include="BoxManager.Discussion.cs" />
     <Compile Include="BoxManager.Event.cs" />
     <Compile Include="BoxManager.File.cs" />
+    <Compile Include="BoxManager.SharedItems.cs" />
     <Compile Include="BoxManager.Token.cs" />
     <Compile Include="BoxManager.User.cs" />
     <Compile Include="BoxRestClient.cs" />

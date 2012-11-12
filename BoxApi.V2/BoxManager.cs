@@ -6,7 +6,7 @@ using System.Threading;
 namespace BoxApi.V2
 {
     /// <summary>
-    ///   Provides methods for using Box.NET SOAP web service
+    /// Provides methods for using Box v2 API.  This class is not thread-safe.
     /// </summary>
     public partial class BoxManager
     {

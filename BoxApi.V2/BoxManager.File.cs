@@ -153,20 +153,32 @@ namespace BoxApi.V2
         /// <returns>The fetched file</returns>
         public File GetFile(string id, Field[] fields = null)
         {
-            return GetFile(id, 0, fields);
+            return GetFile(id, 0, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields);
         }
 
-        private File GetFile(string id, int attempt, Field[] fields = null)
+        /// <summary>
+        /// Retrieves a file using a shared link
+        /// </summary>
+        /// <param name="id">The ID of the file to get</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The shared file</returns>
+        public File GetFile(string id, string sharedLinkUrl, Field[] fields = null)
         {
-            GuardFromNull(id, "id");
+            return GetFile(id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields);
+        }
+
+        private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null)
+        {
+            Func<IRestRequest, File> getFile = getFileOperation;
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
             if (attempt > 0)
             {
                 Backoff(attempt);
             }
             var request = _requestHelper.Get(ResourceType.File, id, fields);
-            var file = _restClient.ExecuteAndDeserialize<File>(request);
-            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, fields) : file;
+            var file = getFile(request);
+            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, _restClient.ExecuteAndDeserialize<File>, fields) : file;
         }
 
         /// <summary>
@@ -191,10 +203,23 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
         {
-            GetFile(onSuccess, onFailure, id, 0, fields);
+            GetFile(onSuccess, onFailure, id, 0, _restClient.ExecuteAsync, fields);
         }
 
-        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Field[] fields = null)
+        /// <summary>
+        /// Retrieves a file
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved File</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to get</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null)
+        {
+            GetFile(onSuccess, onFailure, id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields);
+        }
+
+        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -207,7 +232,7 @@ namespace BoxApi.V2
                     {
                         // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
                         Backoff(attempt);
-                        GetFile(onSuccess, onFailure, id, attempt, fields);
+                        GetFile(onSuccess, onFailure, id, attempt, getFileAsync, fields);
                     }
                     else
                     {
@@ -215,7 +240,7 @@ namespace BoxApi.V2
                     }
                 };
 
-            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
+            getFileAsync(request, onSuccessWrapper, onFailure);
         }
 
         /// <summary>

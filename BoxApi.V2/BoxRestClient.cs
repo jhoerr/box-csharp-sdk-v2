@@ -7,6 +7,8 @@ using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
+
+
     internal class BoxRestClient : RestClient
     {
         private const string ServiceUrl = "https://www.box.com/api/";
@@ -15,10 +17,11 @@ namespace BoxApi.V2
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
 
-        public BoxRestClient(IAuthenticator authenticator = null, IWebProxy proxy = null) :
+        public BoxRestClient(IBoxAuthenticator authenticator = null, IWebProxy proxy = null) :
             base(ServiceUrl)
         {
             Authenticator = authenticator;
+
             Proxy = proxy;
             ClearHandlers();
             var xmlDeserializer = new XmlDeserializer();
@@ -33,7 +36,7 @@ namespace BoxApi.V2
         {
             var restResponse = base.Execute(request);
             Error error;
-            if (!WasSuccessful(restResponse, out error))
+            if (!HandleResponse(restResponse, out error))
             {
                 throw new BoxException(error);
             }
@@ -53,7 +56,7 @@ namespace BoxApi.V2
             base.ExecuteAsync<T>(request, (response, handle) =>
                 {
                     Error error;
-                    if (WasSuccessful(response, out error))
+                    if (HandleResponse(response, out error))
                     {
                         onSuccess(response.Data);
                         return;
@@ -68,7 +71,7 @@ namespace BoxApi.V2
             base.ExecuteAsync(request, (response, handle) =>
                 {
                     Error error;
-                    if (WasSuccessful(response, out error))
+                    if (HandleResponse(response, out error))
                     {
                         onSuccess(response);
                         return;
@@ -83,7 +86,7 @@ namespace BoxApi.V2
             base.ExecuteAsync(request, (response, handle) =>
                 {
                     Error error;
-                    if (WasSuccessful(response, out error))
+                    if (HandleResponse(response, out error))
                     {
                         onSuccess();
                         return;
@@ -126,10 +129,13 @@ namespace BoxApi.V2
             }
         }
 
-        public bool WasSuccessful(IRestResponse restResponse, out Error error)
+        public bool HandleResponse(IRestResponse restResponse, out Error error)
         {
             error = null;
             var success = true;
+
+            ((IBoxAuthenticator)Authenticator).ClearSharedLink();
+
             if (restResponse == null)
             {
                 success = false;
@@ -154,6 +160,12 @@ namespace BoxApi.V2
                 }
             }
             return success;
+        }
+
+        public BoxRestClient WithSharedLink(string sharedLink)
+        {
+            ((IBoxAuthenticator)Authenticator).SetSharedLink(sharedLink);
+            return this;
         }
     }
 }

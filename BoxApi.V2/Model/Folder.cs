@@ -16,11 +16,17 @@ namespace BoxApi.V2.Model
         [JsonProperty(PropertyName = "item_collection")]
         public ItemCollection ItemCollection { get; set; }
 
+        /// <summary>
+        /// The files contained within this folder
+        /// </summary>
         public IEnumerable<File> Files
         {
             get { return FromEntriesGetAll(ResourceType.File); }
         }
 
+        /// <summary>
+        /// The subfolders contained within this folder
+        /// </summary>
         public IEnumerable<Folder> Folders
         {
             get { return FromEntriesGetAll(ResourceType.Folder); }

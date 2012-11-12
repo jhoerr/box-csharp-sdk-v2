@@ -2,8 +2,12 @@ using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
 {
+    public class ShareableEntity : HierarchyEntity
+    {
+    }
+
     [JsonObject(MemberSerialization.OptIn)]
-    public class File : HierarchyEntity
+    public class File : ShareableEntity
     {
         /// <summary>
         ///   The item size in bytes
