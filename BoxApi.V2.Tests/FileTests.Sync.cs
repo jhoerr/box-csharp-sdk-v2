@@ -114,7 +114,7 @@ namespace BoxApi.V2.Tests
             finally
             {
                 Client.Delete(file);
-                Client.Delete(folder);
+                Client.Delete(folder, true);
             }
         }
 
@@ -191,7 +191,7 @@ namespace BoxApi.V2.Tests
             }
             finally
             {
-                Client.Delete(folder);
+                Client.Delete(folder, true);
             }
         }
 

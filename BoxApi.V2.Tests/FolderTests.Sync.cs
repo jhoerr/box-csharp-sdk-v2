@@ -48,15 +48,13 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, Field.CreatedAt, Field.ModifiedAt });
+                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, });
                 var actual = folder.Files.Single(f => f.Id.Equals(testFile.Id));
                 // expect present
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.Name, Is.EqualTo(testFile.Name));
                 Assert.That(actual.Size, Is.EqualTo(testFile.Size));
                 Assert.That(actual.Etag, Is.EqualTo(testFile.Etag));
-                Assert.That(actual.CreatedAt, Is.EqualTo(testFile.CreatedAt));
-                Assert.That(actual.ModifiedAt, Is.EqualTo(testFile.ModifiedAt));
                 // expect empty
                 Assert.That(actual.CreatedBy, Is.Null);
                 Assert.That(actual.OwnedBy, Is.Null);
@@ -167,8 +165,8 @@ namespace BoxApi.V2.Tests
             var copyName = TestItemName();
             var copy = Client.Copy(folder, RootId, copyName, null);
             Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
-            Client.Delete(folder);
-            Client.Delete(copy);
+            Client.Delete(folder, true);
+            Client.Delete(copy, true);
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -225,7 +223,7 @@ namespace BoxApi.V2.Tests
             Client.Delete(targetFolder, true);
         }
 
-        [Test, Description("This fails, but eventually won't.  See http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
+        [Test, ExpectedException(typeof(BoxException)), Description("This fails, but eventually won't.  See http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
         public void MoveFolderToSameParent()
         {
             var folderName = TestItemName();
@@ -305,7 +303,7 @@ namespace BoxApi.V2.Tests
             }
             finally
             {
-                Client.Delete(newParent);
+                Client.Delete(newParent, true);
             }
         }
     }
