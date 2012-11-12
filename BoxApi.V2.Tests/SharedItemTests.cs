@@ -33,6 +33,15 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
+        public void ReadSharedFile()
+        {
+            var bytes = UnauthenticatedClient.Read(SharedFileId, SharedFileLink);
+            // Contents are the following 29 bytes:
+            // This is a shared file.  Neat!
+            Assert.That(bytes.Length, Is.EqualTo(29));
+        }
+
+        [Test]
         public void GetSharedFolder()
         {
             var folder = UnauthenticatedClient.GetSharedItem<Folder>(SharedFolderLink);
