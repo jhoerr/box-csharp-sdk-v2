@@ -157,7 +157,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file using a shared link
+        /// Retrieves a shared file
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
@@ -207,7 +207,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file
+        /// Retrieves a shared file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -267,6 +267,19 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Retrieve the contents of a shared file
+        /// </summary>
+        /// <param name="id">The ID of the file to read</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <returns>The raw file contents</returns>
+        public byte[] Read(string id, string sharedLinkUrl)
+        {
+            GuardFromNull(id, "id");
+            var request = _requestHelper.Read(id);
+            return _restClient.WithSharedLink(sharedLinkUrl).Execute(request).RawBytes;
+        }
+
+        /// <summary>
         /// Retrieve the contents of the specified file
         /// </summary>
         /// <param name="file">The file to read</param>
@@ -286,6 +299,19 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             var buffer = Read(id);
+            output.Write(buffer, 0, buffer.Length);
+        }
+
+        /// <summary>
+        /// Retrieve the contents of a shared file
+        /// </summary>
+        /// <param name="id">The ID of the file to read</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="output">A stream to which the file contents will be written</param>
+        public void Read(string id, string sharedLinkUrl, Stream output)
+        {
+            GuardFromNull(id, "id");
+            var buffer = Read(id, sharedLinkUrl);
             output.Write(buffer, 0, buffer.Length);
         }
 
@@ -314,6 +340,22 @@ namespace BoxApi.V2
             var request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieve the contents of a shared file
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the file contents</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to read</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        public void Read(Action<byte[]> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Read(id);
+            Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         /// <summary>
@@ -347,6 +389,28 @@ namespace BoxApi.V2
                     }
                 };
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieve the contents of a shared file
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the file stream</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to read</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        public void ReadToStream(Action<Stream> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Read(id);
+            Action<IRestResponse> onSuccessWrapper = response =>
+            {
+                using (var stream = new MemoryStream(response.RawBytes))
+                {
+                    onSuccess(stream);
+                }
+            };
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         /// <summary>
@@ -525,6 +589,23 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Copies a shared file to the specified folder
+        /// </summary>
+        /// <param name="id">The ID of the file to copy</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The copied file</returns>
+        public File CopyFile(string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>(request);
+        }
+
+        /// <summary>
         /// Copies a file to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied file</param>
@@ -572,7 +653,27 @@ namespace BoxApi.V2
             var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
-        
+
+        /// <summary>
+        /// Copies a shared file to the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform following a successful File operation</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="id">The ID of the file to copy</param>
+        /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied file</param>
+        /// <param name="newName">The optional new name for the copied file</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+
         /// <summary>
         /// Creates a shared link to the specified file
         /// </summary>

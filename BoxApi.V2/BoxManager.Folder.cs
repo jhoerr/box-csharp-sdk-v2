@@ -104,6 +104,20 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Retrieves a shared folder
+        /// </summary>
+        /// <param name="id">The ID of the folder to get</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The fetched folder.</returns>
+        public Folder GetFolder(string id, string sharedLinkUrl, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<Folder>(request);
+        }
+
+        /// <summary>
         /// Retrieves a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
@@ -116,6 +130,22 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Get(ResourceType.Folder, id, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieves a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
+        /// <param name="onFailure">Action to perform following a failed operation</param>
+        /// <param name="id">The ID of the folder to get</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
         }
 
         /// <summary>
@@ -141,6 +171,21 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id, fields);
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
+        }
+
+
+        /// <summary>
+        /// Retrieve a shared folder's items
+        /// </summary>
+        /// <param name="id">The ID of the folder containing the items to retrieve</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>A collection of items representing the folder's contents.</returns>
+        public ItemCollection GetItems(string id, string sharedLinkUrl, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            var request = _requestHelper.GetItems(id, fields);
+            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<ItemCollection>(request);
         }
 
         /// <summary>
@@ -170,6 +215,23 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             var folderItems = _requestHelper.GetItems(id, fields);
             _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieve a folder's items
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the folder's items</param>
+        /// <param name="onFailure">Action to perform following a failed operation</param>
+        /// <param name="id">The ID of the folder containing the items to retrieve</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(fields, "fields");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var folderItems = _requestHelper.GetItems(id, fields);
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
         /// <summary>
@@ -272,6 +334,23 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Copies a shared folder to the specified folder
+        /// </summary>
+        /// <param name="id">The ID of the folder to copy</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
+        /// <param name="newName">The optional new name for the copied folder</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The copied folder</returns>
+        public Folder CopyFolder(string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName, fields);
+            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<Folder>(request);
+        }
+
+        /// <summary>
         /// Copies a folder to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied folder</param>
@@ -317,6 +396,25 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Copies a folder to the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the copied folder</param>
+        /// <param name="onFailure">Action to perform following a failed operation</param>
+        /// <param name="id">The ID of the folder to copy</param>
+        /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
+        /// <param name="newName">The optional new name for the copied folder</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        {
+            GuardFromNull(id, "id");
+            GuardFromNull(newParentId, "newParentId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            var request = _requestHelper.Copy(ResourceType.Folder, id, newParentId, newName, fields);
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
         }
 
         /// <summary>
