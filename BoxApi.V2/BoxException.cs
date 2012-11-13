@@ -8,7 +8,7 @@ namespace BoxApi.V2
     {
         public HttpStatusCode HttpStatusCode { get; private set; }
         public string ShortDescription { get { return Error.Code; } }
-        public string Message { get { return Error.Message; } }
+        public new string Message { get { return Error.Message; } }
         public Error Error { get; private set; }
 
         public BoxException(Error error)
