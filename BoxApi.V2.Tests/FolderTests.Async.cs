@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using BoxApi.V2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
@@ -171,7 +170,7 @@ namespace BoxApi.V2.Tests
             var callbackHit = false;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { Preview = true, Download = true });
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
 
             Client.ShareFolderLink(copiedFolder =>
                 {
@@ -197,9 +196,9 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName, null);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var targetFolderName = TestItemName();
-            Folder targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
+            var targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
 
             Client.MoveFolder(movedFolder =>
                 {
@@ -224,7 +223,7 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
             var folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName, null);
+            var folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
 
             Client.Rename(renamedFolder =>
@@ -253,7 +252,7 @@ namespace BoxApi.V2.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
-       
+
             Client.GetItems(contents =>
                 {
                     callbackHit = true;
@@ -262,7 +261,7 @@ namespace BoxApi.V2.Tests
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
                     Client.DeleteFolder(testFolder.Id, true);
-                }, AbortOnFailure, testFolder.Id, new[]{Field.Name,});
+                }, AbortOnFailure, testFolder.Id, new[] {Field.Name,});
 
             do
             {
@@ -281,7 +280,7 @@ namespace BoxApi.V2.Tests
             // Arrange
             var callbackHit = false;
             var folder = Client.CreateFolder(RootId, TestItemName(), null);
-            string newDescription = "new description";
+            var newDescription = "new description";
 
             // Act
             folder.Description = newDescription;
@@ -313,13 +312,13 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string fileName = TestItemName();
+            var fileName = TestItemName();
             var folder = Client.CreateFolder(RootId, fileName, null);
-            string newDescription = "new description";
-            string newFolder = TestItemName();
+            var newDescription = "new description";
+            var newFolder = TestItemName();
             var newParent = Client.CreateFolder(RootId, newFolder, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
-            string newName = TestItemName();
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var newName = TestItemName();
 
             // Act
             folder.Name = newName;
@@ -348,6 +347,5 @@ namespace BoxApi.V2.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
-
     }
 }

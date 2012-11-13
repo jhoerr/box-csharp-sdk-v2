@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Windows.Forms;
-using BoxApi.V2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
@@ -95,7 +93,7 @@ namespace BoxApi.V2.Tests
                 }
                 try
                 {
-                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse() {Content = content});
+                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse {Content = content});
                 }
                 catch
                 {
@@ -112,12 +110,12 @@ namespace BoxApi.V2.Tests
             ui.ShowDialog();
             using (var stream = fi.CreateText())
             {
-                testConfigInfo = new TestConfigInfo()
-                                     {
-                                         AppKey = ui.AppKey,
-                                         AuthKey = ui.AuthKey,
-                                         TestEmail = ui.TestEmail,
-                                     };
+                testConfigInfo = new TestConfigInfo
+                    {
+                        AppKey = ui.AppKey,
+                        AuthKey = ui.AuthKey,
+                        TestEmail = ui.TestEmail,
+                    };
                 stream.Write(new JsonSerializer().Serialize(testConfigInfo));
             }
             return testConfigInfo;
@@ -130,6 +128,5 @@ namespace BoxApi.V2.Tests
             public string AuthKey { get; set; }
             public string CollaboratingUser { get; set; }
         }
-
     }
 }

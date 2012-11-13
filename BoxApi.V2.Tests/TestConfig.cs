@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using BoxApi.V2;
 using Microsoft.Win32;
-using RestSharp.Serializers;
 
 namespace BoxApi.V2.Tests
 {
@@ -43,7 +35,7 @@ namespace BoxApi.V2.Tests
             }
             TestEmail = email.Text;
             var auth = new BoxAuthenticator(appKey.Text);
-            string authUrl = auth.GetAuthorizationUrl();
+            var authUrl = auth.GetAuthorizationUrl();
             OpenUrl(authUrl);
             MessageBox.Show(this, "Please confirm access to the app in the launched browser window");
             AuthKey = auth.GetAuthorizationToken();
@@ -51,17 +43,15 @@ namespace BoxApi.V2.Tests
         }
 
         /// <summary>
-        /// Opens <paramref name="url"/> in a default web browser
+        ///     Opens <paramref name="url" /> in a default web browser
         /// </summary>
         /// <param name="url">Destination URL</param>
         public static void OpenUrl(string url)
         {
-            string key = @"htmlfile\shell\open\command";
-            RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(key, false);
-            string defaultBrowserPath = ((string)registryKey.GetValue(null, null)).Split('"')[1];
+            var key = @"htmlfile\shell\open\command";
+            var registryKey = Registry.ClassesRoot.OpenSubKey(key, false);
+            var defaultBrowserPath = ((string) registryKey.GetValue(null, null)).Split('"')[1];
             Process.Start(defaultBrowserPath, url);
         }
- 
-
     }
 }

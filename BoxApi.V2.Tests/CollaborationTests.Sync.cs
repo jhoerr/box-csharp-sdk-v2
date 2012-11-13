@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
@@ -34,7 +33,7 @@ namespace BoxApi.V2.Tests
             var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, CollaborationRole.Viewer);
             try
             {
-                Collaboration actual = Client.Get(collaboration);
+                var actual = Client.Get(collaboration);
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(actual.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
@@ -51,10 +50,10 @@ namespace BoxApi.V2.Tests
         {
             var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var view = Client.CreateCollaboration(folder, CollaboratingUser, CollaborationRole.Viewer);
-            
+
             try
             {
-                CollaborationCollection actual = Client.GetCollaborations(folder);
+                var actual = Client.GetCollaborations(folder);
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.TotalCount, Is.EqualTo("1"));
                 Assert.That(actual.Entries.Any(c => c.Id.Equals(view.Id)), Is.True);
@@ -70,10 +69,10 @@ namespace BoxApi.V2.Tests
         {
             var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             var collaboration = Client.CreateCollaboration(folder, CollaboratingUser, CollaborationRole.Viewer);
-            
+
             try
             {
-                Collaboration updated = Client.Update(collaboration, CollaborationRole.Editor);
+                var updated = Client.Update(collaboration, CollaborationRole.Editor);
                 Assert.That(updated, Is.Not.Null);
                 Assert.That(updated.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(updated.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));

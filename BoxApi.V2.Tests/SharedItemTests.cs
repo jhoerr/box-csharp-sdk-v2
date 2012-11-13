@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using BoxApi.V2.Model;
 using NUnit.Framework;
 
@@ -83,7 +80,7 @@ namespace BoxApi.V2.Tests
             }
             finally
             {
-                Client.Delete(folder, true);   
+                Client.Delete(folder, true);
             }
         }
 
@@ -105,6 +102,5 @@ namespace BoxApi.V2.Tests
                 Client.Delete(folder, true);
             }
         }
-
     }
 }

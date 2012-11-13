@@ -43,10 +43,10 @@ namespace BoxApi.V2.Tests
         {
             var callbackHit = false;
 
-            var expected = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName, expected);
-            
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName, expected);
+
             Client.Read(readBytes =>
                 {
                     Assert.That(readBytes, Is.EqualTo(expected));
@@ -70,13 +70,13 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            var expected = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName);
             // Act
             Client.Write(updatedFile =>
                 {
-                    byte[] actual = Client.Read(file.Id);
+                    var actual = Client.Read(file.Id);
                     Assert.That(actual, Is.EqualTo(expected));
                     callbackHit = true;
                 }, AbortOnFailure, file, expected);
@@ -100,15 +100,15 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            string newItemName = TestItemName();
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName);
+            var newItemName = TestItemName();
             // Act
             Client.Copy(copiedFile =>
                 {
                     // Assert
                     AssertFileConstraints(copiedFile, newItemName, RootId);
-                    Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id)); 
+                    Assert.That(copiedFile.Id, Is.Not.EqualTo(file.Id));
                     callbackHit = true;
                 }, AbortOnFailure, file, RootId, newItemName, null);
 
@@ -131,10 +131,10 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() {Download = true, Preview = true});
-            
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName);
+            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+
             // Act
             Client.ShareLink(sharedFile =>
                 {
@@ -163,9 +163,9 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            string newItemName = TestItemName();
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName);
+            var newItemName = TestItemName();
             // Act
             Client.Rename(renamedFile =>
                 {
@@ -193,10 +193,10 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            string folderName = TestItemName();
-            Folder folder = Client.CreateFolder(RootId, folderName, null);
+            var testItemName = TestItemName();
+            var file = Client.CreateFile(RootId, testItemName);
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName, null);
             // Act
             Client.Move(movedFile =>
                 {
@@ -224,9 +224,9 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string fileName = TestItemName();
+            var fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
-            string newDescription = "new description";
+            var newDescription = "new description";
 
             // Act
             Client.UpdateDescription(updatedFile =>
@@ -257,14 +257,14 @@ namespace BoxApi.V2.Tests
         {
             // Arrange
             var callbackHit = false;
-            string fileName = TestItemName();
+            var fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
-            string newDescription = "new description";
-            string newFolder = TestItemName();
+            var newDescription = "new description";
+            var newFolder = TestItemName();
             var folder = Client.CreateFolder(RootId, newFolder, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions() { Download = true, Preview = true });
-            string newName = TestItemName();
-            
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var newName = TestItemName();
+
             // Act
             file.Name = newName;
             file.Description = newDescription;
@@ -292,6 +292,5 @@ namespace BoxApi.V2.Tests
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
-
     }
 }

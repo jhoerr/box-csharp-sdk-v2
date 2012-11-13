@@ -70,7 +70,7 @@ namespace BoxApi.V2.Tests
             Client.CreateDiscussion(_folder.Id, firstName);
             Client.CreateDiscussion(_folder.Id, secondName);
 
-            DiscussionCollection actual = Client.GetDiscussions(_folder);
+            var actual = Client.GetDiscussions(_folder);
 
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.TotalCount, Is.EqualTo("2"));

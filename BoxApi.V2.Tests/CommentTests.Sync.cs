@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BoxApi.V2.Model;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace BoxApi.V2.Tests
@@ -13,11 +9,11 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Add()
         {
-            File file = Client.CreateFile(RootId, TestItemName());
-            string message = "the message";
+            var file = Client.CreateFile(RootId, TestItemName());
+            var message = "the message";
             try
             {
-                Comment comment = Client.CreateComment(file, message);
+                var comment = Client.CreateComment(file, message);
                 Assert.That(comment, Is.Not.Null);
                 Assert.That(comment.Item.Id, Is.EqualTo(file.Id));
                 Assert.That(comment.Message, Is.EqualTo(message));
@@ -32,12 +28,12 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Get()
         {
-            File file = Client.CreateFile(RootId, TestItemName());
-            string message = "the message";
+            var file = Client.CreateFile(RootId, TestItemName());
+            var message = "the message";
             try
             {
-                Comment expected = Client.CreateComment(file, message);
-                Comment actual = Client.GetComment(expected);
+                var expected = Client.CreateComment(file, message);
+                var actual = Client.GetComment(expected);
                 Assert.That(actual, Is.Not.Null);
                 Assert.That(actual.Item.Id, Is.EqualTo(expected.Item.Id));
                 Assert.That(actual.Message, Is.EqualTo(expected.Message));
@@ -51,9 +47,9 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetAll()
         {
-            File file = Client.CreateFile(RootId, TestItemName());
-            string firstComment = "first comment";
-            string secondComment = "second comment";
+            var file = Client.CreateFile(RootId, TestItemName());
+            var firstComment = "first comment";
+            var secondComment = "second comment";
             try
             {
                 Client.CreateComment(file, firstComment);
@@ -72,9 +68,9 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Update()
         {
-            File file = Client.CreateFile(RootId, TestItemName());
-            string originalComment = "originalComment";
-            string newComment = "newComment";
+            var file = Client.CreateFile(RootId, TestItemName());
+            var originalComment = "originalComment";
+            var newComment = "newComment";
             try
             {
                 var comment = Client.CreateComment(file, originalComment);
@@ -92,8 +88,8 @@ namespace BoxApi.V2.Tests
         [Test]
         public void Delete()
         {
-            File file = Client.CreateFile(RootId, TestItemName());
-            string originalComment = "originalComment";
+            var file = Client.CreateFile(RootId, TestItemName());
+            var originalComment = "originalComment";
             try
             {
                 var comment = Client.CreateComment(file, originalComment);

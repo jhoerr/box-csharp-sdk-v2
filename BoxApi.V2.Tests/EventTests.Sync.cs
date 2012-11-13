@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
 
@@ -23,7 +22,7 @@ namespace BoxApi.V2.Tests
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             try
             {
-                UserEventCollection events = Client.GetUserEvents(latestPosition);
+                var events = Client.GetUserEvents(latestPosition);
                 Assert.That(events.ChunkSize, Is.EqualTo(1));
                 Assert.That(events.Entries.Count, Is.EqualTo(1));
                 var entry = events.Entries.Single();
@@ -45,7 +44,7 @@ namespace BoxApi.V2.Tests
             Client.CreateComment(testFile, "comment!");
             try
             {
-                UserEventCollection events = Client.GetUserEvents(latestPosition, StreamType.Changes);
+                var events = Client.GetUserEvents(latestPosition, StreamType.Changes);
                 Assert.That(events.ChunkSize, Is.EqualTo(0));
                 Assert.That(events.Entries.Count, Is.EqualTo(0));
             }

@@ -25,7 +25,7 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                var items = Client.GetItems(testFolder, new[] {Field.CreatedAt, Field.Name, });
+                var items = Client.GetItems(testFolder, new[] {Field.CreatedAt, Field.Name,});
                 Assert.That(items, Is.Not.Null);
                 Assert.That(items.TotalCount, Is.EqualTo("2"));
                 // expected present
@@ -49,7 +49,7 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, });
+                var folder = Client.GetFolder(RootId, new[] {Field.Name, Field.Size, Field.Etag,});
                 var actual = folder.Files.Single(f => f.Id.Equals(testFile.Id));
                 // expect present
                 Assert.That(actual, Is.Not.Null);
@@ -224,7 +224,8 @@ namespace BoxApi.V2.Tests
             Client.Delete(targetFolder, true);
         }
 
-        [Test, ExpectedException(typeof(BoxException)), Description("This fails, but eventually won't.  See http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
+        [Test, ExpectedException(typeof (BoxException)),
+         Description("This fails, but eventually won't.  See http://stackoverflow.com/questions/12439723/moving-folder-to-same-parent-returns-400-bad-request")]
         public void MoveFolderToSameParent()
         {
             var folderName = TestItemName();
@@ -234,7 +235,7 @@ namespace BoxApi.V2.Tests
                 var moved = Client.Move(folder, RootId);
                 AssertFolderConstraints(moved, folderName, RootId, folder.Id);
             }
-            finally 
+            finally
             {
                 Client.DeleteFolder(folder.Id, true);
             }
