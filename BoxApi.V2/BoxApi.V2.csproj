@@ -96,6 +96,7 @@
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\ShareableEntity.cs" />
     <Compile Include="Model\UserCollection.cs" />
     <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />

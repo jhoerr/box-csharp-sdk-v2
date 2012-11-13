@@ -17,7 +17,7 @@ namespace BoxApi.V2.Model
         /// </summary>
         [JsonProperty(PropertyName = "expires_at")]
         public DateTime? ExpiresAt { get; set; }
-
+        
         /// <summary>
         /// The level of access this user has
         /// </summary>
@@ -28,6 +28,9 @@ namespace BoxApi.V2.Model
         /// </summary>
         public Entity Item { get; set; }
 
+        /// <summary>
+        /// The 
+        /// </summary>
         [JsonProperty(PropertyName = "accessible_by")]
         public UserEntity AccessibleBy { get; set; }
 

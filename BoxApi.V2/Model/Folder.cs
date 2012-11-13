@@ -6,8 +6,11 @@ using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
 {
+    /// <summary>
+    /// A Box folder, which can contain files and other folders
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Folder : File
+    public class Folder : ShareableEntity
     {
         public const string Root = "0";
 
@@ -22,7 +25,7 @@ namespace BoxApi.V2.Model
         /// </summary>
         public IEnumerable<File> Files
         {
-            get { return FromEntriesGetAll(ResourceType.File); }
+            get { return FromEntriesGetAll<File>(ResourceType.File); }
         }
 
         /// <summary>
@@ -30,12 +33,12 @@ namespace BoxApi.V2.Model
         /// </summary>
         public IEnumerable<Folder> Folders
         {
-            get { return FromEntriesGetAll(ResourceType.Folder); }
+            get { return FromEntriesGetAll<Folder>(ResourceType.Folder); }
         }
 
-        private IEnumerable<Folder> FromEntriesGetAll(ResourceType value)
+        private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value) where T:ShareableEntity
         {
-            return ItemCollection.Entries.Where(i => i.Type.Equals(value));
+            return ItemCollection.Entries.Where(i => i.Type.Equals(value)).Cast<T>();
         }
 
         public override string ToString()

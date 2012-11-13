@@ -5,9 +5,9 @@ using System.Text;
 namespace BoxApi.V2.Model
 {
     /// <summary>
-    /// A collection of 
+    /// A collection of events.
     /// </summary>
-    public class EventCollection<T> where T : Event
+    public abstract class EventCollection<T> where T : Event
     {
         /// <summary>
         /// The number of event records returned
@@ -25,10 +25,16 @@ namespace BoxApi.V2.Model
         public List<T> Entries { get; set; }
     }
 
+    /// <summary>
+    /// A collection of events scoped to a single user's account
+    /// </summary>
     public class UserEventCollection : EventCollection<UserEvent>
     {
     }
 
+    /// <summary>
+    /// A collection of events scoped to users in an enterprise
+    /// </summary>
     public class EnterpriseEventCollection : EventCollection<EnterpriseEvent>
     {
     }

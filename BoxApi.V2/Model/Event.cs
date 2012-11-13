@@ -34,6 +34,9 @@ namespace BoxApi.V2.Model
         public ModifiableEntity Source { get; set; }
     }
 
+    /// <summary>
+    /// An event that occured in a user's account
+    /// </summary>
     public class UserEvent : Event
     {
         /// <summary>
@@ -42,6 +45,9 @@ namespace BoxApi.V2.Model
         public StandardEventType EventType { get; set; }
     }
 
+    /// <summary>
+    /// An event that occured in an enterprise
+    /// </summary>
     public class EnterpriseEvent : Event
     {
         /// <summary>

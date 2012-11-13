@@ -2,6 +2,9 @@ using System;
 
 namespace BoxApi.V2.Model
 {
+    /// <summary>
+    /// An item that can be changed over time.
+    /// </summary>
     public class ModifiableEntity : Entity
     {
         /// <summary>
@@ -30,6 +33,9 @@ namespace BoxApi.V2.Model
         public UserEntity OwnedBy { get; set; }
     }
 
+    /// <summary>
+    /// An item that exists as part of a hierarchy tree.
+    /// </summary>
     public class HierarchyEntity : ModifiableEntity
     {
         /// <summary>

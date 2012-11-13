@@ -2,21 +2,12 @@ using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
 {
-    public class ShareableEntity : HierarchyEntity
-    {
-    }
-
+    /// <summary>
+    /// A Box file.
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class File : ShareableEntity
-    {
-        /// <summary>
-        ///   The item size in bytes
-        /// </summary>
-        public string Size { get; set; }
-
-        [JsonProperty(PropertyName = "shared_link")]
-        public SharedLink SharedLink { get; set; }
-
+    {   
         /// <summary>
         ///   The path from the user’s root to this file by folder names
         /// </summary>

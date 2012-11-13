@@ -11,12 +11,8 @@ namespace BoxApi.V2.Model
     /// 4xx: An error in the request. Usually a bad parameter.
     /// 5xx: The request is fine, but something is wrong on Box’s end
     /// </summary>
-    public class Error
+    public class Error : EntityBase
     {
-        /// <summary>
-        /// Object type. For errors is ‘error’
-        /// </summary>
-        public string Type { get; set; }
         /// <summary>
         /// the HTTP status of the error response
         /// </summary>

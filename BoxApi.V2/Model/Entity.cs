@@ -3,10 +3,13 @@ using BoxApi.V2.Model.Enum;
 
 namespace BoxApi.V2.Model
 {
+    /// <summary>
+    /// The base type for objects returned from Box.  
+    /// </summary>
     public class EntityBase
     {
         /// <summary>
-        /// Type of item.  One of: File, Folder, Comment, Discussion, Event, Token
+        /// The type of item being returned.
         /// </summary>
         public ResourceType Type { get; set; }
     }
