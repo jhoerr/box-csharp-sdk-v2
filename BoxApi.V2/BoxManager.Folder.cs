@@ -8,7 +8,7 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         /// <summary>
-        /// Creates a new folder in the specified folder
+        ///     Creates a new folder in the specified folder
         /// </summary>
         /// <param name="parent">The folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
@@ -21,7 +21,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new folder in the specified folder
+        ///     Creates a new folder in the specified folder
         /// </summary>
         /// <param name="parentId">The ID of the folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
@@ -36,7 +36,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new folder in the specified folder
+        ///     Creates a new folder in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created Folder</param>
         /// <param name="onFailure">Action to perform following a failed Folder creation</param>
@@ -50,7 +50,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new folder in the specified folder
+        ///     Creates a new folder in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created folder</param>
         /// <param name="onFailure">Action to perform following a failed folder creation</param>
@@ -67,7 +67,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a folder
+        ///     Retrieves a folder
         /// </summary>
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -79,7 +79,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a folder
+        ///     Retrieves a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -92,7 +92,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a folder
+        ///     Retrieves a folder
         /// </summary>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -105,7 +105,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a shared folder
+        ///     Retrieves a shared folder
         /// </summary>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
@@ -119,7 +119,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a folder
+        ///     Retrieves a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -134,7 +134,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a folder
+        ///     Retrieves a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -150,7 +150,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve a folder's items
+        ///     Retrieve a folder's items
         /// </summary>
         /// <param name="folder">The folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -162,7 +162,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve a folder's items
+        ///     Retrieve a folder's items
         /// </summary>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -176,7 +176,7 @@ namespace BoxApi.V2
 
 
         /// <summary>
-        /// Retrieve a shared folder's items
+        ///     Retrieve a shared folder's items
         /// </summary>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
@@ -190,7 +190,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve a folder's items
+        ///     Retrieve a folder's items
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -203,7 +203,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve a folder's items
+        ///     Retrieve a folder's items
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -219,7 +219,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve a folder's items
+        ///     Retrieve a folder's items
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -236,7 +236,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Removes a folder from a user's Box
+        ///     Removes a folder from a user's Box
         /// </summary>
         /// <param name="folder">The folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
@@ -248,7 +248,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Removes a folder from a user's Box
+        ///     Removes a folder from a user's Box
         /// </summary>
         /// <param name="id">The ID of the folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
@@ -261,7 +261,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Removes a folder from a user's Box
+        ///     Removes a folder from a user's Box
         /// </summary>
         /// <param name="onSuccess">Action to perform when the folder is deleted</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -275,7 +275,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Removes a folder from a user's Box
+        ///     Removes a folder from a user's Box
         /// </summary>
         /// <param name="onSuccess">Action to perform when the folder is deleted</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -291,7 +291,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParent">The destination folder for the copied folder</param>
@@ -305,7 +305,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="folder">The folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
@@ -319,7 +319,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="id">The ID of the folder to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
@@ -335,7 +335,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a shared folder to the specified folder
+        ///     Copies a shared folder to the specified folder
         /// </summary>
         /// <param name="id">The ID of the folder to copy</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
@@ -352,7 +352,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -367,7 +367,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -382,7 +382,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -400,7 +400,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a folder to the specified folder
+        ///     Copies a folder to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -419,7 +419,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified folder
+        ///     Creates a shared link to the specified folder
         /// </summary>
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
@@ -433,7 +433,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified folder
+        ///     Creates a shared link to the specified folder
         /// </summary>
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
@@ -449,7 +449,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified folder
+        ///     Creates a shared link to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the linked folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -464,7 +464,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified folder
+        ///     Creates a shared link to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the linked folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -482,7 +482,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
@@ -495,7 +495,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
@@ -508,7 +508,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
@@ -523,7 +523,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -535,9 +535,9 @@ namespace BoxApi.V2
             GuardFromNull(newParent, "newParent");
             Move(onSuccess, onFailure, folder, newParent.Id, fields);
         }
-        
+
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -551,7 +551,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a folder to the specified destination
+        ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -568,7 +568,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a folder
+        ///     Renames a folder
         /// </summary>
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
@@ -581,7 +581,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a folder
+        ///     Renames a folder
         /// </summary>
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
@@ -596,7 +596,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a folder
+        ///     Renames a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the renamed folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -610,7 +610,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a folder
+        ///     Renames a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the renamed folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -627,7 +627,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a folder's description
+        ///     Updates a folder's description
         /// </summary>
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
@@ -640,7 +640,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a folder's description
+        ///     Updates a folder's description
         /// </summary>
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
@@ -655,7 +655,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a folder's description
+        ///     Updates a folder's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -669,7 +669,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a folder's description
+        ///     Updates a folder's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
@@ -685,7 +685,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update one or more of a folder's name, description, parent, or shared link.
+        ///     Update one or more of a folder's name, description, parent, or shared link.
         /// </summary>
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -699,7 +699,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update one or more of a folder's name, description, parent, or shared link.
+        ///     Update one or more of a folder's name, description, parent, or shared link.
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>

@@ -11,9 +11,9 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         private const int MaxFileGetAttempts = 4;
-      
+
         /// <summary>
-        /// Creates a new empty file in the specified folder
+        ///     Creates a new empty file in the specified folder
         /// </summary>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
@@ -25,7 +25,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new empty file in the specified folder
+        ///     Creates a new empty file in the specified folder
         /// </summary>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
@@ -35,9 +35,9 @@ namespace BoxApi.V2
         {
             return CreateFile(parentId, name, new byte[0], fields);
         }
-        
+
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
@@ -51,7 +51,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
@@ -67,7 +67,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created File</param>
         /// <param name="onFailure">Action to perform following a failed File creation</param>
@@ -81,7 +81,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created File</param>
         /// <param name="onFailure">Action to perform following a failed File creation</param>
@@ -94,7 +94,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created File</param>
         /// <param name="onFailure">Action to perform following a failed File creation</param>
@@ -109,7 +109,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new file with the provided content in the specified folder
+        ///     Creates a new file with the provided content in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the created File</param>
         /// <param name="onFailure">Action to perform following a failed File creation</param>
@@ -135,7 +135,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file
+        ///     Retrieves a file
         /// </summary>
         /// <param name="file">The file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -147,7 +147,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file
+        ///     Retrieves a file
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -158,7 +158,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a shared file
+        ///     Retrieves a shared file
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
@@ -171,7 +171,7 @@ namespace BoxApi.V2
 
         private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null)
         {
-            Func<IRestRequest, File> getFile = getFileOperation;
+            var getFile = getFileOperation;
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
             if (attempt > 0)
             {
@@ -183,7 +183,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file
+        ///     Retrieves a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -196,7 +196,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a file
+        ///     Retrieves a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -208,7 +208,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves a shared file
+        ///     Retrieves a shared file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -245,7 +245,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="file">The file to read</param>
         /// <returns>The raw file contents</returns>
@@ -256,7 +256,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="id">The ID of the file to read</param>
         /// <returns>The raw file contents</returns>
@@ -268,7 +268,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of a shared file
+        ///     Retrieve the contents of a shared file
         /// </summary>
         /// <param name="id">The ID of the file to read</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
@@ -281,7 +281,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="file">The file to read</param>
         /// <param name="output">A stream to which the file contents will be written</param>
@@ -292,7 +292,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="id">The ID of the file to read</param>
         /// <param name="output">A stream to which the file contents will be written</param>
@@ -304,7 +304,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of a shared file
+        ///     Retrieve the contents of a shared file
         /// </summary>
         /// <param name="id">The ID of the file to read</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
@@ -317,7 +317,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file contents</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -329,7 +329,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file contents</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -344,7 +344,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of a shared file
+        ///     Retrieve the contents of a shared file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file contents</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -360,7 +360,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file stream</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -372,7 +372,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of the specified file
+        ///     Retrieve the contents of the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file stream</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -393,7 +393,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the contents of a shared file
+        ///     Retrieve the contents of a shared file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the file stream</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -405,17 +405,17 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response =>
-            {
-                using (var stream = new MemoryStream(response.RawBytes))
                 {
-                    onSuccess(stream);
-                }
-            };
+                    using (var stream = new MemoryStream(response.RawBytes))
+                    {
+                        onSuccess(stream);
+                    }
+                };
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">A stream containing the file's data</param>
@@ -426,7 +426,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">The file's data</param>
@@ -438,7 +438,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
@@ -451,7 +451,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
@@ -468,7 +468,6 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -486,7 +485,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -499,7 +498,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -512,7 +511,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -527,7 +526,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates the content of a file
+        ///     Updates the content of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -545,7 +544,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="file">The file to copy</param>
         /// <param name="newParent">The destination folder for the copied file</param>
@@ -560,7 +559,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="file">The file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
@@ -574,7 +573,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="id">The ID of the file to copy</param>
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
@@ -590,7 +589,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a shared file to the specified folder
+        ///     Copies a shared file to the specified folder
         /// </summary>
         /// <param name="id">The ID of the file to copy</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
@@ -607,7 +606,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the copied file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -623,7 +622,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful File operation</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -638,7 +637,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a file to the specified folder
+        ///     Copies a file to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful File operation</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -656,7 +655,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Copies a shared file to the specified folder
+        ///     Copies a shared file to the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful File operation</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -676,7 +675,7 @@ namespace BoxApi.V2
 
 
         /// <summary>
-        /// Creates a shared link to the specified file
+        ///     Creates a shared link to the specified file
         /// </summary>
         /// <param name="file">The file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
@@ -690,7 +689,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified file
+        ///     Creates a shared link to the specified file
         /// </summary>
         /// <param name="id">The ID of the file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
@@ -706,7 +705,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified file
+        ///     Creates a shared link to the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the linked file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -721,7 +720,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a shared link to the specified file
+        ///     Creates a shared link to the specified file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the linked file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -739,7 +738,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="file">The file to move</param>
         /// <param name="newParent">The destination folder</param>
@@ -752,7 +751,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="file">The file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
@@ -765,7 +764,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="id">The ID of the file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
@@ -780,7 +779,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -794,7 +793,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -808,7 +807,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Moves a file to the specified destination
+        ///     Moves a file to the specified destination
         /// </summary>
         /// <param name="onSuccess">Action to perform with the moved file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -825,7 +824,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a file
+        ///     Renames a file
         /// </summary>
         /// <param name="file">The file to rename</param>
         /// <param name="newName">The new name for the file</param>
@@ -838,7 +837,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a file
+        ///     Renames a file
         /// </summary>
         /// <param name="id">The ID of the file to rename</param>
         /// <param name="newName">The new name for the file</param>
@@ -853,7 +852,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a file
+        ///     Renames a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the renamed file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -867,7 +866,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Renames a file
+        ///     Renames a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the renamed file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -884,7 +883,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a file's description
+        ///     Updates a file's description
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="description">The new description for the file</param>
@@ -897,7 +896,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a file's description
+        ///     Updates a file's description
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="description">The new description for the file</param>
@@ -912,7 +911,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update one or more of a file's name, description, parent, or shared link.
+        ///     Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -925,7 +924,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a file's description
+        ///     Updates a file's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -939,7 +938,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update one or more of a file's name, description, parent, or shared link.
+        ///     Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -953,7 +952,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updates a file's description
+        ///     Updates a file's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -969,7 +968,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a file from the user's Box
+        ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="file">The file to delete</param>
         public void Delete(File file)
@@ -979,7 +978,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a file from the user's Box
+        ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="id">The ID of the file to delete</param>
         /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
@@ -992,7 +991,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a file from the user's Box
+        ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -1004,7 +1003,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a file from the user's Box
+        ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>

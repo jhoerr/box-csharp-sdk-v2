@@ -6,7 +6,7 @@ using System.Threading;
 namespace BoxApi.V2
 {
     /// <summary>
-    /// Provides methods for using Box v2 API.  This class is not designed to be thread-safe.
+    ///     Provides methods for using Box v2 API.  This class is not designed to be thread-safe.
     /// </summary>
     public partial class BoxManager
     {
@@ -14,7 +14,7 @@ namespace BoxApi.V2
         private readonly RequestHelper _requestHelper;
 
         /// <summary>
-        /// Instantiates BoxManager
+        ///     Instantiates BoxManager
         /// </summary>
         /// <param name="applicationApiKey"> The API key which is assigned to your application</param>
         /// <param name="authorizationToken"> The user's authorization token.  This can be null if you are exclusively consuming shared items.</param>

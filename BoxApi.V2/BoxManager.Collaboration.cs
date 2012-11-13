@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
-using IRestResponse = RestSharp.IRestResponse;
+using RestSharp;
 
 namespace BoxApi.V2
 {
     public partial class BoxManager
     {
         /// <summary>
-        /// Add a collaboration for a single user to a folder.
+        ///     Add a collaboration for a single user to a folder.
         /// </summary>
         /// <param name="folder">The folder in which to collaborate</param>
         /// <param name="userId">The ID of the collaborating user</param>
@@ -25,7 +22,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Add a collaboration for a single user to a folder.
+        ///     Add a collaboration for a single user to a folder.
         /// </summary>
         /// <param name="folderId">The ID of the folder in which to collaborate</param>
         /// <param name="userId">The ID of the collaborating user</param>
@@ -42,7 +39,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Add a collaboration for a single user to a folder.
+        ///     Add a collaboration for a single user to a folder.
         /// </summary>
         /// <param name="onSuccess">Action to perform with the new collaboration</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
@@ -57,7 +54,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Add a collaboration for a single user to a folder.
+        ///     Add a collaboration for a single user to a folder.
         /// </summary>
         /// <param name="onSuccess">Action to perform with the new collaboration</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
@@ -75,7 +72,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the details of an existing collaboration
+        ///     Retrieve the details of an existing collaboration
         /// </summary>
         /// <param name="collaboration">The collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -87,7 +84,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the details of an existing collaboration
+        ///     Retrieve the details of an existing collaboration
         /// </summary>
         /// <param name="collaborationId">The ID of the collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -100,7 +97,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the details of an existing collaboration
+        ///     Retrieve the details of an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the existig collaboration</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
@@ -113,7 +110,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve the details of an existing collaboration
+        ///     Retrieve the details of an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the existig collaboration</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
@@ -128,7 +125,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve all existing collaborations in the specified folder
+        ///     Retrieve all existing collaborations in the specified folder
         /// </summary>
         /// <param name="folder">The folder whose collaborations should be retrieved</param>
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
@@ -141,7 +138,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve all existing collaborations in the specified folder
+        ///     Retrieve all existing collaborations in the specified folder
         /// </summary>
         /// <param name="folderId">The ID of the folder whose collaborations should be retrieved</param>
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
@@ -155,7 +152,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve all existing collaborations in the specified folder
+        ///     Retrieve all existing collaborations in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's collaborations</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation</param>
@@ -169,7 +166,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieve all existing collaborations in the specified folder
+        ///     Retrieve all existing collaborations in the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's collaborations</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation</param>
@@ -185,7 +182,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role in an existing collaboration
+        ///     Update the collaborator's role in an existing collaboration
         /// </summary>
         /// <param name="collaboration">The collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
@@ -198,7 +195,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role and status in an existing collaboration
+        ///     Update the collaborator's role and status in an existing collaboration
         /// </summary>
         /// <param name="collaboration">The collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
@@ -212,7 +209,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role in an existing collaboration
+        ///     Update the collaborator's role in an existing collaboration
         /// </summary>
         /// <param name="collaborationId">The ID of the collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
@@ -226,7 +223,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Updat the collaborator's role and status in an existing collaboration
+        ///     Updat the collaborator's role and status in an existing collaboration
         /// </summary>
         /// <param name="collaborationId">The ID of the collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
@@ -241,7 +238,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role in an existing collaboration
+        ///     Update the collaborator's role in an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated collaboration</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>
@@ -255,7 +252,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role and status in an existing collaboration
+        ///     Update the collaborator's role and status in an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated collaboration</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>
@@ -270,7 +267,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role in an existing collaboration
+        ///     Update the collaborator's role in an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated collaboration</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>
@@ -285,7 +282,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Update the collaborator's role and status in an existing collaboration
+        ///     Update the collaborator's role and status in an existing collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform with the updated collaboration</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>
@@ -299,9 +296,9 @@ namespace BoxApi.V2
             var request = _requestHelper.UpdateCollaboration(collaborationId, role, status, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
-    
+
         /// <summary>
-        /// Delete a collaboration
+        ///     Delete a collaboration
         /// </summary>
         /// <param name="collaboration">The collaboration to delete</param>
         public void Delete(Collaboration collaboration)
@@ -311,7 +308,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Delete a collaboration
+        ///     Delete a collaboration
         /// </summary>
         /// <param name="collaborationId">The ID of the collaboration to delete</param>
         public void DeleteCollaboration(string collaborationId)
@@ -322,7 +319,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Delete a collaboration
+        ///     Delete a collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform after the collaboration is deleted</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>
@@ -334,7 +331,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Delete a collaboration
+        ///     Delete a collaboration
         /// </summary>
         /// <param name="onSuccess">Action to perform after the collaboration is deleted</param>
         /// <param name="onFailure">Action to perform following a failed Collaboration operation</param>

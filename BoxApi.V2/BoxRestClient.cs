@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net;
 using BoxApi.V2.Model;
 using RestSharp;
@@ -7,8 +6,6 @@ using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
-
-
     internal class BoxRestClient : RestClient
     {
         private const string ServiceUrl = "https://www.box.com/api/";
@@ -170,7 +167,7 @@ namespace BoxApi.V2
 
         public BoxRestClient WithSharedLink(string sharedLink)
         {
-            ((IBoxAuthenticator)Authenticator).SetSharedLink(sharedLink);
+            ((IBoxAuthenticator) Authenticator).SetSharedLink(sharedLink);
             return this;
         }
     }

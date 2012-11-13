@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace BoxApi.V2.Model
 {
     /// <summary>
-    /// A Box folder, which can contain files and other folders
+    ///     A Box folder, which can contain files and other folders
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class Folder : ShareableEntity
@@ -15,13 +15,13 @@ namespace BoxApi.V2.Model
         public const string Root = "0";
 
         /// <summary>
-        ///   An array of file or folder objects contained in this folder
+        ///     An array of file or folder objects contained in this folder
         /// </summary>
         [JsonProperty(PropertyName = "item_collection")]
         public ItemCollection ItemCollection { get; set; }
 
         /// <summary>
-        /// The files contained within this folder
+        ///     The files contained within this folder
         /// </summary>
         public IEnumerable<File> Files
         {
@@ -29,14 +29,14 @@ namespace BoxApi.V2.Model
         }
 
         /// <summary>
-        /// The subfolders contained within this folder
+        ///     The subfolders contained within this folder
         /// </summary>
         public IEnumerable<Folder> Folders
         {
             get { return FromEntriesGetAll<Folder>(ResourceType.Folder); }
         }
 
-        private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value) where T:ShareableEntity
+        private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value) where T : ShareableEntity
         {
             return ItemCollection.Entries.Where(i => i.Type.Equals(value)).Cast<T>();
         }

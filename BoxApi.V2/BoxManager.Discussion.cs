@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
-using IRestResponse = RestSharp.IRestResponse;
+using RestSharp;
 
 namespace BoxApi.V2
 {
     public partial class BoxManager
     {
         /// <summary>
-        /// Creates a new discussion for a folder
+        ///     Creates a new discussion for a folder
         /// </summary>
         /// <param name="folder">The folder for which to create a discussion</param>
         /// <param name="name">The name of the discussion</param>
@@ -25,7 +22,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new discussion for a folder
+        ///     Creates a new discussion for a folder
         /// </summary>
         /// <param name="folderId">The ID of the folder for which to create a discussion</param>
         /// <param name="name">The name of the discussion</param>
@@ -41,7 +38,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new discussion for a folder
+        ///     Creates a new discussion for a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the new discussion</param>
         /// <param name="onFailure">Action to perform following a failed creation</param>
@@ -56,7 +53,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Creates a new discussion for a folder
+        ///     Creates a new discussion for a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the new discussion</param>
         /// <param name="onFailure">Action to perform following a failed creation</param>
@@ -74,7 +71,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves an existing discussion
+        ///     Retrieves an existing discussion
         /// </summary>
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -87,7 +84,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves an existing discussion
+        ///     Retrieves an existing discussion
         /// </summary>
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -100,7 +97,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves an existing discussion
+        ///     Retrieves an existing discussion
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved discussion</param>
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
@@ -115,7 +112,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves an existing discussion
+        ///     Retrieves an existing discussion
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved discussion</param>
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
@@ -130,7 +127,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves all discussions for the specified folder
+        ///     Retrieves all discussions for the specified folder
         /// </summary>
         /// <param name="folder">The folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -142,7 +139,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves all discussions for the specified folder
+        ///     Retrieves all discussions for the specified folder
         /// </summary>
         /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -155,7 +152,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves all discussions for the specified folder
+        ///     Retrieves all discussions for the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's discussions</param>
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
@@ -168,7 +165,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves all discussions for the specified folder
+        ///     Retrieves all discussions for the specified folder
         /// </summary>
         /// <param name="onSuccess">Action to perform with the folder's discussions</param>
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
@@ -183,7 +180,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a discussion from a folder
+        ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="discussion">The discussion to delete</param>
         public void Delete(Discussion discussion)
@@ -193,7 +190,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a discussion from a folder
+        ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="id">The ID of the discussion to delete</param>
         public void DeleteDiscussion(string id)
@@ -204,7 +201,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a discussion from a folder
+        ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed delete</param>
@@ -216,7 +213,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Deletes a discussion from a folder
+        ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed delete</param>

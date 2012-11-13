@@ -15,7 +15,7 @@ namespace BoxApi.V2
             var request = JsonRequest(resourceResourceType, null, Method.GET, fields);
             return request;
         }
-       
+
         public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null)
         {
             var request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);

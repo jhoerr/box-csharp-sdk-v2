@@ -36,7 +36,7 @@ namespace BoxApi.V2
         {
             _sharedLink = sharedLink;
         }
-        
+
         public void ClearSharedLink()
         {
             _sharedLink = null;

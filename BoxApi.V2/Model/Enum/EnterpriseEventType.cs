@@ -1,180 +1,222 @@
 namespace BoxApi.V2.Model.Enum
 {
     /// <summary>
-    /// Events that are tracked at the enterprise level
+    ///     Events that are tracked at the enterprise level
     /// </summary>
     public enum EnterpriseEventType
     {
         /// <summary>
-        /// Added user to group
+        ///     Added user to group
         /// </summary>
         GroupAddUser,
+
         /// <summary>
-        /// Created user
+        ///     Created user
         /// </summary>
         NewUser,
+
         /// <summary>
-        /// Created new group
+        ///     Created new group
         /// </summary>
         GroupCreation,
+
         /// <summary>
-        /// Deleted group
+        ///     Deleted group
         /// </summary>
         GroupDeletion,
+
         /// <summary>
-        /// Deleted user
+        ///     Deleted user
         /// </summary>
         DeleteUser,
+
         /// <summary>
-        /// Edited group
+        ///     Edited group
         /// </summary>
         GroupEdited,
+
         /// <summary>
-        /// Edited user
+        ///     Edited user
         /// </summary>
         EditUser,
+
         /// <summary>
-        /// Granted folder access
+        ///     Granted folder access
         /// </summary>
         GroupAddFolder,
+
         /// <summary>
-        /// Removed user from group
+        ///     Removed user from group
         /// </summary>
         GroupRemoveUser,
+
         /// <summary>
-        /// Removed folder access from group
+        ///     Removed folder access from group
         /// </summary>
         GroupRemoveFolder,
+
         /// <summary>
-        /// Added trusted application
+        ///     Added trusted application
         /// </summary>
         AddTrustedDevice,
+
         /// <summary>
-        /// Administrative login
+        ///     Administrative login
         /// </summary>
         AdminLogin,
+
         /// <summary>
-        /// Added device assocation
+        ///     Added device assocation
         /// </summary>
         AddDeviceAssociation,
+
         /// <summary>
-        /// Failed login
+        ///     Failed login
         /// </summary>
         FailedLogin,
+
         /// <summary>
-        /// Logged in
+        ///     Logged in
         /// </summary>
         Login,
+
         /// <summary>
-        /// Removed trusted application
+        ///     Removed trusted application
         /// </summary>
         RemoveTrustedDevice,
+
         /// <summary>
-        /// Removed device association
+        ///     Removed device association
         /// </summary>
         RemoveDeviceAssociation,
+
         /// <summary>
-        /// Agreed to terms of service
+        ///     Agreed to terms of service
         /// </summary>
         TermsOfServiceAgree,
+
         /// <summary>
-        /// Rejected terms of service
+        ///     Rejected terms of service
         /// </summary>
         TermsOfServiceReject,
+
         /// <summary>
-        /// Item copied
+        ///     Item copied
         /// </summary>
         Copy,
+
         /// <summary>
-        /// Item deleted
+        ///     Item deleted
         /// </summary>
         Delete,
+
         /// <summary>
-        /// Item downloaded
+        ///     Item downloaded
         /// </summary>
         Download,
+
         /// <summary>
-        /// Item edited
+        ///     Item edited
         /// </summary>
         Edit,
+
         /// <summary>
-        /// Item locked
+        ///     Item locked
         /// </summary>
         Lock,
+
         /// <summary>
-        /// Item moved
+        ///     Item moved
         /// </summary>
         Move,
+
         /// <summary>
-        /// Item previewed
+        ///     Item previewed
         /// </summary>
         Preview,
+
         /// <summary>
-        /// Item renamed
+        ///     Item renamed
         /// </summary>
         Rename,
+
         /// <summary>
-        /// Set file auto-delete
+        ///     Set file auto-delete
         /// </summary>
         StorageExpiration,
+
         /// <summary>
-        /// Item undeleted
+        ///     Item undeleted
         /// </summary>
         Undelete,
+
         /// <summary>
-        /// Item unlocked
+        ///     Item unlocked
         /// </summary>
         Unlock,
+
         /// <summary>
-        /// Item uploaded
+        ///     Item uploaded
         /// </summary>
         Upload,
+
         /// <summary>
-        /// Item shared
+        ///     Item shared
         /// </summary>
         Share,
+
         /// <summary>
-        /// Extend shared link expiration
+        ///     Extend shared link expiration
         /// </summary>
         UpdateShareExpiration,
+
         /// <summary>
-        /// Set shared link expiration
+        ///     Set shared link expiration
         /// </summary>
         ShareExpiration,
+
         /// <summary>
-        /// Unshared links
+        ///     Unshared links
         /// </summary>
         Unshare,
+
         /// <summary>
-        /// Accepted collaboration invitation
+        ///     Accepted collaboration invitation
         /// </summary>
         CollaborationAccept,
+
         /// <summary>
-        /// Changed user's collaboration role
+        ///     Changed user's collaboration role
         /// </summary>
         CollaborationRoleChange,
+
         /// <summary>
-        /// Extended collaboration expiration 
+        ///     Extended collaboration expiration
         /// </summary>
         UpdateCollaborationExpiration,
+
         /// <summary>
-        /// Removed collaborators
+        ///     Removed collaborators
         /// </summary>
         CollaborationRemove,
+
         /// <summary>
-        /// Invited collaborators
+        ///     Invited collaborators
         /// </summary>
         CollaborationInvite,
+
         /// <summary>
-        /// Set collaboration expiration
+        ///     Set collaboration expiration
         /// </summary>
         CollaborationExpiration,
+
         /// <summary>
-        /// Synced folder
+        ///     Synced folder
         /// </summary>
         ItemSync,
+
         /// <summary>
-        /// Unsynced folder
+        ///     Unsynced folder
         /// </summary>
         ItemUnsync
     }

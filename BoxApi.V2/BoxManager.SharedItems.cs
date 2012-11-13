@@ -7,7 +7,7 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         /// <summary>
-        /// Gets information about a shared item.
+        ///     Gets information about a shared item.
         /// </summary>
         /// <typeparam name="T">The shared item's type (File or Folder)</typeparam>
         /// <param name="sharedLinkUrl">The link to the shared item (SharedLink.Url)</param>
@@ -21,7 +21,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Gets information about a shared item.
+        ///     Gets information about a shared item.
         /// </summary>
         /// <typeparam name="T">The shared item's type (File or Folder)</typeparam>
         /// <param name="onSuccess">Action to perform with the shared item</param>
