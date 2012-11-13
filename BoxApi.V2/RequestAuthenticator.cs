@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace BoxApi.V2
 {
-    public class RequestAuthenticator : IBoxAuthenticator
+    internal class RequestAuthenticator : IBoxAuthenticator
     {
         private readonly string _applicationApiKey;
         private readonly string _authorizationToken;
@@ -43,7 +43,7 @@ namespace BoxApi.V2
         }
     }
 
-    public interface IBoxAuthenticator : IAuthenticator
+    internal interface IBoxAuthenticator : IAuthenticator
     {
         void SetSharedLink(string sharedLink);
         void ClearSharedLink();

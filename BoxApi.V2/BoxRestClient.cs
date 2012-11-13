@@ -149,14 +149,14 @@ namespace BoxApi.V2
                 success = false;
                 var jsonDeserializer = new JsonDeserializer();
                 error = jsonDeserializer.Deserialize<Error>(restResponse);
-                if (error.Type == null)
-                {
-                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
-                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
-                    {
-                        error = errorCollection.Entries.First();
-                    }
-                }
+//                if (error.Type == null)
+//                {
+//                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
+//                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
+//                    {
+//                        error = errorCollection.Entries.First();
+//                    }
+//                }
             }
             return success;
         }

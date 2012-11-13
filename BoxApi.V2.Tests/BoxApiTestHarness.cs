@@ -97,7 +97,7 @@ namespace BoxApi.V2.Tests
                 {
                     testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse() {Content = content});
                 }
-                catch (Exception e)
+                catch
                 {
                     testConfigInfo = ConfigureTestInfo(fi);
                 }

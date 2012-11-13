@@ -2,6 +2,9 @@ using System.ComponentModel;
 
 namespace BoxApi.V2.Model.Enum
 {
+    /// <summary>
+    /// The roles that can be applied to a collaborating user
+    /// </summary>
     public enum CollaborationRole
     {
         /// <summary>
