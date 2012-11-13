@@ -1,4 +1,5 @@
 using System.Text;
+using BoxApi.V2.Model.Enum;
 
 namespace BoxApi.V2.Model
 {

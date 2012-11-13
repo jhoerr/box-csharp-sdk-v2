@@ -83,6 +83,16 @@
     <Compile Include="Model\CommentCollection.cs" />
     <Compile Include="Model\Discussion.cs" />
     <Compile Include="Model\DiscussionCollection.cs" />
+    <Compile Include="Model\Enum\Access.cs" />
+    <Compile Include="Model\Enum\CollaborationRole.cs" />
+    <Compile Include="Model\Enum\EnterpriseEventType.cs" />
+    <Compile Include="Model\Enum\EnumExtensions.cs" />
+    <Compile Include="Model\Enum\Field.cs" />
+    <Compile Include="Model\Enum\ResourceType.cs" />
+    <Compile Include="Model\Enum\StandardEventType.cs" />
+    <Compile Include="Model\Enum\Status.cs" />
+    <Compile Include="Model\Enum\StreamType.cs" />
+    <Compile Include="Model\Enum\UserRole.cs" />
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
@@ -92,7 +102,6 @@
     <Compile Include="BoxManager.cs" />
     <Compile Include="Model\BoxAuthToken.cs" />
     <Compile Include="Model\Comment.cs" />
-    <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Folder.cs" />

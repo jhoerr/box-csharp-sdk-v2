@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using BoxApi.V2;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using Microsoft.Win32;
 
 namespace BoxApi.V2.Samples

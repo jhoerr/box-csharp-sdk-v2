@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using BoxApi.V2;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
 
 namespace BoxApi.V2.Tests

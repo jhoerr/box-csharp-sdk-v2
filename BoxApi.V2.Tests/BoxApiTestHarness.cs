@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using BoxApi.V2;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
 using RestSharp;
 using RestSharp.Deserializers;

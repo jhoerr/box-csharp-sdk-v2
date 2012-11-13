@@ -1,4 +1,5 @@
 using System;
+using BoxApi.V2.Model.Enum;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -20,7 +21,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         /// The level of access this user has
         /// </summary>
-        public Role Role { get; set; }
+        public CollaborationRole Role { get; set; }
 
         /// <summary>
         /// The folder this discussion is related to

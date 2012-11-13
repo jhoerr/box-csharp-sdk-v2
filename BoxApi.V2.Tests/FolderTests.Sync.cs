@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
 
 namespace BoxApi.V2.Tests

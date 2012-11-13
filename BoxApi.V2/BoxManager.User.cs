@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 
 namespace BoxApi.V2

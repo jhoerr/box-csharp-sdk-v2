@@ -1,5 +1,6 @@
 ﻿using System;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 
 namespace BoxApi.V2

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Serialization;
 using RestSharp;
 
@@ -196,7 +197,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Field[] fields = null)
+        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);
@@ -204,7 +205,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, Role role, Status status, Field[] fields = null)
+        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId);

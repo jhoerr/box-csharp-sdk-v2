@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 using File = BoxApi.V2.Model.File;
 

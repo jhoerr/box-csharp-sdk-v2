@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 
 namespace BoxApi.V2
 {
