@@ -7,36 +7,41 @@ namespace BoxApi.V2.Model
 {
     /// <summary>
     /// Collaborations are Box’s equivalent of access control lists. They let you set and apply permissions for users to folders.
-    /// You can read more about those permissions at https://support.box.com/entries/20366031-what-are-the-different-collaboration-permissions-and-what-access-do-they-provide.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class Collaboration : ModifiableEntity
     {
         /// <summary>
-        ///   The time this collaboration will expire
+        ///   The time this collaboration will automatically expire
         /// </summary>
         [JsonProperty(PropertyName = "expires_at")]
         public DateTime? ExpiresAt { get; set; }
         
         /// <summary>
-        /// The level of access this user has
+        /// The level of access this user has to the folder.
         /// </summary>
         public CollaborationRole Role { get; set; }
 
         /// <summary>
-        /// The folder this discussion is related to
+        /// The folder in which this collaboration is taking place
         /// </summary>
         public Entity Item { get; set; }
 
         /// <summary>
-        /// The 
+        /// The user with whom the collaboration exists
         /// </summary>
         [JsonProperty(PropertyName = "accessible_by")]
         public UserEntity AccessibleBy { get; set; }
 
+        /// <summary>
+        /// When the collaborating user acknowledged their role and status
+        /// </summary>
         [JsonProperty(PropertyName = "acknowledged_at")]
         public DateTime? AcknowledgedAt{ get; set; }
 
+        /// <summary>
+        /// Whether the user has Accepted or Rejected their role in the collaboration
+        /// </summary>
         public Status Status { get; set; }
     }
 }

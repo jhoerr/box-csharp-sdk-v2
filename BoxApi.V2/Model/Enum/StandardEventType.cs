@@ -1,5 +1,8 @@
 namespace BoxApi.V2.Model.Enum
 {
+    /// <summary>
+    /// Events that are tracked for user accounts.
+    /// </summary>
     public enum StandardEventType
     {
         /// <summary>
