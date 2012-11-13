@@ -21,7 +21,6 @@ namespace BoxApi.V2
             base(ServiceUrl)
         {
             Authenticator = authenticator;
-
             Proxy = proxy;
             ClearHandlers();
             var xmlDeserializer = new XmlDeserializer();
