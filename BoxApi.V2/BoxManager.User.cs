@@ -1,6 +1,7 @@
 ﻿using System;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using RestSharp;
 
 namespace BoxApi.V2
 {
@@ -107,6 +108,38 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetUser(id, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Used to provision a new user in an enterprise. This method only works for enterprise admins.
+        /// </summary>
+        /// <param name="user">The properties to set for the new user.  Name and Login are required.  Warning -- Box tracks a user's space amount in GB, so if you choose to specify the SpaceAmount, it must be at least 1 GB (2^30).</param>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new user</returns>
+        public User CreateUser(ManagedUser user, Field[] fields = null)
+        {
+            GuardFromNull(user, "user");
+            GuardFromNull(user.Name, "user.Name");
+            GuardFromNull(user.Login, "user.Login");
+            var request = _requestHelper.CreateUser(user, fields);
+            return _restClient.ExecuteAndDeserialize<User>(request);
+        }
+
+        /// <summary>
+        /// Used to provision a new user in an enterprise. This method only works for enterprise admins.
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the created user</param>
+        /// <param name="onFailure">Action to perform following a failed User operation</param>
+        /// <param name="user">The properties to set for the new user.  Name and Login are required.  Warning -- Box tracks a user's space amount in GB, so if you choose to specify the SpaceAmount, it must be at least 1 GB (2^30).</param>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new user</returns>
+        public void CreateUser(Action<User> onSuccess, Action<Error> onFailure, ManagedUser user, Field[] fields = null)
+        {
+            GuardFromNull(user, "user");
+            GuardFromNull(user.Name, "user.Name");
+            GuardFromNull(user.Login, "user.Login");
+            var request = _requestHelper.CreateUser(user, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
