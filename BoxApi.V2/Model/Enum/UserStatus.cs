@@ -1,3 +1,6 @@
+using System.ComponentModel;
+using System.Runtime.Serialization;
+
 namespace BoxApi.V2.Model.Enum
 {
     /// <summary>
@@ -8,10 +11,10 @@ namespace BoxApi.V2.Model.Enum
         /// <summary>
         /// User is active within the Enterprise
         /// </summary>
-        Active,
+        [EnumMember(Value = "active")] Active,
         /// <summary>
         /// User is not active within the Enterprise
         /// </summary>
-        Inactive
+        [EnumMember(Value = "inactive")] Inactive
     }
 }

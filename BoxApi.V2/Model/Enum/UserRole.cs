@@ -1,10 +1,10 @@
-using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace BoxApi.V2.Model.Enum
 {
     public enum UserRole
     {
-        [Description("admin")] Admin,
-        [Description("user")] User
+        [EnumMember(Value = "user")] User,
+        [EnumMember(Value = "admin")] Admin,
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using RestSharp.Serializers;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
@@ -23,8 +25,10 @@ namespace BoxApi.V2.Serialization
                 {
                     MissingMemberHandling = MissingMemberHandling.Ignore,
                     NullValueHandling = NullValueHandling.Include,
-                    DefaultValueHandling = DefaultValueHandling.Include
+                    DefaultValueHandling = DefaultValueHandling.Include,
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 };
+            _serializer.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
