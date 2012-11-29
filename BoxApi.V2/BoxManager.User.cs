@@ -7,6 +7,29 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         /// <summary>
+        ///     Retrieves information about the user who is currently logged in i.e. the user for whom this auth token was generated. 
+        /// </summary>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>Returns a single complete user object. An error is returned if a valid auth token is not included in the API request.</returns>
+        public User Me(Field[] fields = null)
+        {
+            var request = _requestHelper.Me(fields);
+            return _restClient.ExecuteAndDeserialize<User>(request);
+        }
+
+        /// <summary>
+        ///     Retrieves information about the user who is currently logged in i.e. the user for whom this auth token was generated. 
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the current user</param>
+        /// <param name="onFailure">Action to perform following a failed User operation</param>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void Me(Action<User> onSuccess, Action<Error> onFailure, Field[] fields = null)
+        {
+            var request = _requestHelper.Me(fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
         ///     For an individual user, this provides their own user information and content. For an enterprise admin, this provides information on all users in the admin’s enterprise.
         /// </summary>
         /// <param name="filterTerm">Only users whose name or login starts with this value will be returned.  Default is no filter.</param>

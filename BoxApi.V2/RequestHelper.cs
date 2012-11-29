@@ -257,6 +257,12 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest Me(Field[] fields = null)
+        {
+            var request = JsonRequest(ResourceType.User, "/me", Method.GET, fields);
+            return request;
+        }
+
         public IRestRequest GetUsers(string filterTerm, int? limit, int? offset, Field[] fields = null)
         {
             var request = JsonRequest(ResourceType.User, null, Method.GET, fields);

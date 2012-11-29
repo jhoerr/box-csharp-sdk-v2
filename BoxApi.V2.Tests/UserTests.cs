@@ -50,5 +50,12 @@ namespace BoxApi.V2.Tests
             Assert.That(folder.OwnedBy.Id, Is.EqualTo(newOwner.Id));
             Client.Delete(folder);
         }
+
+        [TestCase("john hoerr")]
+        public void Me(string username)
+        {
+            var user = Client.Me();
+            Assert.That(user.Name, Is.EqualTo(username));
+        }
     }
 }
