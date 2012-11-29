@@ -22,11 +22,6 @@ namespace BoxApi.V2.Model
         public string Id { get; set; }
 
         /// <summary>
-        ///     A unique ID for use with the /events endpoint
-        /// </summary>
-        public string SequenceId { get; set; }
-
-        /// <summary>
         ///     The name of the item
         /// </summary>
         public string Name { get; set; }

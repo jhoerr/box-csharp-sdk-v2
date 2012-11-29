@@ -42,5 +42,10 @@ namespace BoxApi.V2.Model
         ///     Whether the user has Accepted or Rejected their role in the collaboration
         /// </summary>
         public Status Status { get; set; }
+
+        /// <summary>
+        ///     A unique ID for use with the /events endpoint
+        /// </summary>
+        public string SequenceId { get; set; }
     }
 }

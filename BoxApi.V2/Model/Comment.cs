@@ -23,5 +23,10 @@ namespace BoxApi.V2.Model
         ///     The object this comment was placed on
         /// </summary>
         public Entity Item { get; set; }
+
+        /// <summary>
+        ///     A unique ID for use with the /events endpoint
+        /// </summary>
+        public string SequenceId { get; set; }
     }
 }
