@@ -93,6 +93,7 @@
     <Compile Include="Model\Enum\Status.cs" />
     <Compile Include="Model\Enum\StreamType.cs" />
     <Compile Include="Model\Enum\UserRole.cs" />
+    <Compile Include="Model\Enum\UserStatus.cs" />
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
