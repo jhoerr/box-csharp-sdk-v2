@@ -7,7 +7,6 @@ namespace BoxApi.V2.Model
     /// <summary>
     ///     An object representing this item’s shared link and associated permissions
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public class SharedLink
     {
         /// <summary>
