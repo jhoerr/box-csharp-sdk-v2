@@ -10,7 +10,7 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).
 
 ## Status
 
-This client is currently in beta and is still under active development.  The Box v2 API is itself still in beta (and getting better all the time!), so regular breaking changes should be expected.
+This client is currently in beta and is still under active development.  The Box v2 API is itself still in beta (and getting better all the time!), so breaking changes should be expected.
 
 Support currently exists for:
 
@@ -27,7 +27,9 @@ Support currently exists for:
 
 Support is planned but not yet implemented for:
 
-* Events (Long-polling)
+* Long-polling Events
+* If-Match/If-Not-Match for Files/Folders
+* Viewing metadata for previous versions of a file.
 
 ## Usage
 
