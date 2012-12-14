@@ -88,6 +88,7 @@ namespace BoxApi.V2.Tests
             try
             {
                 Assert.That(user.Name, Is.EqualTo(expectedName));
+                Assert.That(user.Address, Is.EqualTo(expectedAddress));
                 Assert.That(user.Login, Is.EqualTo(expectedLogin));
                 Assert.That(user.Role, Is.EqualTo(UserRole.User));
                 Assert.That(user.Status, Is.EqualTo(UserStatus.Inactive));
@@ -99,5 +100,43 @@ namespace BoxApi.V2.Tests
                 Client.Delete(user, false, true);
             }
         }
+
+        [Test]
+        public void UpdateEnterpriseUser()
+        {
+            var managedUser = new ManagedUser
+            {
+                Name = "will change",
+                Login = "ajoioejwofiwej@gmail.com",
+                Status = UserStatus.Inactive,
+                Address = "will change street",
+                SpaceAmount = -1,
+            };
+            
+            var user = Client.CreateUser(managedUser);
+
+            const string expectedName = "foo bar";
+            const string expectedAddress = "some address";
+            var expectedSpaceAmount = 2 * (long)Math.Pow(2, 30); // 2 GB
+
+            user.Name = expectedName;
+            user.Address = expectedAddress;
+            user.Status = UserStatus.Active;
+            user.SpaceAmount = expectedSpaceAmount;
+
+            try
+            {
+                var updatedUser = Client.UpdateUser(user);
+                Assert.That(updatedUser.Name, Is.EqualTo(expectedName));
+                Assert.That(updatedUser.Address, Is.EqualTo(expectedAddress));
+                Assert.That(updatedUser.Status, Is.EqualTo(UserStatus.Active));
+                Assert.That(updatedUser.SpaceAmount, Is.EqualTo(expectedSpaceAmount));
+            }
+            finally
+            {
+                Client.Delete(user, false, true);
+            }
+        }
+
     }
 }

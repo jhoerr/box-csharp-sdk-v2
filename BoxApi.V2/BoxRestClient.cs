@@ -8,9 +8,8 @@ namespace BoxApi.V2
 {
     internal class BoxRestClient : RestClient
     {
-        private const string ServiceUrl = "https://www.box.com/api/";
+        private const string ServiceUrl = "https://api.box.com/";
         public const string JsonMimeType = "application/json";
-        public const string JsonAltMimeType = "application/json";
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
 
@@ -25,7 +24,6 @@ namespace BoxApi.V2
             AddHandler(XmlMimeType, xmlDeserializer);
             AddHandler(XmlAltMimeType, xmlDeserializer);
             AddHandler(JsonMimeType, jsonDeserializer);
-            AddHandler(JsonAltMimeType, jsonDeserializer);
         }
 
         public override IRestResponse Execute(IRestRequest request)

@@ -80,6 +80,25 @@ namespace BoxApi.V2.Model
         /// </summary>
         [JsonProperty(PropertyName = "is_exempt_from_login_verification")]
         public bool IsExemptFromLoginVerification { get; set; }
- 
+
+        public object ToUpdateRequestBody()
+        {
+            return new
+                {
+                    name = Name,
+                    role = Role,
+                    language = Language,
+                    is_sync_enabled = IsSyncEnabled,
+                    job_title = JobTitle,
+                    phone = Phone,
+                    address = Address,
+                    space_amount = SpaceAmount,
+                    tracking_codes = TrackingCodes,
+                    can_see_managed_users = CanSeeManagedUsers,
+                    status = Status,
+                    is_exempt_from_device_limits = IsExemptFromDeviceLimits,
+                    is_exempt_from_login_verification = IsExemptFromLoginVerification,
+                };
+        }
     }
 }

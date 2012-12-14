@@ -144,6 +144,32 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Updates the settings and information about a user. This method only works for enterprise admins
+        /// </summary>
+        /// <param name="user">The user with udpated information</param>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>A user with the updated information</returns>
+        public User UpdateUser(ManagedUser user, Field[] fields = null)
+        {
+            var request = _requestHelper.UpdateUser(user, fields);
+            return _restClient.ExecuteAndDeserialize<User>(request);
+        }
+
+        /// <summary>
+        /// Updates the settings and information about a user. This method only works for enterprise admins
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the updated user</param>
+        /// <param name="onFailure">Action to perform following a failed User operation</param>
+        /// <param name="user">The user with udpated information</param>
+        /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>A user with the updated information</returns>
+        public void UpdateUser(Action<User> onSuccess, Action<Error> onFailure, ManagedUser user, Field[] fields = null)
+        {
+            var request = _requestHelper.UpdateUser(user, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
         ///     Deletes a user from an enterprise account
         /// </summary>
         /// <param name="user">The user to delete</param>

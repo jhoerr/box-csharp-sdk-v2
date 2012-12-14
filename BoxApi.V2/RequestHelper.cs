@@ -295,6 +295,14 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest UpdateUser(ManagedUser user, Field[] fields = null)
+        {
+            var request = JsonRequest(ResourceType.User, "{id}", Method.PUT, fields);
+            request.AddUrlSegment("id", user.Id);
+            request.AddBody(user.ToUpdateRequestBody());
+            return request;
+        }
+
         public IRestRequest DeleteUser(string id, bool notify, bool force)
         {
             var request = JsonRequest(ResourceType.User, "{id}", Method.DELETE);
