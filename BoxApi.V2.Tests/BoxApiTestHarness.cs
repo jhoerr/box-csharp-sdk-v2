@@ -27,7 +27,7 @@ namespace BoxApi.V2.Tests
             Client = new BoxManager(testInfo.AppKey, testInfo.AuthKey);
             UnauthenticatedClient = new BoxManager(testInfo.AppKey);
             CollaboratingUser = testInfo.CollaboratingUser;
-            MaxWaitInSeconds = 5;
+            MaxWaitInSeconds = 10;
         }
 
         protected static string TestItemName()
@@ -72,8 +72,8 @@ namespace BoxApi.V2.Tests
             Assert.That(actual.Access, Is.EqualTo(sharedLink.Access));
             Assert.That(actual.UnsharedAt, Is.GreaterThan(DateTime.MinValue));
             Assert.That(actual.UnsharedAt, Is.LessThan(DateTime.MaxValue));
-            Assert.That(actual.Permissions.Download, Is.True);
-            Assert.That(actual.Permissions.Preview, Is.True);
+            Assert.That(actual.Permissions.CanDownload, Is.True);
+            Assert.That(actual.Permissions.CanPreview, Is.True);
         }
 
         private static TestConfigInfo GetTestInfo()

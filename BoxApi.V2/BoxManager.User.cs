@@ -34,7 +34,7 @@ namespace BoxApi.V2
         ///     For an individual user, this provides their own user information and content. For an enterprise admin, this provides information on all users in the admin’s enterprise.
         /// </summary>
         /// <param name="filterTerm">Only users whose name or login starts with this value will be returned.  Default is no filter.</param>
-        /// <param name="limit">The number of records to return. Default is all users.</param>
+        /// <param name="limit">The number of records to return. If no filterTerm, limit, or offset are supplied, all user records are returned.  </param>
         /// <param name="offset">The record at which to start (used in conjunction with 'limit'.)  Default is the first record.</param>
         /// <param name="fields">The properties that should be set on the returned UserCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of users matching the supplied filtering criteria</returns>

@@ -133,12 +133,13 @@ namespace BoxApi.V2.Tests
             var callbackHit = false;
             var testItemName = TestItemName();
             var file = Client.CreateFile(RootId, testItemName);
-            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
 
             // Act
             Client.ShareLink(sharedFile =>
                 {
                     // Assert
+                    Client.Delete(sharedFile);
                     AssertFileConstraints(sharedFile, file.Name, RootId, file.Id);
                     AssertSharedLink(sharedFile.SharedLink, expectedLink);
                     callbackHit = true;
@@ -150,7 +151,6 @@ namespace BoxApi.V2.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             // Cleanup
-            Client.Delete(Client.GetFile(file.Id));
 
             if (MaxWaitInSeconds.Equals(0))
             {
@@ -232,6 +232,7 @@ namespace BoxApi.V2.Tests
             Client.UpdateDescription(updatedFile =>
                 {
                     // Assert
+                    Client.Delete(updatedFile);
                     AssertFileConstraints(updatedFile, file.Name, RootId, file.Id);
                     Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
                     callbackHit = true;
@@ -243,8 +244,6 @@ namespace BoxApi.V2.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             // Cleanup
-            Client.Delete(file);
-
             if (MaxWaitInSeconds.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
@@ -262,7 +261,7 @@ namespace BoxApi.V2.Tests
             var newDescription = "new description";
             var newFolder = TestItemName();
             var folder = Client.CreateFolder(RootId, newFolder, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
             var newName = TestItemName();
 
             // Act

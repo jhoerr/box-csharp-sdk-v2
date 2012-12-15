@@ -138,5 +138,11 @@ namespace BoxApi.V2.Tests
             }
         }
 
+        [Test]
+        public void GetLargeNumberOfUsers()
+        {
+//            var totalCount = Client.GetUsers();
+            var users = Client.GetUsers(null, 1, 500);
+        }
     }
 }

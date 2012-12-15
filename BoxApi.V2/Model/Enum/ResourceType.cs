@@ -4,7 +4,8 @@ namespace BoxApi.V2.Model.Enum
 {
     public enum ResourceType
     {
-        [Description("files")] File,
+        [Description("unknown")]Unknown,
+        [Description("files")]File,
         [Description("folders")] Folder,
         [Description("comments")] Comment,
         [Description("discussions")] Discussion,

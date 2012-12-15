@@ -10,7 +10,7 @@ namespace BoxApi.V2.Model
     ///     A Box folder, which can contain files and other folders
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Folder : ShareableEntity
+    public class Folder : File
     {
         public const string Root = "0";
 

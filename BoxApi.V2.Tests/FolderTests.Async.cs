@@ -170,7 +170,7 @@ namespace BoxApi.V2.Tests
             var callbackHit = false;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanPreview = true, CanDownload = true});
 
             Client.ShareFolderLink(copiedFolder =>
                 {
@@ -317,7 +317,7 @@ namespace BoxApi.V2.Tests
             var newDescription = "new description";
             var newFolder = TestItemName();
             var newParent = Client.CreateFolder(RootId, newFolder, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
             var newName = TestItemName();
 
             // Act
@@ -328,6 +328,7 @@ namespace BoxApi.V2.Tests
             Client.Update(updatedFolder =>
                 {
                     // Assert
+                    Client.Delete(updatedFolder, true);
                     AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
                     AssertSharedLink(sharedLink, updatedFolder.SharedLink);
                     Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
@@ -340,7 +341,6 @@ namespace BoxApi.V2.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             // Cleanup
-            Client.Delete(newParent, true);
 
             if (MaxWaitInSeconds.Equals(0))
             {

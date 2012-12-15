@@ -121,18 +121,12 @@ namespace BoxApi.V2.Tests
             var fileName = TestItemName();
             var file = Client.CreateFile(RootId, fileName);
             // Act
-            try
-            {
-                var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
-                var linkedFile = Client.ShareLink(file, expectedLink);
-                // Assert
-                AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
-                AssertSharedLink(linkedFile.SharedLink, expectedLink);
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
+            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { CanDownload = true, CanPreview = true });
+            var linkedFile = Client.ShareLink(file, expectedLink);
+            Client.Delete(linkedFile);
+            // Assert
+            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+            AssertSharedLink(linkedFile.SharedLink, expectedLink);
         }
 
         [Test]
@@ -142,16 +136,10 @@ namespace BoxApi.V2.Tests
             var file = Client.CreateFile(RootId, fileName);
             var newName = TestItemName();
             // Act
-            try
-            {
-                var renamedFile = Client.Rename(file, newName);
-                // Assert
-                AssertFileConstraints(renamedFile, newName, RootId, file.Id);
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
+            var renamedFile = Client.Rename(file, newName);
+            Client.Delete(renamedFile);
+            // Assert
+            AssertFileConstraints(renamedFile, newName, RootId, file.Id);
         }
 
         [Test]
@@ -217,17 +205,11 @@ namespace BoxApi.V2.Tests
             var newDescription = "new description";
             var file = Client.CreateFile(RootId, fileName);
             // Act
-            try
-            {
-                var updatedFile = Client.UpdateDescription(file, newDescription);
-                // Assert
-                AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
-                Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
+            var updatedFile = Client.UpdateDescription(file, newDescription);
+            Client.Delete(updatedFile);
+            // Assert
+            AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
+            Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
         }
 
         [Test]
@@ -238,7 +220,7 @@ namespace BoxApi.V2.Tests
             var newDescription = "new description";
             var newFolder = TestItemName();
             var folder = Client.CreateFolder(RootId, newFolder, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
             var newName = TestItemName();
             // Act
             try

@@ -24,7 +24,7 @@ namespace BoxApi.V2.Model
         /// <param name="permissions">The </param>
         public SharedLink(Access access, DateTime unsharedAt, Permissions permissions)
         {
-            Access = access.Name();
+            Access = access;
             UnsharedAt = new DateTime(unsharedAt.Year, unsharedAt.Month, unsharedAt.Day, unsharedAt.Hour, unsharedAt.Minute, unsharedAt.Second);
             Permissions = permissions;
         }
@@ -32,7 +32,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The level of access required for this shared link. Can be: Open, Company, Collaborators.
         /// </summary>
-        public string Access { get; set; }
+        public Access Access { get; set; }
 
         /// <summary>
         ///     The day that this link should be disabled at. Timestamps are rounded off to the given day.
@@ -58,7 +58,8 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     Whether this item is password-protected
         /// </summary>
-        public bool PasswordEnabled { get; set; }
+        [JsonProperty(PropertyName = "is_password_enabled")]
+        public bool IsPasswordEnabled { get; set; }
 
         /// <summary>
         ///     The number of times this item has been downloaded

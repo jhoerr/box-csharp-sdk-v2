@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Net;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 using RestSharp.Deserializers;
 
@@ -28,7 +30,7 @@ namespace BoxApi.V2
 
         public override IRestResponse Execute(IRestRequest request)
         {
-            var restResponse = base.Execute(request);
+            IRestResponse restResponse = base.Execute(request);
             Error error;
             if (!HandleResponse(restResponse, out error))
             {
@@ -39,7 +41,7 @@ namespace BoxApi.V2
 
         public T ExecuteAndDeserialize<T>(IRestRequest request) where T : class, new()
         {
-            var restResponse = base.Execute<T>(request);
+            IRestResponse<T> restResponse = base.Execute<T>(request);
             return restResponse.Data;
         }
 
@@ -125,7 +127,7 @@ namespace BoxApi.V2
         public bool HandleResponse(IRestResponse restResponse, out Error error)
         {
             error = null;
-            var success = true;
+            bool success = true;
 
             TryClearSharedLink();
 
@@ -142,17 +144,21 @@ namespace BoxApi.V2
             {
                 success = false;
                 var jsonDeserializer = new JsonDeserializer();
-                error = jsonDeserializer.Deserialize<Error>(restResponse);
-//                if (error.Type == null)
-//                {
-//                    var errorCollection = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
-//                    if (!string.IsNullOrEmpty(errorCollection.TotalCount))
-//                    {
-//                        error = errorCollection.Entries.First();
-//                    }
-//                }
+                error = TryGetSingleError(restResponse, jsonDeserializer) ?? TryGetFirstErrorFromCollection(restResponse, jsonDeserializer);
             }
             return success;
+        }
+
+        private static Error TryGetSingleError(IRestResponse restResponse, JsonDeserializer jsonDeserializer)
+        {
+            var deserialized = jsonDeserializer.Deserialize<Error>(restResponse);
+            return deserialized.Type.Equals(ResourceType.Error) ? deserialized : null;
+        }
+
+        private Error TryGetFirstErrorFromCollection(IRestResponse restResponse, JsonDeserializer jsonDeserializer)
+        {
+            var deserialized = jsonDeserializer.Deserialize<ErrorCollection>(restResponse);
+            return (deserialized.Entries != null) ? deserialized.Entries.First() : null;
         }
 
         private void TryClearSharedLink()

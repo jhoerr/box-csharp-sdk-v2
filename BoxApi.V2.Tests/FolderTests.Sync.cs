@@ -45,7 +45,8 @@ namespace BoxApi.V2.Tests
         [Test]
         public void FieldsWorksOnGetFolder()
         {
-            var testFile = Client.CreateFile(RootId, "file", new byte[] {0x00, 0x01, 0x02, 0x03});
+            var fileName = TestItemName();
+            var testFile = Client.CreateFile(RootId, fileName, new byte[] { 0x00, 0x01, 0x02, 0x03 });
 
             try
             {
@@ -205,7 +206,7 @@ namespace BoxApi.V2.Tests
         {
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Preview = true, Download = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanPreview = true, CanDownload = true});
             var update = Client.ShareLink(folder, sharedLink);
             AssertFolderConstraints(update, folderName, RootId, folder.Id);
             AssertSharedLink(update.SharedLink, sharedLink);
@@ -288,7 +289,7 @@ namespace BoxApi.V2.Tests
             var folder = Client.CreateFolder(RootId, TestItemName(), null);
             var newDescription = "new description";
             var newParent = Client.CreateFolder(RootId, TestItemName(), null);
-            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {Download = true, Preview = true});
+            var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
             var newName = TestItemName();
             // Act
             try

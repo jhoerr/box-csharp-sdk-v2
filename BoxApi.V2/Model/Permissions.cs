@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace BoxApi.V2.Model
 {
     /// <summary>
@@ -8,11 +10,13 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     Whether this link allows downloads
         /// </summary>
-        public bool Download { get; set; }
+        [JsonProperty(PropertyName = "item_collection")]
+        public bool CanDownload { get; set; }
 
         /// <summary>
         ///     Whether this link allows previews
         /// </summary>
-        public bool Preview { get; set; }
+        [JsonProperty(PropertyName = "can_preview")]
+        public bool CanPreview { get; set; }
     }
 }
