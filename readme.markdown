@@ -27,6 +27,7 @@ Support currently exists for:
 
 Support is planned but not yet implemented for:
 
+* OAuth2
 * Long-polling Events
 * If-Match/If-Not-Match for Files/Folders
 * Viewing metadata for previous versions of a file.
