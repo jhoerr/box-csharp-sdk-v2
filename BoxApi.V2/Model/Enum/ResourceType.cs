@@ -14,6 +14,6 @@ namespace BoxApi.V2.Model.Enum
         [Description("collaborations")] Collaboration,
         [Description("users")] User,
         [Description("shared_items")] SharedItem,
-        [Description("error")] Error,
+        [Description("error")]Error,
     }
 }

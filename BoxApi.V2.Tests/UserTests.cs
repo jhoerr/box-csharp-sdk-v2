@@ -9,60 +9,10 @@ namespace BoxApi.V2.Tests
     [TestFixture]
     public class UserTests : BoxApiTestHarness
     {
-        [Test]
-        public void GetAllUsers()
-        {
-            var userCollection = Client.GetUsers();
-            // This could be more than one, depending on how your account is set up.
-            // If you're an enterprise admin, the user collection will contain all users in the enterprise.
-            Assert.That(userCollection.TotalCount, Is.EqualTo("2"));
-        }
-
-        [Test]
-        [Ignore("You'll need to change the user's ID to something meaningful.")]
-        public void GetSingleUser()
-        {
-            var user = Client.GetUser("182238740");
-            Assert.That(user, Is.Not.Null);
-            Assert.That(user.Name, Is.EqualTo("john hoerr"));
-        }
-
-        [Test]
-        [Ignore("You'll need to change the filter term to something meaningful.")]
-        public void FilterUsers()
-        {
-            var userCollection = Client.GetUsers("john hoerr");
-            Assert.That(userCollection.TotalCount, Is.EqualTo("1"));
-        }
-
-        [Test,
-         ExpectedException(typeof (BoxException)),
-         Description("Be careful with this test, it does what it says!"),
-        ]
-        [Ignore("You'll need to change the user's ID to something meaningful (and hopefully one you won't miss.)")]
-        public void DeleteUser()
-        {
-            var user = Client.GetUser("186819348");
-            Client.Delete(user);
-            // Should fail when trying to re-fetch the user!
-            Client.GetUser("186819348");
-        }
-
-        [Test]
-        [Ignore("You'll need to change the current owner and new owner ID to something meaningful.")]
-        public void MoveRootFolderToAnotherUser()
-        {
-            var currentOwner = Client.GetUser("186819348");
-            var newOwner = Client.GetUser("182238740");
-            var folder = Client.MoveRootFolderToAnotherUser(currentOwner, newOwner);
-            Assert.That(folder.OwnedBy.Id, Is.EqualTo(newOwner.Id));
-            Client.Delete(folder);
-        }
-
         [TestCase("john hoerr")]
         public void Me(string username)
         {
-            var user = Client.Me();
+            User user = Client.Me();
             Assert.That(user.Name, Is.EqualTo(username));
         }
 
@@ -72,7 +22,7 @@ namespace BoxApi.V2.Tests
             const string expectedName = "foo bar";
             const string expectedLogin = "ajoioejwofiwej@gmail.com";
             const string expectedAddress = "some address";
-            var expectedSpaceAmount = 2*(long) Math.Pow(2, 30); // 2 GB
+            long expectedSpaceAmount = 2*(long) Math.Pow(2, 30); // 2 GB
 
             var managedUser = new ManagedUser
                 {
@@ -83,7 +33,7 @@ namespace BoxApi.V2.Tests
                     SpaceAmount = expectedSpaceAmount,
                 };
 
-            var user = Client.CreateUser(managedUser);
+            User user = Client.CreateUser(managedUser);
 
             try
             {
@@ -101,23 +51,113 @@ namespace BoxApi.V2.Tests
             }
         }
 
+        [Test,
+         ExpectedException(typeof (BoxException)),
+         Description("Be careful with this test, it does what it says!"),
+        ]
+        [Ignore("You'll need to change the user's ID to something meaningful (and hopefully one you won't miss.)")]
+        public void DeleteUser()
+        {
+            User user = Client.GetUser("186819348");
+            Client.Delete(user);
+            // Should fail when trying to re-fetch the user!
+            Client.GetUser("186819348");
+        }
+
+        [Test]
+        [Ignore("You'll need to change the filter term to something meaningful.")]
+        public void FilterUsers()
+        {
+            UserCollection userCollection = Client.GetUsers("john hoerr");
+            Assert.That(userCollection.TotalCount, Is.EqualTo("1"));
+        }
+
+        [Test]
+        public void GetAllUsers()
+        {
+            UserCollection userCollection = Client.GetUsers();
+            // This could be more than one, depending on how your account is set up.
+            // If you're an enterprise admin, the user collection will contain all users in the enterprise.
+            Assert.That(userCollection.TotalCount, Is.EqualTo("2"));
+        }
+
+        [Test]
+        public void GetLargeNumberOfUsers()
+        {
+//            var totalCount = Client.GetUsers();
+            UserCollection users = Client.GetUsers(null, 1, 500);
+        }
+
+        [Test]
+        [Ignore("You'll need to change the user's ID to something meaningful.")]
+        public void GetSingleUser()
+        {
+            User user = Client.GetUser("182238740");
+            Assert.That(user, Is.Not.Null);
+            Assert.That(user.Name, Is.EqualTo("john hoerr"));
+        }
+
+        [Test]
+        [Ignore("You'll need to change the current owner and new owner ID to something meaningful.")]
+        public void MoveRootFolderToAnotherUser()
+        {
+            User currentOwner = Client.GetUser("186819348");
+            User newOwner = Client.GetUser("182238740");
+            Folder folder = Client.MoveRootFolderToAnotherUser(currentOwner, newOwner);
+            Assert.That(folder.OwnedBy.Id, Is.EqualTo(newOwner.Id));
+            Client.Delete(folder);
+        }
+
+        [Test]
+        public void TrackingCodes()
+        {
+            const string expectedName = "foo bar";
+            const string expectedLogin = "ajoioejwofiwej@gmail.com";
+
+            var expectedTrackingCodes = new List<TrackingCode>
+                {
+                    new TrackingCode("key1", "value1"),
+                    new TrackingCode("key2", "value2"), 
+                };
+
+            var managedUser = new ManagedUser
+            {
+                Name = expectedName,
+                Login = expectedLogin,
+//                TrackingCodes = expectedTrackingCodes,
+            };
+
+            User user = Client.CreateUser(managedUser, new[] { Field.TrackingCodes, Field.Name, Field.Login, });
+
+            try
+            {
+                Assert.That(user.Name, Is.EqualTo(expectedName));
+                Assert.That(user.Login, Is.EqualTo(expectedLogin));
+//                Assert.That(user.TrackingCodes, Is.EqualTo(expectedTrackingCodes));
+            }
+            finally
+            {
+                Client.Delete(user, false, true);
+            }
+        }
+
         [Test]
         public void UpdateEnterpriseUser()
         {
             var managedUser = new ManagedUser
-            {
-                Name = "will change",
-                Login = "ajoioejwofiwej@gmail.com",
-                Status = UserStatus.Inactive,
-                Address = "will change street",
-                SpaceAmount = -1,
-            };
-            
-            var user = Client.CreateUser(managedUser);
+                {
+                    Name = "will change",
+                    Login = "ajoioejwofiwej@gmail.com",
+                    Status = UserStatus.Inactive,
+                    Address = "will change street",
+                    SpaceAmount = -1,
+                };
+
+            User user = Client.CreateUser(managedUser);
 
             const string expectedName = "foo bar";
             const string expectedAddress = "some address";
-            var expectedSpaceAmount = 2 * (long)Math.Pow(2, 30); // 2 GB
+            long expectedSpaceAmount = 2*(long) Math.Pow(2, 30); // 2 GB
 
             user.Name = expectedName;
             user.Address = expectedAddress;
@@ -126,7 +166,7 @@ namespace BoxApi.V2.Tests
 
             try
             {
-                var updatedUser = Client.UpdateUser(user);
+                User updatedUser = Client.UpdateUser(user);
                 Assert.That(updatedUser.Name, Is.EqualTo(expectedName));
                 Assert.That(updatedUser.Address, Is.EqualTo(expectedAddress));
                 Assert.That(updatedUser.Status, Is.EqualTo(UserStatus.Active));
@@ -136,13 +176,6 @@ namespace BoxApi.V2.Tests
             {
                 Client.Delete(user, false, true);
             }
-        }
-
-        [Test]
-        public void GetLargeNumberOfUsers()
-        {
-//            var totalCount = Client.GetUsers();
-            var users = Client.GetUsers(null, 1, 500);
         }
     }
 }

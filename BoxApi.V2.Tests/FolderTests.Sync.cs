@@ -12,7 +12,7 @@ namespace BoxApi.V2.Tests
         [Test]
         public void GetFolder()
         {
-            var folder = Client.GetFolder(RootId, null);
+            var folder = Client.GetFolder(RootId);
             AssertFolderConstraints(folder, "All Files", null, RootId);
         }
 
@@ -79,6 +79,18 @@ namespace BoxApi.V2.Tests
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName);
             AssertFolderConstraints(folder, folderName, RootId);
+            // clean up 
+            Client.Delete(folder, true);
+        }
+
+        [Test]
+        public void FieldsWorkOnCreateFolder()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName, new[]{Field.Name, Field.Parent, });
+            AssertFolderConstraints(folder, folderName, RootId);
+            Assert.That(folder.CreatedAt, Is.Null);
+            Assert.That(folder.CreatedBy, Is.Null);
             // clean up 
             Client.Delete(folder, true);
         }

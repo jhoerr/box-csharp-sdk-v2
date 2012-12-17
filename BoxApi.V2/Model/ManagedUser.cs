@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BoxApi.V2.Model.Enum;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BoxApi.V2.Model
 {
@@ -9,11 +10,6 @@ namespace BoxApi.V2.Model
     /// </summary>
     public class ManagedUser : UserEntity
     {
-        public ManagedUser()
-        {
-            TrackingCodes = new List<KeyValuePair<string, string>>();
-        }
-
         /// <summary>
         ///     The user’s total available space amount in bytes
         /// </summary>
@@ -34,7 +30,7 @@ namespace BoxApi.V2.Model
         ///     An array of key/value pairs set by the user’s admin
         /// </summary>
         [JsonProperty(PropertyName = "tracking_codes")]
-        public List<KeyValuePair<string, string>> TrackingCodes { get; set; }
+        public List<TrackingCode> TrackingCodes { get; set; }
 
         /// <summary>
         ///     Whether this user can see other enterprise users in its contact list
