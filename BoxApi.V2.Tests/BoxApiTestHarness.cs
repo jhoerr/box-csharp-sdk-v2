@@ -45,7 +45,7 @@ namespace BoxApi.V2.Tests
             AssertEntityConstraints(file, ResourceType.File, expectedName, expectedParentId, expectedId);
         }
 
-        private static void AssertEntityConstraints(ShareableEntity item, ResourceType expectedType, string expectedName, string expectedParentId, string expectedId)
+        private static void AssertEntityConstraints(File item, ResourceType expectedType, string expectedName, string expectedParentId, string expectedId)
         {
             Assert.That(item, Is.Not.Null);
             Assert.That(item.Type, Is.EqualTo(expectedType));

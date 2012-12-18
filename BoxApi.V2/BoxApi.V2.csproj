@@ -98,7 +98,6 @@
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
-    <Compile Include="Model\ShareableEntity.cs" />
     <Compile Include="Model\ManagedUser.cs" />
     <Compile Include="Model\TrackingCode.cs" />
     <Compile Include="Model\UserCollection.cs" />

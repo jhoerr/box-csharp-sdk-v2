@@ -67,6 +67,28 @@ namespace BoxApi.V2.Tests
             }
         }
 
+        [Test]
+        public void CanGetSubfolderFromFoldersProperty()
+        {
+            var folderName = TestItemName();
+            var testFolder = Client.CreateFolder(Folder.Root, folderName);
+
+            try
+            {
+                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, });
+                var actual = folder.Folders.Single(f => f.Id.Equals(testFolder.Id));
+                // expect present
+                Assert.That(actual, Is.Not.Null);
+                // expect empty
+            }
+            finally
+            {
+                Client.Delete(testFolder);
+            }
+            
+        }
+
+
         [Test, ExpectedException(typeof (BoxException))]
         public void GetNonExistentFolder()
         {

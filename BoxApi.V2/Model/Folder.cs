@@ -35,7 +35,7 @@ namespace BoxApi.V2.Model
             get { return FromEntriesGetAll<Folder>(ResourceType.Folder); }
         }
 
-        private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value) where T : ShareableEntity
+        private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value) where T : File
         {
             return ItemCollection.Entries.Where(i => i.Type.Equals(value)).Cast<T>();
         }
