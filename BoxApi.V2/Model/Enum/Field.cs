@@ -41,7 +41,9 @@ namespace BoxApi.V2.Model.Enum
         [Description("space_amount")] SpaceAmount,
         [Description("space_used")] SpaceUsed,
         [Description("status")] Status,
-        [Description("sync_enabled")] SyncEnabled,
+        [Description("is_sync_enabled")] IsSyncEnabled,
         [Description("tracking_codes")] TrackingCodes,
+        [Description("is_exempt_from_login_verification")]IsExemptFromLoginVerification,
+        [Description("is_exempt_from_device_limits")]IsExemptFromDeviceLimits,
     }
 }

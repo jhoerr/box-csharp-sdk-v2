@@ -6,13 +6,14 @@ using NUnit.Framework;
 
 namespace BoxApi.V2.Tests
 {
-    [TestFixture]
+    [Ignore("These tests are by necessity geared towards my (jhoerr) account.  You'll need to change things about them to run them for yourself.")]
     public class UserTests : BoxApiTestHarness
     {
         [TestCase("john hoerr")]
+        // Replace with your username
         public void Me(string username)
         {
-            User user = Client.Me();
+            User user = Client.Me(new[] {Field.TrackingCodes, Field.Name});
             Assert.That(user.Name, Is.EqualTo(username));
         }
 
@@ -65,7 +66,7 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
-        [Ignore("You'll need to change the filter term to something meaningful.")]
+        //You'll need to change the filter term to something meaningful.
         public void FilterUsers()
         {
             UserCollection userCollection = Client.GetUsers("john hoerr");
@@ -73,23 +74,24 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
+        // This could be more than one, depending on how your account is set up.
+        // If you're an enterprise admin, the user collection will contain all users in the enterprise.
         public void GetAllUsers()
         {
             UserCollection userCollection = Client.GetUsers();
-            // This could be more than one, depending on how your account is set up.
-            // If you're an enterprise admin, the user collection will contain all users in the enterprise.
             Assert.That(userCollection.TotalCount, Is.EqualTo(1));
         }
 
         [Test]
         public void GetLargeNumberOfUsers()
         {
-//            var totalCount = Client.GetUsers();
-            UserCollection users = Client.GetUsers(null, 1, 500);
+            UserCollection users = Client.GetUsers(null, 1000, 0, new[] {Field.SpaceAmount,});
+            Assert.That(users.TotalCount, Is.EqualTo(1000));
+            Assert.That(users.Entries.Count, Is.EqualTo(1000));
         }
 
         [Test]
-        [Ignore("You'll need to change the user's ID to something meaningful.")]
+        // You'll need to change the user's ID to something meaningful.
         public void GetSingleUser()
         {
             User user = Client.GetUser("182238740");
@@ -98,7 +100,7 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
-        [Ignore("You'll need to change the current owner and new owner ID to something meaningful.")]
+        // You'll need to change the current owner and new owner ID to something meaningful.
         public void MoveRootFolderToAnotherUser()
         {
             User currentOwner = Client.GetUser("186819348");
@@ -109,6 +111,7 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
+        // "These tracking codes are particular to one enterprise account -- you'll need to change them for yours."
         public void TrackingCodes()
         {
             const string expectedName = "foo bar";
@@ -116,41 +119,29 @@ namespace BoxApi.V2.Tests
 
             var expectedTrackingCodes = new List<TrackingCode>
                 {
-                    new TrackingCode("key1", "value1"),
-                    new TrackingCode("key2", "value2"), 
+                    new TrackingCode("Foo", "value1"),
+                    new TrackingCode("Bar", "value2"),
                 };
 
             var managedUser = new ManagedUser
-            {
-                Name = expectedName,
-                Login = expectedLogin,
-//                TrackingCodes = expectedTrackingCodes,
-            };
+                {
+                    Name = expectedName,
+                    Login = expectedLogin,
+                    TrackingCodes = expectedTrackingCodes,
+                };
 
-            User user = Client.CreateUser(managedUser, new[] { Field.TrackingCodes, Field.Name, Field.Login, });
+            User user = Client.CreateUser(managedUser, new[] {Field.Name, Field.Login, Field.TrackingCodes,});
 
             try
             {
                 Assert.That(user.Name, Is.EqualTo(expectedName));
                 Assert.That(user.Login, Is.EqualTo(expectedLogin));
-//                Assert.That(user.TrackingCodes, Is.EqualTo(expectedTrackingCodes));
+                Assert.That(user.TrackingCodes, Is.EquivalentTo(expectedTrackingCodes));
             }
             finally
             {
                 Client.Delete(user, false, true);
             }
-        }
-
-        [Test]
-        public void UsedSpaceIsUpdated()
-        {
-            User user = Client.Me();
-            var initialSpaceUsed = user.SpaceUsed;
-            var file = Client.CreateFile(Folder.Root, TestItemName(), new byte[]{0x0,0x1,0x2,0x3,0x4});
-            user = Client.Me();
-            var spaceUsed = user.SpaceUsed - initialSpaceUsed;
-            Assert.That(spaceUsed, Is.EqualTo(file.Size));
-            Client.Delete(file);
         }
 
         [Test]
@@ -188,6 +179,18 @@ namespace BoxApi.V2.Tests
             {
                 Client.Delete(user, false, true);
             }
+        }
+
+        [Test]
+        public void UsedSpaceIsUpdated()
+        {
+            User user = Client.Me(new []{Field.SpaceUsed, });
+            long initialSpaceUsed = user.SpaceUsed;
+            File file = Client.CreateFile(Folder.Root, TestItemName(), new byte[] {0x0, 0x1, 0x2, 0x3, 0x4});
+            user = Client.Me(new[] { Field.SpaceUsed, });
+            long spaceUsed = user.SpaceUsed - initialSpaceUsed;
+            Assert.That(spaceUsed, Is.EqualTo(file.Size));
+            Client.Delete(file);
         }
     }
 }
