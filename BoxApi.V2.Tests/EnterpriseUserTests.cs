@@ -6,17 +6,9 @@ using NUnit.Framework;
 
 namespace BoxApi.V2.Tests
 {
-    [Ignore("These tests are by necessity geared towards my (jhoerr) account.  You'll need to change things about them to run them for yourself.")]
-    public class UserTests : BoxApiTestHarness
+    [Ignore("These tests are by necessity geared towards an enterprise account.  You'll need to change things about them to run them for yourself.")]
+    public class EnterpriseUserTests : BoxApiTestHarness
     {
-        [TestCase("john hoerr")]
-        // Replace with your username
-        public void Me(string username)
-        {
-            User user = Client.Me(new[] {Field.TrackingCodes, Field.Name});
-            Assert.That(user.Name, Is.EqualTo(username));
-        }
-
         [Test]
         public void CreateEnterpriseUser()
         {
@@ -181,16 +173,5 @@ namespace BoxApi.V2.Tests
             }
         }
 
-        [Test]
-        public void UsedSpaceIsUpdated()
-        {
-            User user = Client.Me(new []{Field.SpaceUsed, });
-            long initialSpaceUsed = user.SpaceUsed;
-            File file = Client.CreateFile(Folder.Root, TestItemName(), new byte[] {0x0, 0x1, 0x2, 0x3, 0x4});
-            user = Client.Me(new[] { Field.SpaceUsed, });
-            long spaceUsed = user.SpaceUsed - initialSpaceUsed;
-            Assert.That(spaceUsed, Is.EqualTo(file.Size));
-            Client.Delete(file);
-        }
     }
 }
