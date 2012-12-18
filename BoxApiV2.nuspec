@@ -3,14 +3,14 @@
   <metadata>
     <id>Box.v2.SDK</id>
     <title>Box.com SDK (API v2)</title>
-    <version>0.13</version>
+    <version>0.14</version>
     <authors>John Hoerr, Carson Gross, Box</authors>
     <owners>John Hoerr, Carson Gross, Box</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A client SDK for Box.com (API v2).  (http://developers.box.com/docs/).  Both this project and the new Box API are still in beta.</description>
-    <releaseNotes>Bug fixes.  Fields should now work with PUT/POST requests.</releaseNotes>
+    <releaseNotes>Bug fixes.  Fixed User deserialization issues.</releaseNotes>
     <copyright>Copyright 2012 John Hoerr, Carson Gross, The Trustees of Indiana University (www.iu.edu)</copyright>
     <tags>Box Box.com</tags>
     <dependencies>
