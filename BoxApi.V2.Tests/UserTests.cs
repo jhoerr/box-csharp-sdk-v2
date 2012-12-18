@@ -142,6 +142,18 @@ namespace BoxApi.V2.Tests
         }
 
         [Test]
+        public void UsedSpaceIsUpdated()
+        {
+            User user = Client.Me();
+            var initialSpaceUsed = user.SpaceUsed;
+            var file = Client.CreateFile(Folder.Root, TestItemName(), new byte[]{0x0,0x1,0x2,0x3,0x4});
+            user = Client.Me();
+            var spaceUsed = user.SpaceUsed - initialSpaceUsed;
+            Assert.That(spaceUsed, Is.EqualTo(file.Size));
+            Client.Delete(file);
+        }
+
+        [Test]
         public void UpdateEnterpriseUser()
         {
             var managedUser = new ManagedUser

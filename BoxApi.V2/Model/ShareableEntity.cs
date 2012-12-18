@@ -16,6 +16,6 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The item size in bytes
         /// </summary>
-        public string Size { get; set; }
+        public int Size { get; set; }
     }
 }

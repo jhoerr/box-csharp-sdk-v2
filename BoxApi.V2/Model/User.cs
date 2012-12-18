@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using BoxApi.V2.Model.Enum;
 using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
