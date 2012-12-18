@@ -7,7 +7,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     Count of Entries
         /// </summary>
-        public string TotalCount { get; set; }
+        public int TotalCount { get; set; }
 
         /// <summary>
         ///     A collection of T items

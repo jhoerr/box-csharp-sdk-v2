@@ -5,7 +5,6 @@ namespace BoxApi.V2.Model
     /// <summary>
     ///     A Box file.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public class File : ShareableEntity
     {
         /// <summary>

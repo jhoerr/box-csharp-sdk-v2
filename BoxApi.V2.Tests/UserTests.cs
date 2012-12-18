@@ -78,7 +78,7 @@ namespace BoxApi.V2.Tests
             UserCollection userCollection = Client.GetUsers();
             // This could be more than one, depending on how your account is set up.
             // If you're an enterprise admin, the user collection will contain all users in the enterprise.
-            Assert.That(userCollection.TotalCount, Is.EqualTo("2"));
+            Assert.That(userCollection.TotalCount, Is.EqualTo(1));
         }
 
         [Test]

@@ -27,7 +27,7 @@ namespace BoxApi.V2.Tests
             {
                 var items = Client.GetItems(testFolder, new[] {Field.CreatedAt, Field.Name,});
                 Assert.That(items, Is.Not.Null);
-                Assert.That(items.TotalCount, Is.EqualTo("2"));
+                Assert.That(items.TotalCount, Is.EqualTo(2));
                 // expected present
                 Assert.That(items.Entries.All(e => e.Id != null));
                 Assert.That(items.Entries.All(e => e.Name != null));
@@ -178,7 +178,7 @@ namespace BoxApi.V2.Tests
             var subfolder = Client.CreateFolder(folder.Id, "subfolder", null);
             var copyName = TestItemName();
             var copy = Client.Copy(folder, RootId, copyName, null);
-            Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo("1"));
+            Assert.That(copy.ItemCollection.TotalCount, Is.EqualTo(1));
             Client.Delete(folder, true);
             Client.Delete(copy, true);
         }

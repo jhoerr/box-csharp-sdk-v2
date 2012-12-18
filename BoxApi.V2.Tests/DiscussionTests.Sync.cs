@@ -73,7 +73,7 @@ namespace BoxApi.V2.Tests
             var actual = Client.GetDiscussions(_folder);
 
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.TotalCount, Is.EqualTo("2"));
+            Assert.That(actual.TotalCount, Is.EqualTo(2));
             Assert.That(actual.Entries.Any(), Is.True);
             Assert.That(actual.Entries.Count(), Is.EqualTo(2));
             Assert.That(actual.Entries.Any(d => d.Name.Equals(firstName)), Is.True);
@@ -120,7 +120,7 @@ namespace BoxApi.V2.Tests
             var comments = Client.GetComments(discussion);
 
             Assert.That(comments, Is.Not.Null);
-            Assert.That(comments.TotalCount, Is.EqualTo("2"));
+            Assert.That(comments.TotalCount, Is.EqualTo(2));
             Assert.That(comments.Entries.Any(), Is.True);
             Assert.That(comments.Entries.Count(), Is.EqualTo(2));
             Assert.That(comments.Entries.Any(c => c.Message.Equals(firstMessage)), Is.True);

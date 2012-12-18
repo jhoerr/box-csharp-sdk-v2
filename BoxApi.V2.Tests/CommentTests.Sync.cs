@@ -55,7 +55,7 @@ namespace BoxApi.V2.Tests
                 Client.CreateComment(file, firstComment);
                 Client.CreateComment(file, secondComment);
                 var comments = Client.GetComments(file);
-                Assert.That(comments.TotalCount, Is.EqualTo("2"));
+                Assert.That(comments.TotalCount, Is.EqualTo(2));
                 Assert.That(comments.Entries.Any(c => c.Message.Equals(firstComment)), Is.True);
                 Assert.That(comments.Entries.Any(c => c.Message.Equals(secondComment)), Is.True);
             }
@@ -95,7 +95,7 @@ namespace BoxApi.V2.Tests
                 var comment = Client.CreateComment(file, originalComment);
                 Client.Delete(comment);
                 var commentCollection = Client.GetComments(file);
-                Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
+                Assert.That(commentCollection.TotalCount, Is.EqualTo(0));
             }
             finally
             {

@@ -55,7 +55,7 @@ namespace BoxApi.V2.Tests
             {
                 var actual = Client.GetCollaborations(folder);
                 Assert.That(actual, Is.Not.Null);
-                Assert.That(actual.TotalCount, Is.EqualTo("1"));
+                Assert.That(actual.TotalCount, Is.EqualTo(1));
                 Assert.That(actual.Entries.Any(c => c.Id.Equals(view.Id)), Is.True);
             }
             finally
@@ -94,7 +94,7 @@ namespace BoxApi.V2.Tests
             {
                 Client.Delete(collaboration);
                 var collaborations = Client.GetCollaborations(folder);
-                Assert.That(collaborations.TotalCount, Is.EqualTo("0"));
+                Assert.That(collaborations.TotalCount, Is.EqualTo(0));
             }
             finally
             {

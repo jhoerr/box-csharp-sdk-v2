@@ -95,7 +95,7 @@ namespace BoxApi.V2.Tests
                 Assert.That(copiedFolder.Id, Is.Not.EqualTo(SharedFolderId));
                 // Should not be shared just because the original is shared.
                 Assert.That(copiedFolder.SharedLink, Is.Null);
-                Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
+                Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo(1));
             }
             finally
             {

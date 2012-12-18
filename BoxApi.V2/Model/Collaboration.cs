@@ -7,7 +7,6 @@ namespace BoxApi.V2.Model
     /// <summary>
     ///     Collaborations are Box’s equivalent of access control lists. They let you set and apply permissions for users to folders.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public class Collaboration : ModifiableEntity
     {
         /// <summary>

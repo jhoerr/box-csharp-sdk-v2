@@ -52,6 +52,7 @@ namespace BoxApi.V2.Tests
             Client.GetComment(gotComment =>
                 {
                     // Assert
+                    Client.Delete(file);
                     Assert.That(gotComment, Is.Not.Null);
                     Assert.That(gotComment.Message, Is.EqualTo(message));
                     callbackHit = true;
@@ -63,7 +64,6 @@ namespace BoxApi.V2.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             // Cleanup
-            Client.Delete(file);
 
             if (MaxWaitInSeconds.Equals(0))
             {
@@ -149,8 +149,8 @@ namespace BoxApi.V2.Tests
             Client.Delete(response =>
                 {
                     var commentCollection = Client.GetComments(file);
-                    Assert.That(commentCollection.TotalCount, Is.EqualTo("0"));
-
+                    Client.Delete(file);
+                    Assert.That(commentCollection.TotalCount, Is.EqualTo(0));
                     callbackHit = true;
                 }, AbortOnFailure, comment);
 
@@ -160,7 +160,6 @@ namespace BoxApi.V2.Tests
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
             // Cleanup
-            Client.Delete(file);
 
             if (MaxWaitInSeconds.Equals(0))
             {
