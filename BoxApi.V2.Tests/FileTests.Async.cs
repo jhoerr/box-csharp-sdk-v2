@@ -49,6 +49,7 @@ namespace BoxApi.V2.Tests
 
             Client.Read(readBytes =>
                 {
+                    Client.Delete(file);
                     Assert.That(readBytes, Is.EqualTo(expected));
                     callbackHit = true;
                 }, AbortOnFailure, file);
@@ -58,7 +59,6 @@ namespace BoxApi.V2.Tests
                 Thread.Sleep(1000);
             } while (!callbackHit && --MaxWaitInSeconds > 0);
 
-            Client.Delete(file);
             if (MaxWaitInSeconds.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");

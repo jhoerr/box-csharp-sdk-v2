@@ -148,7 +148,7 @@ namespace BoxApi.V2.Tests
             Client.CopyFolder(copiedFolder =>
                 {
                     callbackHit = true;
-                    Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo("1"));
+                    Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo(1));
                     Client.DeleteFolder(folder.Id, true);
                     Client.DeleteFolder(copiedFolder.Id, true);
                 }, AbortOnFailure, folder.Id, RootId, copyName, null);
@@ -257,7 +257,7 @@ namespace BoxApi.V2.Tests
                 {
                     callbackHit = true;
                     Assert.That(contents, Is.Not.Null);
-                    Assert.That(contents.TotalCount, Is.EqualTo("2"));
+                    Assert.That(contents.TotalCount, Is.EqualTo(2));
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
                     Client.DeleteFolder(testFolder.Id, true);

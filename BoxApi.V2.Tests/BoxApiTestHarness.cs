@@ -27,7 +27,7 @@ namespace BoxApi.V2.Tests
             Client = new BoxManager(testInfo.AppKey, testInfo.AuthKey);
             UnauthenticatedClient = new BoxManager(testInfo.AppKey);
             CollaboratingUser = testInfo.CollaboratingUser;
-            MaxWaitInSeconds = 10;
+            MaxWaitInSeconds = 15;
         }
 
         protected static string TestItemName()

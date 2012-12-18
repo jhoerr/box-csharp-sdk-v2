@@ -70,7 +70,7 @@ namespace BoxApi.V2.Tests
         public void FilterUsers()
         {
             UserCollection userCollection = Client.GetUsers("john hoerr");
-            Assert.That(userCollection.TotalCount, Is.EqualTo("1"));
+            Assert.That(userCollection.TotalCount, Is.EqualTo(1));
         }
 
         [Test]
