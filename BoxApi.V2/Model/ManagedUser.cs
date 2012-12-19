@@ -14,7 +14,7 @@ namespace BoxApi.V2.Model
         ///     The user’s total available space amount in bytes
         /// </summary>
         [JsonProperty(PropertyName = "space_amount")]
-        public long SpaceAmount { get; set; }
+        public double SpaceAmount { get; set; }
 
         /// <summary>
         ///     If the user is part of an enterprise, then this will reflect whether they are a regular user or an admin.

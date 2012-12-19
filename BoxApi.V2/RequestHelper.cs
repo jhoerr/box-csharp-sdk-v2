@@ -259,7 +259,7 @@ namespace BoxApi.V2
 
         public IRestRequest Me(Field[] fields = null)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "/me", Method.GET, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "me", Method.GET, fields);
             return request;
         }
 

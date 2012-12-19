@@ -19,10 +19,10 @@ namespace BoxApi.V2.Tests
         public void SpaceUsedIsUpdated()
         {
             User user = Client.Me(new[] { Field.SpaceUsed, });
-            long initialSpaceUsed = user.SpaceUsed;
+            var initialSpaceUsed = user.SpaceUsed;
             File file = Client.CreateFile(Folder.Root, TestItemName(), new byte[] { 0x0, 0x1, 0x2, 0x3, 0x4 });
             user = Client.Me(new[] { Field.SpaceUsed, });
-            long spaceUsed = user.SpaceUsed - initialSpaceUsed;
+            var spaceUsed = user.SpaceUsed - initialSpaceUsed;
             Assert.That(spaceUsed, Is.EqualTo(file.Size));
             Client.Delete(file);
         }

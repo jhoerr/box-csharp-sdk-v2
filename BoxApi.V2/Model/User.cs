@@ -24,13 +24,13 @@ namespace BoxApi.V2.Model
         ///     The amount of space in use by the user in bytes
         /// </summary>
         [JsonProperty(PropertyName = "space_used")]
-        public long SpaceUsed { get; set; }
+        public double SpaceUsed { get; set; }
 
         /// <summary>
         ///     The maximum individual file size in bytes this user can have
         /// </summary>
         [JsonProperty(PropertyName = "max_upload_size")]
-        public long MaxUploadSize { get; set; }
+        public double MaxUploadSize { get; set; }
 
         /// <summary>
         ///     The URL for the user's avatar image
