@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using BoxApi.V2;
+using BoxApi.V2.Authentication.Legacy;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using Microsoft.Win32;
@@ -16,25 +17,13 @@ namespace BoxApi.V2.Samples
         //
         private static void Main(string[] args)
         {
-            TestTicketBasedAuth();
+            ExecuteAPIMethods("YOUR CLIENT ID", "YOUR CLIENT SECRET", "YOUR ACCESS TOKEN", "YOUR REFRESH TOKEN");
         }
 
-        private static void TestTicketBasedAuth()
-        {
-            var boxAuth = new BoxAuthenticator("s7oea2zglx69sizi2qy5ku8j744bvn7z");
-            var authURL = boxAuth.GetAuthorizationUrl();
-            Console.WriteLine("Got ticket " + boxAuth.Ticket);
-            Console.WriteLine("Please accept the token request in the browser and hit enter...");
-            OpenUrl(authURL);
-            Console.ReadLine();
-            Console.WriteLine("Auth token : " + boxAuth.GetAuthorizationToken());
-            Console.ReadLine();
-        }
-
-        private static void ExecuteAPIMethods(string apiKey, string authToken)
+        private static void ExecuteAPIMethods(string clientId, string clientSecret, string accessToken, string refreshToken)
         {
             // Instantiate a BoxManager with your api key and a user's auth token
-            var boxManager = new BoxManager(apiKey, authToken);
+            var boxManager = new BoxManager(clientId, clientSecret, accessToken, refreshToken);
 
             // Get all contents of the root folder
             // Specify that we only want the Name, Etag, Size, CreatedAt properties returned for the folder contents.
@@ -69,18 +58,6 @@ namespace BoxApi.V2.Samples
 
             // Delete the file
             boxManager.Delete(file);
-        }
-
-        /// <summary>
-        /// Opens <paramref name="url"/> in a default web browser
-        /// </summary>
-        /// <param name="url">Destination URL</param>
-        public static void OpenUrl(string url)
-        {
-            string key = @"htmlfile\shell\open\command";
-            RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(key, false);
-            string defaultBrowserPath = ((string)registryKey.GetValue(null, null)).Split('"')[1];
-            Process.Start(defaultBrowserPath, url);
         }
     }
 }

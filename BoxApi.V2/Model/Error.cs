@@ -33,4 +33,10 @@
         /// </summary>
         public string RequestId { get; set; }
     }
+
+    public class AuthError
+    {
+        public string Error { get; set; }
+        public string ErrorDescription { get; set; }
+    }
 }

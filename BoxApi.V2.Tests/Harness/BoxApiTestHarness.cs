@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
@@ -8,7 +9,7 @@ using RestSharp.Deserializers;
 using RestSharp.Serializers;
 using File = BoxApi.V2.Model.File;
 
-namespace BoxApi.V2.Tests
+namespace BoxApi.V2.Tests.Harness
 {
     public class BoxApiTestHarness
     {
@@ -23,9 +24,9 @@ namespace BoxApi.V2.Tests
 
         protected BoxApiTestHarness()
         {
-            var testInfo = GetTestInfo();
-            Client = new BoxManager(testInfo.AppKey, testInfo.AuthKey);
-            UnauthenticatedClient = new BoxManager(testInfo.AppKey);
+            var testInfo = TestConfigInfo.Get();
+            Client = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, testInfo.AccessToken, testInfo.RefreshToken);
+            UnauthenticatedClient = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, null, null);
             CollaboratingUser = testInfo.CollaboratingUser;
             MaxWaitInSeconds = 15;
         }
@@ -76,57 +77,10 @@ namespace BoxApi.V2.Tests
             Assert.That(actual.Permissions.CanPreview, Is.True);
         }
 
-        private static TestConfigInfo GetTestInfo()
+        protected void UpdateTestInfo(OAuthToken refreshAccessToken)
         {
-            TestConfigInfo testConfigInfo;
-            var fi = new FileInfo(@"..\..\test_info.json");
-            if (!fi.Exists)
-            {
-                testConfigInfo = ConfigureTestInfo(fi);
-            }
-            else
-            {
-                string content;
-                using (var stream = fi.OpenText())
-                {
-                    content = stream.ReadToEnd();
-                }
-                try
-                {
-                    testConfigInfo = new JsonDeserializer().Deserialize<TestConfigInfo>(new RestResponse {Content = content});
-                }
-                catch
-                {
-                    testConfigInfo = ConfigureTestInfo(fi);
-                }
-            }
-            return testConfigInfo;
-        }
-
-        private static TestConfigInfo ConfigureTestInfo(FileInfo fi)
-        {
-            TestConfigInfo testConfigInfo;
-            var ui = new TestConfig();
-            ui.ShowDialog();
-            using (var stream = fi.CreateText())
-            {
-                testConfigInfo = new TestConfigInfo
-                    {
-                        AppKey = ui.AppKey,
-                        AuthKey = ui.AuthKey,
-                        TestEmail = ui.TestEmail,
-                    };
-                stream.Write(new JsonSerializer().Serialize(testConfigInfo));
-            }
-            return testConfigInfo;
-        }
-
-        public class TestConfigInfo
-        {
-            public string AppKey { get; set; }
-            public string TestEmail { get; set; }
-            public string AuthKey { get; set; }
-            public string CollaboratingUser { get; set; }
+            TestConfigInfo.Update(refreshAccessToken);
+         
         }
     }
 }

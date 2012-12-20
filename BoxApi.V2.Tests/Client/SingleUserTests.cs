@@ -1,8 +1,9 @@
-﻿using BoxApi.V2.Model;
+using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
-namespace BoxApi.V2.Tests
+namespace BoxApi.V2.Tests.Client
 {
     [TestFixture]
     public class SingleUserTests : BoxApiTestHarness

@@ -2,27 +2,61 @@
 using System.IO;
 using System.Net;
 using System.Threading;
+using BoxApi.V2.Authentication.Legacy;
+using BoxApi.V2.Authentication.OAuth2;
 
 namespace BoxApi.V2
 {
     /// <summary>
-    ///     Provides methods for using Box v2 API.  This class is not designed to be thread-safe.
+    ///     Provides methods for using the Box v2 API.  This class is not designed to be thread-safe.
     /// </summary>
     public partial class BoxManager
     {
-        private readonly BoxRestClient _restClient;
+        private readonly string _clientId;
+        private readonly string _clientSecret;
+        private readonly IWebProxy _proxy;
         private readonly RequestHelper _requestHelper;
+        private string _refreshToken;
+        private BoxRestClient _restClient;
 
         /// <summary>
         ///     Instantiates BoxManager
         /// </summary>
-        /// <param name="applicationApiKey"> The API key which is assigned to your application</param>
-        /// <param name="authorizationToken"> The user's authorization token.  This can be null if you are exclusively consuming shared items.</param>
+        /// <param name="clientId">The client ID for your Box application</param>
+        /// <param name="clientSecret">The client secret for your Box application</param>
+        /// <param name="accessToken"> The Access Token provided by Box for this User.</param>
+        /// <param name="refreshToken"> The Refresh Token provided by Box for this User.</param>
         /// <param name="proxy">Proxy information</param>
-        public BoxManager(string applicationApiKey, string authorizationToken = null, IWebProxy proxy = null)
+        public BoxManager(string clientId, string clientSecret, string accessToken = null, string refreshToken = null, IWebProxy proxy = null) : this(proxy)
         {
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            ConfigureRestClient(accessToken, refreshToken);
+        }
+
+        /// <summary>
+        ///     Instantiates BoxManager
+        /// </summary>
+        /// <param name="apiKey"> The API key for your Box application</param>
+        /// <param name="authToken"> The Authorization Token provided by Box for this User.</param>
+        /// <param name="proxy">Proxy information</param>
+        [Obsolete("This uses the deprecated v1 authentication scheme.  Please transition to the v2 scheme (OAuth2), which is supported by the other BoxManager constructor")]
+        public BoxManager(string apiKey, string authToken = null, IWebProxy proxy = null) : this(proxy)
+        {
+            _restClient = new BoxRestClient(new RequestAuthenticator(apiKey, authToken), proxy);
+        }
+
+        private BoxManager(IWebProxy proxy)
+        {
+            _proxy = proxy;
             _requestHelper = new RequestHelper();
-            _restClient = new BoxRestClient(new RequestAuthenticator(applicationApiKey, authorizationToken), proxy);
+        }
+
+
+        private void ConfigureRestClient(string accessToken, string refreshToken)
+        {
+            _refreshToken = refreshToken;
+            _restClient = new BoxRestClient(new OAuth2RequestAuthenticator(accessToken), _proxy);
         }
 
         private static void GuardFromNull(object arg, string argName)

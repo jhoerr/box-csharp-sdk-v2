@@ -67,7 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoxAuthenticator.cs" />
+    <Compile Include="Authentication\Common\IBoxAuthenticator.cs" />
+    <Compile Include="Authentication\Common\RequestAuthenticatorBase.cs" />
+    <Compile Include="Authentication\Legacy\BoxAuthenticator.cs" />
+    <Compile Include="Authentication\Legacy\BoxAuthToken.cs" />
+    <Compile Include="Authentication\Legacy\BoxTicket.cs" />
+    <Compile Include="Authentication\Legacy\BoxToken.cs" />
+    <Compile Include="Authentication\Legacy\RequestAuthenticator.cs" />
+    <Compile Include="Authentication\Legacy\RequestHelper.cs" />
+    <Compile Include="Authentication\OAuth2\OAuth2RequestAuthenticator.cs" />
+    <Compile Include="Authentication\OAuth2\RequestHelper.cs" />
+    <Compile Include="Authentication\OAuth2\OAuthToken.cs" />
+    <Compile Include="Authentication\OAuth2\TokenProvider.cs" />
     <Compile Include="BoxManager.Collaboration.cs" />
     <Compile Include="BoxManager.Comment.cs" />
     <Compile Include="BoxManager.Discussion.cs" />
@@ -101,18 +112,14 @@
     <Compile Include="Model\ManagedUser.cs" />
     <Compile Include="Model\TrackingCode.cs" />
     <Compile Include="Model\UserCollection.cs" />
-    <Compile Include="RequestAuthenticator.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.cs" />
-    <Compile Include="Model\BoxAuthToken.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ItemCollection.cs" />
-    <Compile Include="Model\BoxTicket.cs" />
-    <Compile Include="Model\BoxToken.cs" />
     <Compile Include="Model\ModifiableEntity.cs" />
     <Compile Include="Model\Permissions.cs" />
     <Compile Include="Model\SharedLink.cs" />
@@ -126,6 +133,7 @@
     <Compile Include="BoxManager.Folder.cs" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

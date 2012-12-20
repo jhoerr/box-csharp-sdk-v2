@@ -1,4 +1,4 @@
-﻿namespace BoxApi.V2.Model
+namespace BoxApi.V2.Authentication.Legacy
 {
     internal class BoxTicket
     {

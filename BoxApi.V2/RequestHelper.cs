@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BoxApi.V2.Authentication;
+using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Serialization;
 using RestSharp;
+using RestSharp.Serializers;
 
 namespace BoxApi.V2
 {
     internal class RequestHelper
     {
+        private readonly Authentication.OAuth2.RequestHelper _requestHelper = new Authentication.OAuth2.RequestHelper();
+
         public IRestRequest Get(ResourceType resourceResourceType, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, null, Method.GET, fields);
@@ -324,30 +329,6 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetTicket(string apiKey)
-        {
-            var restRequest = new RestRequest("1.0/rest");
-            restRequest.AddParameter("action", "get_ticket");
-            restRequest.AddParameter("api_key", apiKey);
-            return restRequest;
-        }
-
-        public IRestRequest AuthorizationUrl(string ticket)
-        {
-            var restRequest = new RestRequest("1.0/auth/{ticket}");
-            restRequest.AddUrlSegment("ticket", ticket);
-            return restRequest;
-        }
-
-        public IRestRequest SwapTicketForToken(string apiKey, string ticket)
-        {
-            var restRequest = new RestRequest("1.0/rest");
-            restRequest.AddParameter("action", "get_auth_token");
-            restRequest.AddParameter("api_key", apiKey);
-            restRequest.AddParameter("ticket", ticket);
-            return restRequest;
-        }
-
         private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET, string fieldList = null)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
@@ -375,7 +356,8 @@ namespace BoxApi.V2
 
             IRestRequest request = RawRequest(resourceResourceType, resource, method, fieldList);
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new AttributableJsonSerializer();
+            request.JsonSerializer = new JsonSerializer();
+//            request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
     }

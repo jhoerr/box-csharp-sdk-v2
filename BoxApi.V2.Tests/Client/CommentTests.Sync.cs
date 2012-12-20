@@ -1,7 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
+using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
-namespace BoxApi.V2.Tests
+namespace BoxApi.V2.Tests.Client
 {
     [TestFixture]
     public class CommentTestsSync : BoxApiTestHarness

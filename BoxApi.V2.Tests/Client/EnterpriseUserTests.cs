@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
-using RestSharp;
-using RestSharp.Deserializers;
 
-namespace BoxApi.V2.Tests
+namespace BoxApi.V2.Tests.Client
 {
     [Ignore("These tests are by necessity geared towards an enterprise account.  You'll need to change things about them to run them for yourself.")]
     public class EnterpriseUserTests : BoxApiTestHarness
@@ -82,36 +81,6 @@ namespace BoxApi.V2.Tests
             UserCollection users = Client.GetUsers(null, 1000, 0, new[] {Field.SpaceAmount,});
             Assert.That(users.TotalCount, Is.EqualTo(1000));
             Assert.That(users.Entries.Count, Is.EqualTo(1000));
-        }
-
-        [Test, Ignore]
-        // You'll need to change the user's ID to something meaningful.
-        public void GetSingleUser()
-        {
-try
-{
-    UserCollection userCollection;
-    var offset = 0;
-    const int limit = 100;
-    do
-    {
-        var client = new BoxManager("YOUR API KEY", "YOUR AUTH TOKEN");
-        userCollection = client.GetUsers(null, limit, offset, new[] { Field.SpaceAmount });
-        Console.Out.WriteLine("Got users {0}-{1}", offset + 1, Math.Min(offset + limit, userCollection.TotalCount));
-        offset += limit;
-    } while (offset < userCollection.TotalCount);
-}
-catch (Exception e)
-{
-    Console.Out.WriteLine(e.Message);
-    Console.Out.WriteLine(e.StackTrace);
-    if (e.InnerException != null)
-    {
-        Console.Out.WriteLine("Inner Exception:");
-        Console.Out.WriteLine(e.InnerException.Message);
-        Console.Out.WriteLine(e.InnerException.StackTrace);
-    }
-}
         }
 
         [Test]

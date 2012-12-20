@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
 using System.Net;
+using BoxApi.V2.Authentication;
+using BoxApi.V2.Authentication.Common;
+using BoxApi.V2.Authentication.Legacy;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using RestSharp;
@@ -140,11 +143,19 @@ namespace BoxApi.V2
                 error = new Error {Code = "Internal Server Error", Status = "500"};
                 success = false;
             }
-            else if (restResponse.ContentType.Equals(JsonMimeType) && restResponse.Content.Contains(@"""type"":""error"""))
+            else if (restResponse.ContentType.Equals(JsonMimeType))
             {
-                success = false;
                 var jsonDeserializer = new JsonDeserializer();
-                error = TryGetSingleError(restResponse, jsonDeserializer) ?? TryGetFirstErrorFromCollection(restResponse, jsonDeserializer);
+                if (restResponse.Content.Contains(@"""type"":""error"""))
+                {
+                    success = false;
+                    error = TryGetSingleError(restResponse, jsonDeserializer) ?? TryGetFirstErrorFromCollection(restResponse, jsonDeserializer);
+                }
+                else if (restResponse.Content.Contains(@"""error"":"))
+                {
+                    var authError = jsonDeserializer.Deserialize<AuthError>(restResponse);
+                    error = new Error(){Code = "400", Status = authError.Error, Message = authError.ErrorDescription, Type = ResourceType.Error};
+                }
             }
             return success;
         }

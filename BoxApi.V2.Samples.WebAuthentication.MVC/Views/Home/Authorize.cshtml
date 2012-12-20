@@ -1,4 +1,4 @@
-﻿@model BoxApi.V2.Model.BoxAuthToken
+﻿@model BoxApi.V2.Authentication.OAuth2.OAuthToken
 
 @{
     ViewBag.Title = "Authorization Complete";
@@ -7,7 +7,8 @@
 
 <h2>Authorization Complete</h2>
 
-<p>Your authorization token is: <strong>@Model.AuthToken</strong></p>
+<p>Your authorization token is: <strong>@Model.AccessToken</strong></p>
+<p>Your refresh token is: <strong>@Model.RefreshToken</strong></p>
 
 <h3>Want to run the unit tets?</h3>
 

@@ -1,8 +1,8 @@
 using System;
 using System.Net;
-using BoxApi.V2.Model;
+using RestSharp;
 
-namespace BoxApi.V2
+namespace BoxApi.V2.Authentication.Legacy
 {
     /// <summary>
     ///     Provides methods for generating tickets and user authorization tokens
@@ -11,6 +11,21 @@ namespace BoxApi.V2
     {
         private readonly RequestHelper _requestHelper;
         private readonly BoxRestClient _restClient;
+
+        /// <summary>
+        ///     Instantiates a BoxAuthenticator
+        /// </summary>
+        /// <param name="apiKey">The API key for your application</param>
+        /// <param name="ticket">The ticket associated with the current authorization token request, if you already have one.</param>
+        /// <param name="proxy">An optional web proxy that should be used in conjunction with any calls to Box</param>
+        public BoxAuthenticator(string apiKey, string ticket = null, WebProxy proxy = null)
+        {
+            ApiKey = apiKey;
+            Ticket = ticket;
+            Proxy = proxy;
+            _requestHelper = new RequestHelper();
+            _restClient = new BoxRestClient(new RequestAuthenticator(ApiKey, null), proxy);
+        }
 
         /// <summary>
         ///     A web proxy that should be used in conjunction with any calls to Box.
@@ -32,24 +47,9 @@ namespace BoxApi.V2
         /// </summary>
         public string AuthToken { get; private set; }
 
-        /// <summary>
-        ///     Instantiates a BoxAuthenticator
-        /// </summary>
-        /// <param name="apiKey">The API key for your application</param>
-        /// <param name="ticket">The ticket associated with the current authorization token request, if you already have one.</param>
-        /// <param name="proxy">An optional web proxy that should be used in conjunction with any calls to Box</param>
-        public BoxAuthenticator(string apiKey, string ticket = null, WebProxy proxy = null)
-        {
-            ApiKey = apiKey;
-            Ticket = ticket;
-            Proxy = proxy;
-            _requestHelper = new RequestHelper();
-            _restClient = new BoxRestClient(new RequestAuthenticator(ApiKey, null), proxy);
-        }
-
         private void SetTicket()
         {
-            var request = _requestHelper.GetTicket(ApiKey);
+            IRestRequest request = _requestHelper.GetTicket(ApiKey);
             var boxTicket = _restClient.ExecuteAndDeserialize<BoxTicket>(request);
             Ticket = boxTicket.Ticket;
         }
@@ -62,7 +62,7 @@ namespace BoxApi.V2
         public string GetAuthorizationUrl()
         {
             SetTicket();
-            var request = _requestHelper.AuthorizationUrl(Ticket);
+            IRestRequest request = _requestHelper.AuthorizationUrl(Ticket);
             return _restClient.BuildUri(request).AbsoluteUri;
         }
 
@@ -78,25 +78,9 @@ namespace BoxApi.V2
                 {
                     throw new Exception("You must retrieve and approve a ticket before exchanging it for an authorization token");
                 }
-                var request = _requestHelper.SwapTicketForToken(ApiKey, Ticket);
+                IRestRequest request = _requestHelper.SwapTicketForToken(ApiKey, Ticket);
                 var token = _restClient.ExecuteAndDeserialize<BoxAuthToken>(request);
                 return token.AuthToken;
-            }
-            return AuthToken;
-        }
-
-        /// <summary>
-        ///     Create a sandboxed authentication token and corresponding folder for a user.  The user does not need to previously have a registered Box account.
-        /// </summary>
-        /// <param name="email">The sanboxed user's email address</param>
-        /// <returns>A sandboxed authentication token</returns>
-        public string GetAppAuthTokenForUser(string email)
-        {
-            if (AuthToken == null)
-            {
-                var request = _requestHelper.CreateToken(email);
-                var token = _restClient.ExecuteAndDeserialize<BoxToken>(request);
-                AuthToken = token.Token;
             }
             return AuthToken;
         }

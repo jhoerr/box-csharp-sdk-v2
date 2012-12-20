@@ -1,4 +1,6 @@
-﻿namespace BoxApi.V2.Model
+using BoxApi.V2.Model;
+
+namespace BoxApi.V2.Authentication.Legacy
 {
     public class BoxAuthToken
     {
