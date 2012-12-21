@@ -14,13 +14,16 @@ namespace BoxApi.V2.Model
         public ResourceType Type { get; set; }
     }
 
-    public class Entity : EntityBase
+    public class IdentifiedEntity : EntityBase
     {
         /// <summary>
         ///     The item's ID
         /// </summary>
         public string Id { get; set; }
+    }
 
+    public class Entity : IdentifiedEntity
+    {
         /// <summary>
         ///     The name of the item
         /// </summary>

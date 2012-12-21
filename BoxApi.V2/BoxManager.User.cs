@@ -290,5 +290,113 @@ namespace BoxApi.V2
             var request = _requestHelper.MoveFolderToAnotherUser(currentOwnerId, Folder.Root, newOwnerId, notify, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
+
+        /// <summary>
+        /// Retrieves the email aliases for a user
+        /// </summary>
+        /// <param name="user">The user for whom to retrieve the email aliases</param>
+        /// <returns>A collection of email aliases</returns>
+        public EmailAliasCollection GetEmailAliases(User user)
+        {
+            GuardFromNull(user, "user");
+            return GetEmailAliases(user.Id);
+        }
+
+        /// <summary>
+        /// Retrieves the email aliases for a user
+        /// </summary>
+        /// <param name="userId">The ID of the user for whom to retrieve the email aliases</param>
+        /// <returns>A collection of email aliases</returns>
+        public EmailAliasCollection GetEmailAliases(string userId)
+        {
+            GuardFromNull(userId, "userId");
+            IRestRequest request = _requestHelper.GetEmailAliases(userId);
+            return _restClient.ExecuteAndDeserialize<EmailAliasCollection>(request);
+        }
+
+        /// <summary>
+        /// Retrieves the email aliases for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perfrom with the email aliases</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="user">The user for whom to retrieve the email aliases</param>
+        /// <returns>A collection of email aliases</returns>
+        public void GetEmailAliases(Action<EmailAliasCollection> onSuccess, Action<Error> onFailure, User user)
+        {
+            GuardFromNull(user, "user");
+            GetEmailAliases(onSuccess, onFailure, user.Id);
+        }
+
+        /// <summary>
+        /// Retrieves the email aliases for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perfrom with the email aliases</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="userId">The ID of the user for whom to retrieve the email aliases</param>
+        /// <returns>A collection of email aliases</returns>
+        public void GetEmailAliases(Action<EmailAliasCollection> onSuccess, Action<Error> onFailure, string userId)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.GetEmailAliases(userId);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Add a new email alias for a user
+        /// </summary>
+        /// <param name="user">The user to alias</param>
+        /// <param name="alias">The email alias to add </param>
+        /// <returns>The updated user</returns>
+        public EmailAlias AddEmailAlias(User user, string alias)
+        {
+            GuardFromNull(user, "user");
+            return AddEmailAlias(user.Id, alias);
+        }
+
+        /// <summary>
+        /// Add a new email alias for a user
+        /// </summary>
+        /// <param name="userId">The ID of the user to alias</param>
+        /// <param name="alias">The email alias to add </param>
+        /// <returns>The updated user</returns>
+        private EmailAlias AddEmailAlias(string userId, string alias)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(alias, "alias");
+            IRestRequest request = _requestHelper.AddAlias(userId, alias);
+            return _restClient.ExecuteAndDeserialize<EmailAlias>(request);
+        }
+
+        /// <summary>
+        /// Add a new email alias for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perform with the updated user</param>
+        /// <param name="onFailure">An action to perform following a failed User operation </param>
+        /// <param name="user">The user to alias</param>
+        /// <param name="alias">The email alias to add </param>
+        /// <returns>The updated user</returns>
+        public void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, User user, string alias)
+        {
+            GuardFromNull(user, "user");
+            AddEmailAlias(onSuccess, onFailure, user.Id, alias);
+        }
+
+        /// <summary>
+        /// Add a new email alias for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perform with the updated user</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="userId">The ID of the user to alias</param>
+        /// <param name="alias">The email alias to add </param>
+        /// <returns>The updated user</returns>
+        private void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, string userId, string alias)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(alias, "alias");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.AddAlias(userId, alias);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
     }
 }

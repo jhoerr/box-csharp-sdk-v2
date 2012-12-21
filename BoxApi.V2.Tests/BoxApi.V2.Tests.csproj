@@ -59,6 +59,7 @@
     <Compile Include="Client\CommentTests.Async.cs" />
     <Compile Include="Client\CommentTests.Sync.cs" />
     <Compile Include="Client\DiscussionTests.Sync.cs" />
+    <Compile Include="Client\EnterpriseUserAliasTests.cs" />
     <Compile Include="Client\EnterpriseUserTests.cs" />
     <Compile Include="Client\EventTests.Sync.cs" />
     <Compile Include="Client\FileTests.Async.cs" />

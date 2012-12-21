@@ -94,6 +94,7 @@
     <Compile Include="Model\CommentCollection.cs" />
     <Compile Include="Model\Discussion.cs" />
     <Compile Include="Model\DiscussionCollection.cs" />
+    <Compile Include="Model\EmailAlias.cs" />
     <Compile Include="Model\Enum\Access.cs" />
     <Compile Include="Model\Enum\CollaborationRole.cs" />
     <Compile Include="Model\Enum\EnterpriseEventType.cs" />
