@@ -317,6 +317,18 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify, Field[] fields = null)
+        {
+            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, fields);
+            request.AddUrlSegment("userId", currentOwnerId);
+            request.AddUrlSegment("folderType", ResourceType.Folder.Description());
+            request.AddUrlSegment("folderId", folderId);
+            // Notify URL parameter seems to result in a 400..
+            // request.AddParameter("notify", notify);
+            request.AddBody(new {owned_by = new {id = newOwnerId}});
+            return request;
+        }
+
         public IRestRequest GetEmailAliases(string id)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases", Method.GET);
@@ -340,15 +352,11 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify, Field[] fields = null)
+        public IRestRequest UpdateLogin(string userId, string login)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, fields);
-            request.AddUrlSegment("userId", currentOwnerId);
-            request.AddUrlSegment("folderType", ResourceType.Folder.Description());
-            request.AddUrlSegment("folderId", folderId);
-            // Notify URL parameter seems to result in a 400..
-            // request.AddParameter("notify", notify);
-            request.AddBody(new {owned_by = new {id = newOwnerId}});
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT);
+            request.AddUrlSegment("id", userId);
+            request.AddBody(new { login });
             return request;
         }
 

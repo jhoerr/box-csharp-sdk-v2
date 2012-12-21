@@ -450,5 +450,59 @@ namespace BoxApi.V2
             IRestRequest request = _requestHelper.DeleteAlias(userId, aliasId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
+
+        /// <summary>
+        /// Changes the primary login email to one of a user's confirmed aliases
+        /// </summary>
+        /// <param name="user">The user to update</param>
+        /// <param name="login">The new login</param>
+        /// <returns>The updated user</returns>
+        public User ChangePrimaryLogin(User user, string login)
+        {
+            GuardFromNull(user, "user");
+            return ChangePrimaryLogin(user.Id, login);
+        }
+
+        /// <summary>
+        /// Changes the primary login email to one of a user's confirmed aliases
+        /// </summary>
+        /// <param name="userId">The ID of the user to update</param>
+        /// <param name="login">The new login</param>
+        /// <returns>The updated user</returns>
+        public User ChangePrimaryLogin(string userId, string login)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(login, "login");
+            IRestRequest request = _requestHelper.UpdateLogin(userId, login);
+            return _restClient.ExecuteAndDeserialize<User>(request);
+        }
+
+        /// <summary>
+        /// Changes the primary login email to one of a user's confirmed aliases
+        /// </summary>
+        /// <param name="onSuccess">An action to perform with the updated user</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="user">The user to update</param>
+        /// <param name="login">The new login</param>
+        public void ChangePrimaryLogin(Action<User> onSuccess, Action<Error> onFailure, User user, string login)
+        {
+            GuardFromNull(user, "user");
+            ChangePrimaryLogin(onSuccess, onFailure, user.Id, login);
+        }
+
+        /// <summary>
+        /// Changes the primary login email to one of a user's confirmed aliases
+        /// </summary>
+        /// <param name="onSuccess">An action to perform with the updated user</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="userId">The ID of the user to update</param>
+        /// <param name="login">The new login</param>
+        public void ChangePrimaryLogin(Action<User> onSuccess, Action<Error> onFailure, string userId, string login)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(login, "login");
+            IRestRequest request = _requestHelper.UpdateLogin(userId, login);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
     }
 }
