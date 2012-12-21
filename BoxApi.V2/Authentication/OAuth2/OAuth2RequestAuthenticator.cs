@@ -1,3 +1,4 @@
+using System;
 using BoxApi.V2.Authentication.Common;
 using RestSharp;
 

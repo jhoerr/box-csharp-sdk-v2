@@ -25,7 +25,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void GetSharedFile()
         {
-            var file = UnauthenticatedClient.GetSharedItem<File>(SharedFileLink);
+            var file = Client.GetSharedItem<File>(SharedFileLink);
             // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
             AssertFileConstraints(file, "shared file.txt", null, SharedFileId);
         }
@@ -33,7 +33,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void ReadSharedFile()
         {
-            var bytes = UnauthenticatedClient.Read(SharedFileId, SharedFileLink);
+            var bytes = Client.Read(SharedFileId, SharedFileLink);
             // Contents are the following 29 bytes:
             // This is a shared file.  Neat!
             Assert.That(bytes.Length, Is.EqualTo(29));
@@ -42,7 +42,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void GetSharedFolder()
         {
-            var folder = UnauthenticatedClient.GetSharedItem<Folder>(SharedFolderLink);
+            var folder = Client.GetSharedItem<Folder>(SharedFolderLink);
             // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
             AssertFolderConstraints(folder, "shared folder", null, SharedFolderId);
             // An ItemCollection is not returned with GetSharedItem() -- you have to do a GetFolder() for that.
@@ -52,7 +52,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void GetSharedFolderWithItems()
         {
-            var folder = UnauthenticatedClient.GetFolder(SharedFolderId, SharedFolderLink);
+            var folder = Client.GetFolder(SharedFolderId, SharedFolderLink);
             // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
             AssertFolderConstraints(folder, "shared folder", null, SharedFolderId);
             // Thus illustrating the caveat in the GetSharedFolder() test...
@@ -62,7 +62,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void GetFileWithinSharedFolder()
         {
-            var actual = UnauthenticatedClient.GetFile(SharedSubfileId, SharedFolderLink);
+            var actual = Client.GetFile(SharedSubfileId, SharedFolderLink);
             // File.Parent is set on a file contained within a shared folder.
             AssertFileConstraints(actual, "shared subfile.txt", SharedFolderId, SharedSubfileId);
         }

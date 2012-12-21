@@ -1,35 +1,27 @@
 using System;
-using System.IO;
 using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
-using RestSharp;
-using RestSharp.Deserializers;
-using RestSharp.Serializers;
-using File = BoxApi.V2.Model.File;
 
 namespace BoxApi.V2.Tests.Harness
 {
     public class BoxApiTestHarness
     {
-        protected readonly BoxManager Client;
-        protected readonly BoxManager UnauthenticatedClient;
-
         protected const string RootId = "0";
         protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
+        protected readonly BoxManager Client;
         protected readonly string CollaboratingUser;
-
-        protected int MaxWaitInSeconds { get; set; }
 
         protected BoxApiTestHarness()
         {
-            var testInfo = TestConfigInfo.Get();
+            TestConfigInfo testInfo = TestConfigInfo.Get();
             Client = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, testInfo.AccessToken, testInfo.RefreshToken);
-            UnauthenticatedClient = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, null, null);
             CollaboratingUser = testInfo.CollaboratingUser;
             MaxWaitInSeconds = 15;
         }
+
+        protected int MaxWaitInSeconds { get; set; }
 
         protected static string TestItemName()
         {
@@ -80,7 +72,6 @@ namespace BoxApi.V2.Tests.Harness
         protected void UpdateTestInfo(OAuthToken refreshAccessToken)
         {
             TestConfigInfo.Update(refreshAccessToken);
-         
         }
     }
 }
