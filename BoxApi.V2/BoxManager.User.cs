@@ -320,7 +320,6 @@ namespace BoxApi.V2
         /// <param name="onSuccess">An action to perfrom with the email aliases</param>
         /// <param name="onFailure">An action to perform following a failed User operation</param>
         /// <param name="user">The user for whom to retrieve the email aliases</param>
-        /// <returns>A collection of email aliases</returns>
         public void GetEmailAliases(Action<EmailAliasCollection> onSuccess, Action<Error> onFailure, User user)
         {
             GuardFromNull(user, "user");
@@ -333,7 +332,6 @@ namespace BoxApi.V2
         /// <param name="onSuccess">An action to perfrom with the email aliases</param>
         /// <param name="onFailure">An action to perform following a failed User operation</param>
         /// <param name="userId">The ID of the user for whom to retrieve the email aliases</param>
-        /// <returns>A collection of email aliases</returns>
         public void GetEmailAliases(Action<EmailAliasCollection> onSuccess, Action<Error> onFailure, string userId)
         {
             GuardFromNull(userId, "userId");
@@ -375,7 +373,6 @@ namespace BoxApi.V2
         /// <param name="onFailure">An action to perform following a failed User operation </param>
         /// <param name="user">The user to alias</param>
         /// <param name="alias">The email alias to add </param>
-        /// <returns>The updated user</returns>
         public void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, User user, string alias)
         {
             GuardFromNull(user, "user");
@@ -389,13 +386,68 @@ namespace BoxApi.V2
         /// <param name="onFailure">An action to perform following a failed User operation</param>
         /// <param name="userId">The ID of the user to alias</param>
         /// <param name="alias">The email alias to add </param>
-        /// <returns>The updated user</returns>
         private void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, string userId, string alias)
         {
             GuardFromNull(userId, "userId");
             GuardFromNull(alias, "alias");
             GuardFromNullCallbacks(onSuccess, onFailure);
             IRestRequest request = _requestHelper.AddAlias(userId, alias);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+
+        /// <summary>
+        /// Delete an email alias for a user
+        /// </summary>
+        /// <param name="user">The aliased user</param>
+        /// <param name="alias">The alias to delete </param>
+        public void Delete(User user, EmailAlias alias)
+        {
+            GuardFromNull(user, "user");
+            GuardFromNull(alias, "alias");
+            DeleteEmailAlias(user.Id, alias.Id);
+        }
+
+        /// <summary>
+        /// Delete an email alias for a user
+        /// </summary>
+        /// <param name="userId">The ID of the aliased user</param>
+        /// <param name="aliasId">The ID of the alias to delete</param>
+        private void DeleteEmailAlias(string userId, string aliasId)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(aliasId, "aliasId");
+            IRestRequest request = _requestHelper.DeleteAlias(userId, aliasId);
+            _restClient.Execute(request);
+        }
+
+        /// <summary>
+        /// Delete an email alias for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perform following a successful delete</param>
+        /// <param name="onFailure">An action to perform following a failed User operation </param>
+        /// <param name="user">The aliased user</param>
+        /// <param name="alias">The alias to delete</param>
+        public void Delete(Action onSuccess, Action<Error> onFailure, User user, EmailAlias alias)
+        {
+            GuardFromNull(user, "user");
+            GuardFromNull(alias, "alias");
+            DeleteEmailAlias(onSuccess, onFailure, user.Id, alias.Id);
+        }
+
+        /// <summary>
+        /// Delete an email alias for a user
+        /// </summary>
+        /// <param name="onSuccess">An action to perform following a successful delete</param>
+        /// <param name="onFailure">An action to perform following a failed User operation</param>
+        /// <param name="userId">The ID of the aliased user</param>
+        /// <param name="aliasId">The ID of the alias to delete</param>
+        private void DeleteEmailAlias(Action onSuccess, Action<Error> onFailure, string userId, string aliasId)
+        {
+            GuardFromNull(userId, "userId");
+            GuardFromNull(aliasId, "aliasId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.DeleteAlias(userId, aliasId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
     }

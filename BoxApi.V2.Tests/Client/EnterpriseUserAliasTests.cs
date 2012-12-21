@@ -25,7 +25,7 @@ namespace BoxApi.V2.Tests.Client
         public void AddAlias(string domain)
         {
             var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
-            User user = Client.CreateUser(new ManagedUser() { Name = "test user", Status = UserStatus.Inactive, Login = string.Format("box.api.test.primary@{0}", domain) });
+            User user = CreateUser(domain);
 
             try
             {
@@ -37,6 +37,51 @@ namespace BoxApi.V2.Tests.Client
             {
                 Client.Delete(user);
             }
+        }
+
+        [TestCase("indiana.edu"), Ignore("Change the domain to one used in your organization's enterprise account,")]
+        public void GetAddedAlias(string domain)
+        {
+            var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
+            User user = CreateUser(domain);
+
+            try
+            {
+                Client.AddEmailAlias(user, expectedAlias);
+                var aliasCollection = Client.GetEmailAliases(user);
+                Assert.That(aliasCollection.TotalCount, Is.EqualTo(1));
+                var emailAlias = aliasCollection.Entries.First();
+                Assert.That(emailAlias.Email, Is.EqualTo(expectedAlias));
+                Assert.That(emailAlias.IsConfirmed, Is.False);
+            }
+            finally
+            {
+                Client.Delete(user);
+            }
+        }
+
+        [TestCase("indiana.edu"), Ignore("Change the domain to one used in your organization's enterprise account,")]
+        public void DeleteAlias(string domain)
+        {
+            var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
+            User user = CreateUser(domain);
+
+            try
+            {
+                var emailAlias = Client.AddEmailAlias(user, expectedAlias);
+                Client.Delete(user, emailAlias);
+                var aliasCollection = Client.GetEmailAliases(user);
+                Assert.That(aliasCollection.TotalCount, Is.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(user);
+            }
+        }
+
+        private User CreateUser(string domain)
+        {
+            return Client.CreateUser(new ManagedUser() { Name = "test user", Status = UserStatus.Inactive, Login = string.Format("box.api.test.primary@{0}", domain) });
         }
     }
 }

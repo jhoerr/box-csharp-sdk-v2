@@ -332,6 +332,14 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest DeleteAlias(string userId, string aliasId)
+        {
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases/{aliasId}", Method.DELETE);
+            request.AddUrlSegment("id", userId);
+            request.AddUrlSegment("aliasId", aliasId);
+            return request;
+        }
+
         public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, fields);
