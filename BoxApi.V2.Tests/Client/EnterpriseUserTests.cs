@@ -27,7 +27,7 @@ namespace BoxApi.V2.Tests.Client
                     SpaceAmount = expectedSpaceAmount,
                 };
 
-            User user = Client.CreateUser(managedUser);
+            User user = Client.CreateUser(managedUser, new Field[] { Field.Name, Field.Address, Field.Login, Field.Role, Field.Status, Field.SpaceAmount, Field.SpaceUsed,  });
 
             try
             {
@@ -38,6 +38,35 @@ namespace BoxApi.V2.Tests.Client
                 Assert.That(user.Status, Is.EqualTo(UserStatus.Inactive));
                 Assert.That(user.SpaceAmount, Is.EqualTo(expectedSpaceAmount));
                 Assert.That(user.SpaceUsed, Is.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(user, false, true);
+            }
+        }
+
+        [Test]
+        public void CreateCoAdminUser()
+        {
+            const string expectedName = "foo bar";
+            const string expectedLogin = "ajoioejwofiwej@gmail.com";
+
+            var managedUser = new ManagedUser
+            {
+                Name = expectedName,
+                Login = expectedLogin,
+                Status = UserStatus.Inactive,
+                Role = UserRole.CoAdmin,
+            };
+
+            User user = Client.CreateUser(managedUser, new Field[]{Field.Name, Field.Login, Field.Role, Field.Status});
+
+            try
+            {
+                Assert.That(user.Name, Is.EqualTo(expectedName));
+                Assert.That(user.Login, Is.EqualTo(expectedLogin));
+                Assert.That(user.Role, Is.EqualTo(UserRole.CoAdmin));
+                Assert.That(user.Status, Is.EqualTo(UserStatus.Inactive));
             }
             finally
             {

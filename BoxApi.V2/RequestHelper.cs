@@ -356,8 +356,7 @@ namespace BoxApi.V2
 
             IRestRequest request = RawRequest(resourceResourceType, resource, method, fieldList);
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new JsonSerializer();
-//            request.JsonSerializer = new AttributableJsonSerializer();
+            request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
     }
