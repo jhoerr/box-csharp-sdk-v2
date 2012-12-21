@@ -10,11 +10,11 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).
 
 ## Status
 
-This client is currently in beta and is still under active development.  The Box v2 API is itself still in beta (and getting better all the time!), so breaking changes should be expected.
+This client is currently in beta and is still under active development.  Breaking changes should be expected until version 1.0.
 
 Support currently exists for:
 
-* Authentication
+* Authentication (V1 and OAuth)
 * Files
 * Folders
 * Shared Items
@@ -27,7 +27,6 @@ Support currently exists for:
 
 Support is planned but not yet implemented for:
 
-* OAuth2
 * Long-polling Events
 * If-Match/If-Not-Match for Files/Folders
 * Viewing metadata for previous versions of a file.
