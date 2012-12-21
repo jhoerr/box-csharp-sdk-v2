@@ -5,29 +5,18 @@
 
 <h2>Authorization Flow</h2>
 
-<p>This site demonstrates how to get an authorization token for a user given your API key. Your API Key can be found on the <em>Edit a Box Application</em> page for your app.</p>
+<p>This site demonstrates how to get an authorization token for a user with your Client ID and Client Secret. These can found on the <em>Edit a Box Application</em> page for your app.</p>
 
-<p>The first step is to enter your API key (below).  The site will then generate a ticket and redirect you to Box, where you will enter your credentials.  
+<p>If you are brand new to OAuth2 or Box, please consider reviewing Box's <a href="http://developers.box.com/oauth/">authentication primer</a>.</p>
+
+<p>The first step is to enter your Client ID and Client Secret.  The site will then generate a ticket and redirect you to Box, where you will enter your credentials.  
     You will then be redirected back to this site with your authorization token in the query string, which will be parsed out and presented to you.</p>
 
 <div style="margin: 2em 0em;">
     @using (Html.BeginForm("InitiateAuthorization", "Home", FormMethod.Post))
     {
-        <label for="clientId">Your Client ID</label><input type="text" name="clientId" id="clientId" style="width: 300px"/><br />
-        <label for="clientSecret">Your Client Secret</label><input type="text" name="clientSecret" id="clientSecret" style="width: 300px"/>
+        <label for="clientId" style="margin-right:10px">Your Client ID:</label><input type="text" name="clientId" id="clientId" style="width: 300px"/><br />
+        <label for="clientSecret" style="margin-right:10px">Your Client Secret:</label><input type="text" name="clientSecret" id="clientSecret" style="width: 300px"/>
         <input type="submit" value="Authorize Me"/>
     }
-</div>
-
-<h3>Brand new to Box?</h3>
-
-<p>Ok! In order to interact with the Box API you must first <a href="http://box.com/developers/services/edit/">create a Box application</a>.  Once that's done you can <a href="http://box.com/developers/services">edit your application</a>, where you'll need to do two things:</p>
-<ol>
-    <li>Change the <em>Redirect url</em> to <strong>https://localhost:44300/Home/Authorize</strong>. This tells Box where to send the user after they've been authenticated.  We'll use localhost for development, but in a production application, you'll need to change the host to one for your own domain.</li>
-    <li>Save your changes.</li>
-    <li>Locate the Client ID and Client Secret, which you'll enter above.</li>
-</ol>
-
-<div style="border: 1px solid silver; padding: 2px; width: 751px;">
-    <img src="@Url.Content("~/Content/AppPage.png")"/>
 </div>
