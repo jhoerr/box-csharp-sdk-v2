@@ -4,8 +4,8 @@
     <id>Box.v2.SDK</id>
     <title>Box.com SDK (API v2)</title>
     <version>0.15</version>
-    <authors>John Hoerr, Carson Gross, Box</authors>
-    <owners>John Hoerr, Carson Gross, Box</owners>
+    <authors>John Hoerr, Carson Gross</authors>
+    <owners>John Hoerr, Carson Gross</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

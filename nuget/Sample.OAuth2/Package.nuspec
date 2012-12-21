@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Box.v2.SDK.Sample.Oauth2</id>
+    <title>Box.com SDK (API v2) OAuth2 Sample (MVC)</title>
+    <version>1.0</version>
+    <authors>John Hoerr</authors>
+    <owners>John Hoerr</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An MVC application that demonstrates the Box OAuth2 process utilizing the Box v2 SDK.</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2012 John Hoerr, The Trustees of Indiana University (www.iu.edu)</copyright>
+    <tags>Box Box.com OAuth2</tags>
+    <dependencies>
+      <dependency id="Box.v2.SDK" />
+    </dependencies>
+  </metadata>
+</package>
+
