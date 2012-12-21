@@ -4,6 +4,6 @@ _ReSharper.*
 packages
 *.suo
 *.user
-nuget
 *.log
 test_info.json
+*.nupkg
