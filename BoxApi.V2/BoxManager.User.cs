@@ -358,7 +358,7 @@ namespace BoxApi.V2
         /// <param name="userId">The ID of the user to alias</param>
         /// <param name="alias">The email alias to add </param>
         /// <returns>The updated user</returns>
-        private EmailAlias AddEmailAlias(string userId, string alias)
+        public EmailAlias AddEmailAlias(string userId, string alias)
         {
             GuardFromNull(userId, "userId");
             GuardFromNull(alias, "alias");
@@ -386,7 +386,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">An action to perform following a failed User operation</param>
         /// <param name="userId">The ID of the user to alias</param>
         /// <param name="alias">The email alias to add </param>
-        private void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, string userId, string alias)
+        public void AddEmailAlias(Action<EmailAlias> onSuccess, Action<Error> onFailure, string userId, string alias)
         {
             GuardFromNull(userId, "userId");
             GuardFromNull(alias, "alias");
@@ -413,7 +413,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="userId">The ID of the aliased user</param>
         /// <param name="aliasId">The ID of the alias to delete</param>
-        private void DeleteEmailAlias(string userId, string aliasId)
+        public void DeleteEmailAlias(string userId, string aliasId)
         {
             GuardFromNull(userId, "userId");
             GuardFromNull(aliasId, "aliasId");
@@ -442,7 +442,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">An action to perform following a failed User operation</param>
         /// <param name="userId">The ID of the aliased user</param>
         /// <param name="aliasId">The ID of the alias to delete</param>
-        private void DeleteEmailAlias(Action onSuccess, Action<Error> onFailure, string userId, string aliasId)
+        public void DeleteEmailAlias(Action onSuccess, Action<Error> onFailure, string userId, string aliasId)
         {
             GuardFromNull(userId, "userId");
             GuardFromNull(aliasId, "aliasId");
