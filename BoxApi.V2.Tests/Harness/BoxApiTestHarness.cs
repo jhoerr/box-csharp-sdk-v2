@@ -17,7 +17,7 @@ namespace BoxApi.V2.Tests.Harness
         {
             TestConfigInfo testInfo = TestConfigInfo.Get();
             Client = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, testInfo.AccessToken, testInfo.RefreshToken);
-            CollaboratingUser = testInfo.CollaboratingUser;
+            CollaboratingUser = testInfo.CollaboratingUserId;
             MaxWaitInSeconds = 15;
         }
 

@@ -13,8 +13,8 @@ namespace BoxApi.V2.Tests.Harness
         public string ClientSecret { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
-        public string TestEmail { get; set; }
-        public string CollaboratingUser { get; set; }
+        public string CollaboratingUserEmail { get; set; }
+        public string CollaboratingUserId { get; set; }
 
         public static TestConfigInfo Get()
         {
