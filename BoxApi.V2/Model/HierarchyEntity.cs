@@ -3,7 +3,7 @@ namespace BoxApi.V2.Model
     /// <summary>
     ///     An item that exists as part of a hierarchy tree.
     /// </summary>
-    public class HierarchyEntity : ModifiableEntity
+    public class HierarchyEntity : Version
     {
         /// <summary>
         ///     A unique ID for use with the /events endpoint

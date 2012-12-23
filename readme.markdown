@@ -29,7 +29,6 @@ Support is planned but not yet implemented for:
 
 * Long-polling Events
 * If-Match/If-Not-Match for Files/Folders
-* Viewing metadata for previous versions of a file.
 
 ## Usage
 

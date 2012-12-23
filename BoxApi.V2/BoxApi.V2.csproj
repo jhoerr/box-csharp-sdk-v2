@@ -126,6 +126,7 @@
     <Compile Include="Model\SharedLink.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserEntity.cs" />
+    <Compile Include="Model\Version.cs" />
     <Compile Include="RequestHelper.cs" />
     <Compile Include="Serialization\AttributableJsonSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

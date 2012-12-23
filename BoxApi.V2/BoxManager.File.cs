@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using BoxApi.V2.Model;
@@ -883,34 +884,6 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        ///     Updates a file's description
-        /// </summary>
-        /// <param name="file">The file to update</param>
-        /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <returns>The updated file</returns>
-        public File UpdateDescription(File file, string description, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            return UpdateFileDescription(file.Id, description, fields);
-        }
-
-        /// <summary>
-        ///     Updates a file's description
-        /// </summary>
-        /// <param name="id">The ID of the file to update</param>
-        /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <returns>The updated file</returns>
-        public File UpdateFileDescription(string id, string description, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
-            return _restClient.ExecuteAndDeserialize<File>(request);
-        }
-
-        /// <summary>
         ///     Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
         /// <param name="file">The file to update</param>
@@ -924,20 +897,6 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        ///     Updates a file's description
-        /// </summary>
-        /// <param name="onSuccess">Action to perform with the update file</param>
-        /// <param name="onFailure">Action to perform following a failed File operation</param>
-        /// <param name="file">The file to update</param>
-        /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null)
-        {
-            GuardFromNull(file, "file");
-            UpdateFileDescription(onSuccess, onFailure, file.Id, description, fields);
-        }
-
-        /// <summary>
         ///     Update one or more of a file's name, description, parent, or shared link.
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
@@ -948,22 +907,6 @@ namespace BoxApi.V2
         {
             GuardFromNull(file, "file");
             var request = _requestHelper.Update(ResourceType.File, file.Id, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-
-        /// <summary>
-        ///     Updates a file's description
-        /// </summary>
-        /// <param name="onSuccess">Action to perform with the update file</param>
-        /// <param name="onFailure">Action to perform following a failed File operation</param>
-        /// <param name="id">The ID of the file to update</param>
-        /// <param name="description">The new description for the file</param>
-        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
-        {
-            GuardFromNull(id, "id");
-            GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, fields, description: description);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -1015,6 +958,59 @@ namespace BoxApi.V2
             GuardFromNull(etag, "etag");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFile(id, etag);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Retrieves metadata about older versions of a file
+        /// </summary>
+        /// <param name="file">The file for which to retrieve metadata</param>
+        /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>A collection of metadata objects</returns>
+        public VersionCollection GetVersions(File file, Field[] fields = null)
+        {
+            GuardFromNull(file, "file");
+            return GetVersions(file.Id);
+        }
+
+        /// <summary>
+        /// Retrieves metadata about older versions of a file
+        /// </summary>
+        /// <param name="fileId">The ID of the file for which to retrieve metadata</param>
+        /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>A collection of metadata objects</returns>
+        public VersionCollection GetVersions(string fileId, Field[] fields = null)
+        {
+            GuardFromNull(fileId, "fileId");
+            IRestRequest request = _requestHelper.GetVersions(fileId, fields);
+            return _restClient.ExecuteAndDeserialize<VersionCollection>(request);
+        }
+
+        /// <summary>
+        /// Retrieves metadata about older versions of a file
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved metadata</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="file">The file for which to retrieve metadata</param>
+        /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
+        {
+            GuardFromNull(file, "file");
+            GetVersions(onSuccess, onFailure, file.Id);
+        }
+
+        /// <summary>
+        /// Retrieves metadata about older versions of a file
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the retrieved metadata</param>
+        /// <param name="onFailure">Action to perform following a failed File operation</param>
+        /// <param name="fileId">The ID of the file for which to retrieve metadata</param>
+        /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, string fileId, Field[] fields = null)
+        {
+            GuardFromNull(fileId, "fileId");
+            GuardFromNullCallbacks(onSuccess, onFailure);
+            IRestRequest request = _requestHelper.GetVersions(fileId, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
     }

@@ -155,6 +155,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetVersions(string fileId, Field[] fields)
+        {
+            IRestRequest request = JsonRequest(ResourceType.File, "{id}/versions", Method.GET, fields);
+            request.AddUrlSegment("id", fileId);
+            return request;
+        }
+
         public IRestRequest CreateComment(ResourceType resourceType, string id, string message, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceType, "{id}/comments", Method.POST, fields);

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Tests.Harness;
@@ -10,66 +11,13 @@ namespace BoxApi.V2.Tests.Client
     public class FileTestsSync : BoxApiTestHarness
     {
         [Test]
-        public void CreateAndDeleteFile()
-        {
-            var testItemName = TestItemName();
-            var file = Client.CreateFile(RootId, testItemName);
-            AssertFileConstraints(file, testItemName, RootId);
-            Client.Delete(file);
-        }
-
-        [Test, ExpectedException(typeof (BoxException))]
-        public void CreateFileWithSameNameInSameParentFails()
-        {
-            var testItemName = TestItemName();
-            File file = null;
-            try
-            {
-                file = Client.CreateFile(RootId, testItemName);
-                Client.CreateFile(RootId, testItemName);
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-        [Test]
-        public void ReadFile()
-        {
-            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
-            var testItemName = TestItemName();
-            var file = Client.CreateFile(RootId, testItemName, expected);
-            var actual = Client.Read(file);
-            Assert.That(actual, Is.EqualTo(expected));
-            Client.Delete(file);
-        }
-
-        [Test]
-        public void WriteFile()
-        {
-            // Arrange
-            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
-            var testItemName = TestItemName();
-            var file = Client.CreateFile(RootId, testItemName);
-            // Act
-            Client.Write(file, expected);
-            // Assert
-            var actual = Client.Read(file);
-            Assert.That(actual, Is.EqualTo(expected));
-            // Cleanup
-            file = Client.GetFile(file.Id);
-            Client.Delete(file);
-        }
-
-        [Test]
         public void CopyFile()
         {
-            var testItemName = TestItemName();
-            var originalFile = Client.CreateFile(RootId, testItemName);
+            string testItemName = TestItemName();
+            File originalFile = Client.CreateFile(RootId, testItemName);
             // Act
-            var newName = TestItemName();
-            var copyFile = Client.Copy(originalFile, RootId, newName, null);
+            string newName = TestItemName();
+            File copyFile = Client.Copy(originalFile, RootId, newName, null);
             // Assert
             AssertFileConstraints(copyFile, newName, RootId);
             Assert.That(copyFile.Id, Is.Not.EqualTo(originalFile.Id));
@@ -81,8 +29,8 @@ namespace BoxApi.V2.Tests.Client
         [Test, ExpectedException(typeof (BoxException))]
         public void CopyFileFailsWhenParentAndNameAreSame()
         {
-            var testItemName = TestItemName();
-            var originalFile = Client.CreateFile(RootId, testItemName);
+            string testItemName = TestItemName();
+            File originalFile = Client.CreateFile(RootId, testItemName);
             // Act
             try
             {
@@ -97,14 +45,14 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void CopyFileToDifferentFolder()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            string folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName, null);
             // Act
             try
             {
-                var copyFile = Client.Copy(file, folder, null, null);
+                File copyFile = Client.Copy(file, folder, null, null);
                 // Assert
                 AssertFileConstraints(copyFile, file.Name, folder.Id);
                 Assert.That(copyFile.Id, Is.Not.EqualTo(file.Id));
@@ -117,43 +65,23 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
-        public void ShareLink()
+        public void CreateAndDeleteFile()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            // Act
-            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { CanDownload = true, CanPreview = true });
-            var linkedFile = Client.ShareLink(file, expectedLink);
-            Client.Delete(linkedFile);
-            // Assert
-            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
-            AssertSharedLink(linkedFile.SharedLink, expectedLink);
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            AssertFileConstraints(file, testItemName, RootId);
+            Client.Delete(file);
         }
 
-        [Test]
-        public void RenameFile()
+        [Test, ExpectedException(typeof (BoxException))]
+        public void CreateFileWithSameNameInSameParentFails()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            var newName = TestItemName();
-            // Act
-            var renamedFile = Client.Rename(file, newName);
-            Client.Delete(renamedFile);
-            // Assert
-            AssertFileConstraints(renamedFile, newName, RootId, file.Id);
-        }
-
-        [Test]
-        public void RenameFileToSameName()
-        {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            // Act
+            string testItemName = TestItemName();
+            File file = null;
             try
             {
-                var renamedFile = Client.Rename(file, file.Name);
-                // Assert
-                AssertFileConstraints(renamedFile, file.Name, RootId, file.Id);
+                file = Client.CreateFile(RootId, testItemName);
+                Client.CreateFile(RootId, testItemName);
             }
             finally
             {
@@ -164,14 +92,14 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void MoveFile()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            var newParent = TestItemName();
-            var folder = Client.CreateFolder(RootId, newParent, null);
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            string newParent = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, newParent, null);
             // Act
             try
             {
-                var movedFile = Client.Move(file, folder);
+                File movedFile = Client.Move(file, folder);
                 // Assert
                 AssertFileConstraints(movedFile, fileName, folder.Id, file.Id);
             }
@@ -184,12 +112,12 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void MoveFileToSameParent()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
             // Act
             try
             {
-                var movedFile = Client.Move(file, RootId);
+                File movedFile = Client.Move(file, RootId);
                 // Assert
                 AssertFileConstraints(movedFile, fileName, RootId, file.Id);
             }
@@ -200,13 +128,87 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void PreviousVersions()
+        {
+            // Arrange
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName, new byte[] {1}); // 1st revision: 1 byte
+            // Act
+            file = Client.Write(file, new byte[] {1, 2}); // 2nd revision: 2 bytes
+            file = Client.Write(file, new byte[] {1, 2, 3}); // 3rd revision (current): 3 bytes
+            // Assert
+            VersionCollection actual = Client.GetVersions(file);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.Entries.Select(e => e.Size), Is.EquivalentTo(new[] {1, 2}));
+            // Cleanup
+            Client.Delete(file);
+        }
+
+        [Test]
+        public void ReadFile()
+        {
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName, expected);
+            byte[] actual = Client.Read(file);
+            Assert.That(actual, Is.EqualTo(expected));
+            Client.Delete(file);
+        }
+
+        [Test]
+        public void RenameFile()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            string newName = TestItemName();
+            // Act
+            File renamedFile = Client.Rename(file, newName);
+            Client.Delete(renamedFile);
+            // Assert
+            AssertFileConstraints(renamedFile, newName, RootId, file.Id);
+        }
+
+        [Test]
+        public void RenameFileToSameName()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            try
+            {
+                File renamedFile = Client.Rename(file, file.Name);
+                // Assert
+                AssertFileConstraints(renamedFile, file.Name, RootId, file.Id);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void ShareLink()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            var expectedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
+            File linkedFile = Client.ShareLink(file, expectedLink);
+            Client.Delete(linkedFile);
+            // Assert
+            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+            AssertSharedLink(linkedFile.SharedLink, expectedLink);
+        }
+
+        [Test]
         public void UpdateDescription()
         {
-            var fileName = TestItemName();
-            var newDescription = "new description";
-            var file = Client.CreateFile(RootId, fileName);
+            string fileName = TestItemName();
+            string newDescription = "new description";
+            File file = Client.CreateFile(RootId, fileName);
             // Act
-            var updatedFile = Client.UpdateDescription(file, newDescription);
+            File updatedFile = Client.UpdateDescription(file, newDescription);
             Client.Delete(updatedFile);
             // Assert
             AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
@@ -216,13 +218,13 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void UpdateEverything()
         {
-            var fileName = TestItemName();
-            var file = Client.CreateFile(RootId, fileName);
-            var newDescription = "new description";
-            var newFolder = TestItemName();
-            var folder = Client.CreateFolder(RootId, newFolder, null);
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            string newDescription = "new description";
+            string newFolder = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, newFolder, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
-            var newName = TestItemName();
+            string newName = TestItemName();
             // Act
             try
             {
@@ -230,7 +232,7 @@ namespace BoxApi.V2.Tests.Client
                 file.Description = newDescription;
                 file.Name = newName;
                 file.SharedLink = sharedLink;
-                var updatedFile = Client.Update(file);
+                File updatedFile = Client.Update(file);
                 // Assert
                 AssertFileConstraints(updatedFile, newName, folder.Id, file.Id);
                 AssertSharedLink(sharedLink, file.SharedLink);
@@ -240,6 +242,23 @@ namespace BoxApi.V2.Tests.Client
             {
                 Client.Delete(folder, true);
             }
+        }
+
+        [Test]
+        public void WriteFile()
+        {
+            // Arrange
+            var expected = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            // Act
+            Client.Write(file, expected);
+            // Assert
+            byte[] actual = Client.Read(file);
+            Assert.That(actual, Is.EqualTo(expected));
+            // Cleanup
+            file = Client.GetFile(file.Id);
+            Client.Delete(file);
         }
     }
 }

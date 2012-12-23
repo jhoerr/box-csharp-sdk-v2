@@ -28,10 +28,5 @@ namespace BoxApi.V2.Model
         /// </summary>
         [JsonProperty(PropertyName = "shared_link")]
         public SharedLink SharedLink { get; set; }
-
-        /// <summary>
-        ///     The item size in bytes
-        /// </summary>
-        public int Size { get; set; }
     }
 }
