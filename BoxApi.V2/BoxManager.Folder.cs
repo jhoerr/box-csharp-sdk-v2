@@ -240,11 +240,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
-        public void Delete(Folder folder, bool recursive = false)
+        public void Delete(Folder folder, bool recursive = false, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            DeleteFolder(folder.Id, recursive);
+            DeleteFolder(folder.Id, recursive, etag);
         }
 
         /// <summary>
@@ -252,11 +253,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
-        public void DeleteFolder(string id, bool recursive = false)
+        public void DeleteFolder(string id, bool recursive = false, string etag = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.DeleteFolder(id, recursive);
+            var request = _requestHelper.DeleteFolder(id, recursive, etag);
             _restClient.Execute(request);
         }
 
@@ -267,11 +269,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
-        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Folder folder, bool recursive = false)
+        public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Folder folder, bool recursive = false, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            DeleteFolder(onSuccess, onFailure, folder.Id, recursive);
+            DeleteFolder(onSuccess, onFailure, folder.Id, recursive, etag);
         }
 
         /// <summary>
@@ -281,12 +284,13 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
-        public void DeleteFolder(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, bool recursive = false)
+        public void DeleteFolder(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, bool recursive = false, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.DeleteFolder(id, recursive);
+            var request = _requestHelper.DeleteFolder(id, recursive, etag);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

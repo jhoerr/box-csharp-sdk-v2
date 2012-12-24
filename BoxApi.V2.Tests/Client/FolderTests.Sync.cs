@@ -132,6 +132,24 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(folder, true);
         }
 
+        [Test, ExpectedException(typeof(BoxPreconditionException))]
+        public void DeleteFolderFailsIfEtagIsStale()
+        {
+            var folderName = TestItemName();
+            var original = Client.CreateFolder(RootId, folderName);
+            var current = Client.UpdateDescription(original, "new description");
+            try
+            {
+                Client.Delete(original, true, original.Etag);
+                Assert.Fail();
+            }
+            finally
+            {
+                Client.Delete(current, true);
+            }
+        }
+
+
         [Test]
         public void DeleteFolderRecursive()
         {

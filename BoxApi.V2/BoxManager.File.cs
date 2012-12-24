@@ -993,21 +993,21 @@ namespace BoxApi.V2
         ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="file">The file to delete</param>
-        public void Delete(File file)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void Delete(File file, string etag = null)
         {
             GuardFromNull(file, "file");
-            DeleteFile(file.Id, file.Etag);
+            DeleteFile(file.Id, etag);
         }
 
         /// <summary>
         ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="id">The ID of the file to delete</param>
-        /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
-        public void DeleteFile(string id, string etag)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void DeleteFile(string id, string etag = null)
         {
             GuardFromNull(id, "id");
-            GuardFromNull(etag, "etag");
             var request = _requestHelper.DeleteFile(id, etag);
             _restClient.Execute(request);
         }
@@ -1018,7 +1018,8 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to delete</param>
-        public void Delete(Action onSuccess, Action<Error> onFailure, File file)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void Delete(Action onSuccess, Action<Error> onFailure, File file, string etag = null)
         {
             GuardFromNull(file, "file");
             DeleteFile(onSuccess, onFailure, file.Id, file.Etag);
@@ -1030,11 +1031,10 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to delete</param>
-        /// <param name="etag">The eTag of the file to delete.  This must match the value on the server</param>
-        public void DeleteFile(Action onSuccess, Action<Error> onFailure, string id, string etag)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void DeleteFile(Action onSuccess, Action<Error> onFailure, string id, string etag = null)
         {
             GuardFromNull(id, "id");
-            GuardFromNull(etag, "etag");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.DeleteFile(id, etag);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);

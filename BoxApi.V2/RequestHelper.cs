@@ -58,9 +58,10 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest DeleteFolder(string id, bool recursive)
+        public IRestRequest DeleteFolder(string id, bool recursive, string etag)
         {
             IRestRequest request = GetDeleteRequest(ResourceType.Folder, id);
+            TryAddIfMatchHeader(request, etag);
             request.AddParameter("recursive", recursive.ToString().ToLower());
             return request;
         }
@@ -68,7 +69,7 @@ namespace BoxApi.V2
         public IRestRequest DeleteFile(string id, string etag)
         {
             IRestRequest request = GetDeleteRequest(ResourceType.File, id);
-            request.AddHeader("If-Match", etag ?? string.Empty);
+            TryAddIfMatchHeader(request, etag);
             return request;
         }
 

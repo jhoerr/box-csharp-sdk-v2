@@ -246,7 +246,7 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test, ExpectedException(typeof (BoxPreconditionException))]
-        public void UpdateFailsIfEtagIsStaleAndSpecified()
+        public void UpdateFailsIfEtagIsStale()
         {
             string fileName = TestItemName();
             File original = Client.CreateFile(RootId, fileName);
@@ -319,6 +319,25 @@ namespace BoxApi.V2.Tests.Client
             // Cleanup
             file = Client.GetFile(file.Id);
             Client.Delete(file);
+        }
+
+        [Test, ExpectedException(typeof(BoxPreconditionException))]
+        public void DeleteFailsIfEtagIsStale()
+        {
+            // Arrange
+            string testItemName = TestItemName();
+            File original = Client.CreateFile(RootId, testItemName);
+            File current = Client.Write(original, new byte[] { 1, 2, 3 });
+            try
+            {
+                // Act
+                Client.Delete(original, original.Etag);
+                Assert.Fail();
+            }
+            finally
+            {
+                Client.Delete(current);
+            }
         }
     }
 }
