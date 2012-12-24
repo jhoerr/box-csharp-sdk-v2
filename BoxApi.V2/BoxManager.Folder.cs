@@ -424,12 +424,13 @@ namespace BoxApi.V2
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null)
+        public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            return ShareFolderLink(folder.Id, sharedLink, fields);
+            return ShareFolderLink(folder.Id, sharedLink, fields, etag);
         }
 
         /// <summary>
@@ -438,13 +439,14 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public Folder ShareFolderLink(string id, SharedLink sharedLink, Field[] fields = null)
+        public Folder ShareFolderLink(string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, sharedLink: sharedLink);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -456,11 +458,12 @@ namespace BoxApi.V2
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, Field[] fields = null)
+        public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            ShareFolderLink(onSuccess, onFailure, folder.Id, sharedLink, fields);
+            ShareFolderLink(onSuccess, onFailure, folder.Id, sharedLink, fields, etag);
         }
 
         /// <summary>
@@ -471,13 +474,14 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null)
+        public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, sharedLink: sharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, sharedLink: sharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -487,11 +491,12 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder Move(Folder folder, Folder newParent, Field[] fields = null)
+        public Folder Move(Folder folder, Folder newParent, Field[] fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
-            return Move(folder, newParent.Id, fields);
+            return Move(folder, newParent.Id, fields, etag);
         }
 
         /// <summary>
@@ -500,11 +505,12 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder Move(Folder folder, string newParentId, Field[] fields = null)
+        public Folder Move(Folder folder, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            return MoveFolder(folder.Id, newParentId, fields);
+            return MoveFolder(folder.Id, newParentId, fields, etag);
         }
 
         /// <summary>
@@ -513,12 +519,13 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder MoveFolder(string id, string newParentId, Field[] fields = null)
+        public Folder MoveFolder(string id, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, newParentId);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, newParentId);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -529,11 +536,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, Field[] fields = null)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, Field[] fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
-            Move(onSuccess, onFailure, folder, newParent.Id, fields);
+            Move(onSuccess, onFailure, folder, newParent.Id, fields, etag);
         }
 
         /// <summary>
@@ -543,11 +551,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            MoveFolder(onSuccess, onFailure, folder.Id, newParentId, fields);
+            MoveFolder(onSuccess, onFailure, folder.Id, newParentId, fields, etag);
         }
 
         /// <summary>
@@ -557,13 +566,14 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null)
+        public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, newParentId);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, newParentId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -573,11 +583,12 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The renamed folder</returns>
-        public Folder Rename(Folder folder, string newName, Field[] fields = null)
+        public Folder Rename(Folder folder, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            return RenameFolder(folder.Id, newName, fields);
+            return RenameFolder(folder.Id, newName, fields, etag);
         }
 
         /// <summary>
@@ -586,12 +597,13 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The renamed folder</returns>
-        public Folder RenameFolder(string id, string newName, Field[] fields = null)
+        public Folder RenameFolder(string id, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, name: newName);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, name: newName);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -602,11 +614,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, Field[] fields = null)
+        public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            RenameFolder(onSuccess, onFailure, folder.Id, newName, fields);
+            RenameFolder(onSuccess, onFailure, folder.Id, newName, fields, etag);
         }
 
         /// <summary>
@@ -616,13 +629,14 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null)
+        public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, name: newName);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, name: newName);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -632,11 +646,12 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder UpdateDescription(Folder folder, string description, Field[] fields = null)
+        public Folder UpdateDescription(Folder folder, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            return UpdateFolderDescription(folder.Id, description, fields);
+            return UpdateFolderDescription(folder.Id, description, fields, etag);
         }
 
         /// <summary>
@@ -645,12 +660,13 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder UpdateFolderDescription(string id, string description, Field[] fields = null)
+        public Folder UpdateFolderDescription(string id, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, description: description);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, description: description);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -661,11 +677,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, Field[] fields = null)
+        public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            UpdateFolderDescription(onSuccess, onFailure, folder.Id, description, fields);
+            UpdateFolderDescription(onSuccess, onFailure, folder.Id, description, fields, etag);
         }
 
         /// <summary>
@@ -675,12 +692,13 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null)
+        private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.Folder, id, fields, description: description);
+            var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, description: description);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -689,12 +707,13 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder Update(Folder folder, Field[] fields = null)
+        public Folder Update(Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
-            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, etag, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -705,11 +724,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
-            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
+            var request = _requestHelper.Update(ResourceType.Folder, folder.Id, etag, fields, parentId, folder.Name, folder.Description, folder.SharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
     }

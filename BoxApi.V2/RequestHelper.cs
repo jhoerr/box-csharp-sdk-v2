@@ -106,36 +106,46 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update(ResourceType resourceResourceType, string id, Field[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null,
-                                   string message = null)
+        public IRestRequest Update(ResourceType resourceResourceType, string id, string etag, Field[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", id);
-            var body = new Dictionary<string, object>();
 
-            if (!string.IsNullOrEmpty(parentId))
-            {
-                body.Add("parent", new {id = parentId});
-            }
-            if (!string.IsNullOrEmpty(name))
-            {
-                body.Add("name", name);
-            }
-            if (!string.IsNullOrEmpty(description))
-            {
-                body.Add("description", description);
-            }
-            if (sharedLink != null)
-            {
-                body.Add("shared_link", sharedLink);
-            }
-            if (!string.IsNullOrEmpty(message))
-            {
-                body.Add("message", message);
-            }
+            TryAddIfMatchHeader(request, etag);
+
+            var body = new Dictionary<string, object>();
+            TryAddToBody(body, "parent", parentId, new { id = parentId });
+            TryAddToBody(body, "name", name);
+            TryAddToBody(body, "description", description);
+            TryAddToBody(body, "shared_link", sharedLink);
+            TryAddToBody(body, "message", message);
 
             request.AddBody(body);
             return request;
+        }
+
+        private static void TryAddIfMatchHeader(IRestRequest request, string etag)
+        {
+            if (!string.IsNullOrWhiteSpace(etag))
+            {
+                request.AddHeader("If-Match", etag);
+            }
+        }
+        
+        private static void TryAddIfNoneMatchHeader(IRestRequest request, string etag)
+        {
+            if (!string.IsNullOrWhiteSpace(etag))
+            {
+                request.AddHeader("If-None-Match", etag);
+            }
+        }
+
+        private static void TryAddToBody(Dictionary<string, object> body, string parent, object value, object field = null)
+        {
+            if (value != null)
+            {
+                body.Add(parent, field ?? value);
+            }
         }
 
         public IRestRequest Read(string id)

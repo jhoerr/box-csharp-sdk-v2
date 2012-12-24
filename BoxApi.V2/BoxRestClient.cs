@@ -37,7 +37,13 @@ namespace BoxApi.V2
             Error error;
             if (!HandleResponse(restResponse, out error))
             {
-                throw new BoxException(error);
+                switch (error.Status)
+                {
+                    case 412: // precondition (If-Match) failed
+                        throw new BoxPreconditionException(error);
+                    default:
+                        throw new BoxException(error);
+                }
             }
             return restResponse;
         }
@@ -140,7 +146,7 @@ namespace BoxApi.V2
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
             {
-                error = new Error {Code = "Internal Server Error", Status = "500"};
+                error = new Error {Code = "Internal Server Error", Status = 500};
                 success = false;
             }
             else if (restResponse.ContentType.Equals(JsonMimeType))
@@ -154,7 +160,7 @@ namespace BoxApi.V2
                 else if (restResponse.Content.Contains(@"""error"":"))
                 {
                     var authError = jsonDeserializer.Deserialize<AuthError>(restResponse);
-                    error = new Error(){Code = "400", Status = authError.Error, Message = authError.ErrorDescription, Type = ResourceType.Error};
+                    error = new Error(){Code = authError.Error, Status = 400, Message = authError.ErrorDescription, Type = ResourceType.Error};
                 }
             }
             return success;

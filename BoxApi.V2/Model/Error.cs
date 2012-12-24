@@ -11,7 +11,7 @@
         /// <summary>
         ///     the HTTP status of the error response
         /// </summary>
-        public string Status { get; set; }
+        public int Status { get; set; }
 
         /// <summary>
         ///     the HTTP code of the error response

@@ -306,7 +306,7 @@ namespace BoxApi.V2
         /// <returns>The updated comment</returns>
         public Comment UpdateComment(string id, string message, Field[] fields = null)
         {
-            var request = _requestHelper.Update(ResourceType.Comment, id, fields, message: message);
+            var request = _requestHelper.Update(ResourceType.Comment, id, null, fields, message: message);
             return _restClient.ExecuteAndDeserialize<Comment>(request);
         }
 
@@ -333,7 +333,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void UpdateComment(Action<Comment> onSuccess, Action<Error> onFailure, string id, string message, Field[] fields = null)
         {
-            var request = _requestHelper.Update(ResourceType.Comment, id, fields, message: message);
+            var request = _requestHelper.Update(ResourceType.Comment, id, null, fields, message: message);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

@@ -15,10 +15,19 @@ namespace BoxApi.V2.Tests.Harness
 
         protected BoxApiTestHarness()
         {
+            RefreshAccessToken();
             TestConfigInfo testInfo = TestConfigInfo.Get();
             Client = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, testInfo.AccessToken, testInfo.RefreshToken);
             CollaboratingUser = testInfo.CollaboratingUserId;
-            MaxWaitInSeconds = 15;
+            MaxWaitInSeconds = 20;
+        }
+
+        private void RefreshAccessToken()
+        {
+            var testConfigInfo = TestConfigInfo.Get();
+            var authenticator = new TokenProvider(testConfigInfo.ClientId, testConfigInfo.ClientSecret);
+            var refreshAccessToken = authenticator.RefreshAccessToken(testConfigInfo.RefreshToken);
+            TestConfigInfo.Update(refreshAccessToken);
         }
 
         protected int MaxWaitInSeconds { get; set; }
@@ -67,11 +76,6 @@ namespace BoxApi.V2.Tests.Harness
             Assert.That(actual.UnsharedAt, Is.LessThan(DateTime.MaxValue));
             Assert.That(actual.Permissions.CanDownload, Is.True);
             Assert.That(actual.Permissions.CanPreview, Is.True);
-        }
-
-        protected void UpdateTestInfo(OAuthToken refreshAccessToken)
-        {
-            TestConfigInfo.Update(refreshAccessToken);
         }
     }
 }
