@@ -419,10 +419,11 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">A stream containing the file's data</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An updated file object</returns>
-        public File Write(File file, Stream content)
+        public File Write(File file, Stream content, string etag = null)
         {
-            return Write(file, ReadFully(content));
+            return Write(file, ReadFully(content), etag);
         }
 
         /// <summary>
@@ -430,11 +431,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">The file's data</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An updated file object</returns>
-        public File Write(File file, byte[] content)
+        public File Write(File file, byte[] content, string etag = null)
         {
             GuardFromNull(file, "file");
-            return Write(file.Id, file.Name, file.Etag, content);
+            return Write(file.Id, file.Name, content, etag);
         }
 
         /// <summary>
@@ -442,12 +444,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">A stream containing the file's data</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An updated file object</returns>
-        public File Write(string id, string name, string etag, Stream content)
+        public File Write(string id, string name, Stream content, string etag = null)
         {
-            return Write(id, name, etag, ReadFully(content));
+            return Write(id, name, ReadFully(content), etag);
         }
 
         /// <summary>
@@ -455,14 +457,13 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">The file's data</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <returns>An updated file object</returns>
-        public File Write(string id, string name, string etag, byte[] content)
+        public File Write(string id, string name, byte[] content, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(name, "name");
-            GuardFromNull(etag, "etag");
             var request = _requestHelper.Write(id, name, etag, content);
             return WriteFile(request);
         }
@@ -490,11 +491,12 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="content">A stream containing the file's data</param>
-        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, Stream content)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, Stream content, string etag = null)
         {
             GuardFromNull(file, "file");
-            Write(onSuccess, onFailure, file, ReadFully(content));
+            Write(onSuccess, onFailure, file, ReadFully(content), etag);
         }
 
         /// <summary>
@@ -503,11 +505,12 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
         /// <param name="content">The file's data</param>
-        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, byte[] content)
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, byte[] content, string etag = null)
         {
             GuardFromNull(file, "file");
-            Write(onSuccess, onFailure, file.Id, file.Name, file.Etag, content);
+            Write(onSuccess, onFailure, file.Id, file.Name, content, etag);
         }
 
         /// <summary>
@@ -517,12 +520,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">A stream containing the file's data</param>
-        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, Stream content)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, Stream content, string etag = null)
         {
             GuardFromNull(content, "content");
-            Write(onSuccess, onFailure, id, name, etag, ReadFully(content));
+            Write(onSuccess, onFailure, id, name, ReadFully(content), etag);
         }
 
         /// <summary>
@@ -532,9 +535,9 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
-        /// <param name="etag">The file's eTag.  This must match the value on the server or the write will fail.</param>
         /// <param name="content">The file's data</param>
-        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, string etag, byte[] content)
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, byte[] content, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(content, "content");

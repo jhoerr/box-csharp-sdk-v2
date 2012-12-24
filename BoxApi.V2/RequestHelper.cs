@@ -159,7 +159,7 @@ namespace BoxApi.V2
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/content", Method.POST);
             request.AddUrlSegment("id", id);
-            request.AddHeader("If-Match", etag ?? string.Empty);
+            TryAddIfMatchHeader(request, etag);
             request.AddFile("filename", content, name);
 
             return request;

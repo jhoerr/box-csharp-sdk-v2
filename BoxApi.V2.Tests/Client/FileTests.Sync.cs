@@ -127,46 +127,6 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
-        [Test]
-        public void UpdateSucceedsIfEtagIsStaleAndNotSpecified()
-        {
-            string fileName = TestItemName();
-            File file = Client.CreateFile(RootId, fileName);
-            Client.Write(file, new byte[] {1, 2, 3});
-
-            // Act
-            try
-            {
-                file.Description = "some new description";
-                file = Client.Update(file);
-                Assert.That(file.Description, Is.EqualTo("some new description"));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-        [Test, ExpectedException(typeof(BoxPreconditionException))]
-        public void UpdateFailsIfEtagIsStaleAndSpecified()
-        {
-            string fileName = TestItemName();
-            File original = Client.CreateFile(RootId, fileName);
-            var current = Client.Write(original, new byte[] { 1, 2, 3 });
-
-            // Act
-            try
-            {
-                original.Description = "some new description";
-                Client.Update(original, null, original.Etag);
-                Assert.Fail();
-            }
-            finally
-            {
-                Client.Delete(current);
-            }
-        }
-
 
         [Test]
         public void PreviousVersions()
@@ -282,6 +242,65 @@ namespace BoxApi.V2.Tests.Client
             finally
             {
                 Client.Delete(folder, true);
+            }
+        }
+
+        [Test, ExpectedException(typeof (BoxPreconditionException))]
+        public void UpdateFailsIfEtagIsStaleAndSpecified()
+        {
+            string fileName = TestItemName();
+            File original = Client.CreateFile(RootId, fileName);
+            File current = Client.Write(original, new byte[] {1, 2, 3});
+
+            // Act
+            try
+            {
+                original.Description = "some new description";
+                Client.Update(original, null, original.Etag);
+                Assert.Fail();
+            }
+            finally
+            {
+                Client.Delete(current);
+            }
+        }
+
+        [Test]
+        public void UpdateSucceedsIfEtagIsStaleAndNotSpecified()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            Client.Write(file, new byte[] {1, 2, 3});
+
+            // Act
+            try
+            {
+                file.Description = "some new description";
+                file = Client.Update(file);
+                Assert.That(file.Description, Is.EqualTo("some new description"));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test, ExpectedException(typeof (BoxPreconditionException))]
+        public void WriteFailsIfEtagIsStale()
+        {
+            // Arrange
+            string testItemName = TestItemName();
+            File original = Client.CreateFile(RootId, testItemName);
+            File current = Client.Write(original, new byte[] { 1, 2, 3 });
+            try
+            {
+                // Act
+                Client.Write(original, new byte[] {4, 5, 6}, original.Etag);
+                Assert.Fail();
+            }
+            finally
+            {
+                Client.Delete(current);
             }
         }
 
