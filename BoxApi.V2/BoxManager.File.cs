@@ -139,6 +139,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The fetched file</returns>
         public File Get(File file, Field[] fields = null, string etag = null)
         {
@@ -151,6 +152,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The fetched file</returns>
         public File GetFile(string id, Field[] fields = null, string etag = null)
         {
@@ -163,6 +165,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The shared file</returns>
         public File GetFile(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
@@ -188,11 +191,12 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to get</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
-            GetFile(onSuccess, onFailure, file.Id, fields);
+            GetFile(onSuccess, onFailure, file.Id, fields, etag);
         }
 
         /// <summary>
@@ -201,10 +205,11 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
-            GetFile(onSuccess, onFailure, id, 0, _restClient.ExecuteAsync, fields);
+            GetFile(onSuccess, onFailure, id, 0, _restClient.ExecuteAsync, fields, etag);
         }
 
         /// <summary>
@@ -214,10 +219,11 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
-            GetFile(onSuccess, onFailure, id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields);
+            GetFile(onSuccess, onFailure, id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields, etag);
         }
 
         private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null, string etag = null)
@@ -225,7 +231,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
 
-            var request = _requestHelper.Get(ResourceType.File, id, fields);
+            var request = _requestHelper.Get(ResourceType.File, id, fields, etag);
 
             Action<File> onSuccessWrapper = file =>
                 {

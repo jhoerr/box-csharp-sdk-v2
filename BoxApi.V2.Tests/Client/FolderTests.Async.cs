@@ -20,7 +20,7 @@ namespace BoxApi.V2.Tests.Client
                 {
                     callbackHit = true;
                     AssertFolderConstraints(folder, "All Files", null, RootId);
-                }, AbortOnFailure, RootId, null);
+                }, AbortOnFailure, RootId);
 
             do
             {
@@ -37,7 +37,7 @@ namespace BoxApi.V2.Tests.Client
         public void GetNonExistentFolderAsync()
         {
             var failureOccured = false;
-            Client.GetFolder(folder => { }, (error) => { failureOccured = true; }, "abc", null);
+            Client.GetFolder(folder => { }, (error) => { failureOccured = true; }, "abc");
 
             do
             {

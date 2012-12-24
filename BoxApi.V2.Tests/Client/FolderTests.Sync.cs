@@ -93,7 +93,7 @@ namespace BoxApi.V2.Tests.Client
         [Test, ExpectedException(typeof (BoxException))]
         public void GetNonExistentFolder()
         {
-            Client.GetFolder("abc", null);
+            Client.GetFolder("abc");
         }
 
         [Test]
@@ -104,6 +104,22 @@ namespace BoxApi.V2.Tests.Client
             AssertFolderConstraints(folder, folderName, RootId);
             // clean up 
             Client.Delete(folder, true);
+        }
+
+        [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
+        public void SubsequentGetThrowsNotModifiedException()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName);
+            try
+            {
+                Client.Get(folder, null, folder.Etag);
+            }
+            finally
+            {
+                // clean up 
+                Client.Delete(folder, true);
+            }
         }
 
         [Test]

@@ -71,11 +71,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder Get(Folder folder, Field[] fields = null)
+        public Folder Get(Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            return GetFolder(folder.Id, fields);
+            return GetFolder(folder.Id, fields, etag);
         }
 
         /// <summary>
@@ -85,10 +86,11 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null)
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
-            GetFolder(onSuccess, onFailure, folder.Id, fields);
+            GetFolder(onSuccess, onFailure, folder.Id, fields, etag);
         }
 
         /// <summary>
@@ -96,11 +98,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, Field[] fields = null)
+        public Folder GetFolder(string id, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
             return _restClient.ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -110,11 +113,12 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, string sharedLinkUrl, Field[] fields = null)
+        public Folder GetFolder(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
             return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<Folder>(request);
         }
 
@@ -125,11 +129,12 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -141,11 +146,12 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null)
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
         }
 
