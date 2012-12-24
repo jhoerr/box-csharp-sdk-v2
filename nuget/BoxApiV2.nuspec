@@ -3,14 +3,14 @@
   <metadata>
     <id>Box.v2.SDK</id>
     <title>Box.com SDK (API v2)</title>
-    <version>0.15</version>
+    <version>1.0</version>
     <authors>John Hoerr, Carson Gross</authors>
     <owners>John Hoerr, Carson Gross</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A client SDK for Box.com (API v2).  (http://developers.box.com/docs/).  Both this project and the new Box API are still in beta.</description>
-    <releaseNotes>Added support for OAuth2 and recent User API updates.  V1 authentication is still supported but is now deprecated.  Several namespace changes were made, which may cause compilation issues.</releaseNotes>
+    <description>A client SDK for Box.com (API v2).  API documentation can be found at http://developers.box.com.</description>
+    <releaseNotes>Initial release</releaseNotes>
     <copyright>Copyright 2012 John Hoerr, Carson Gross, The Trustees of Indiana University (www.iu.edu)</copyright>
     <tags>Box Box.com</tags>
     <dependencies>
