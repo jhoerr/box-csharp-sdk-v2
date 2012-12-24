@@ -139,7 +139,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched file</returns>
         public File Get(File file, Field[] fields = null, string etag = null)
         {
@@ -152,7 +152,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched file</returns>
         public File GetFile(string id, Field[] fields = null, string etag = null)
         {
@@ -165,7 +165,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The shared file</returns>
         public File GetFile(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
@@ -191,7 +191,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to get</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
         {
@@ -205,7 +205,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved File</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
@@ -219,7 +219,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
@@ -425,7 +425,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">A stream containing the file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An updated file object</returns>
         public File Write(File file, Stream content, string etag = null)
         {
@@ -437,7 +437,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="content">The file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An updated file object</returns>
         public File Write(File file, byte[] content, string etag = null)
         {
@@ -451,7 +451,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">A stream containing the file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An updated file object</returns>
         public File Write(string id, string name, Stream content, string etag = null)
         {
@@ -464,7 +464,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An updated file object</returns>
         public File Write(string id, string name, byte[] content, string etag = null)
         {
@@ -497,7 +497,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="content">A stream containing the file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, Stream content, string etag = null)
         {
@@ -511,7 +511,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the successfully written file</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="content">The file's data</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, File file, byte[] content, string etag = null)
         {
@@ -527,7 +527,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">A stream containing the file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, Stream content, string etag = null)
         {
             GuardFromNull(content, "content");
@@ -542,7 +542,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Write(Action<File> onSuccess, Action<Error> onFailure, string id, string name, byte[] content, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -688,7 +688,7 @@ namespace BoxApi.V2
         /// <param name="file">The file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null, string etag = null)
@@ -703,7 +703,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
@@ -722,7 +722,7 @@ namespace BoxApi.V2
         /// <param name="file">The file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
@@ -738,7 +738,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
@@ -755,7 +755,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to move</param>
         /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
         public File Move(File file, Folder newParent, Field[] fields = null, string etag = null)
         {
@@ -769,7 +769,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
         public File Move(File file, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -783,7 +783,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
         public File MoveFile(string id, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -801,7 +801,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to move</param>
         /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, Field[] fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
@@ -816,7 +816,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -831,7 +831,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -847,7 +847,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to rename</param>
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed file</returns>
         public File Rename(File file, string newName, Field[] fields = null, string etag = null)
         {
@@ -861,7 +861,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to rename</param>
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed file</returns>
         public File RenameFile(string id, string newName, Field[] fields = null, string etag = null)
         {
@@ -879,7 +879,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to rename</param>
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -894,7 +894,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to rename</param>
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -910,7 +910,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to update</param>
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
         public File UpdateDescription(File file, string description, Field[] fields = null, string etag = null)
         {
@@ -924,7 +924,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
         public File UpdateFileDescription(string id, string description, Field[] fields = null, string etag = null)
         {
@@ -942,7 +942,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to update</param>
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -957,7 +957,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to update</param>
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -971,7 +971,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="file">The file to update</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
         public File Update(File file, Field[] fields = null, string etag = null)
         {
@@ -987,7 +987,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to update</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -999,7 +999,7 @@ namespace BoxApi.V2
         ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="file">The file to delete</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Delete(File file, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -1010,7 +1010,7 @@ namespace BoxApi.V2
         ///     Deletes a file from the user's Box
         /// </summary>
         /// <param name="id">The ID of the file to delete</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void DeleteFile(string id, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -1024,7 +1024,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to delete</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Delete(Action onSuccess, Action<Error> onFailure, File file, string etag = null)
         {
             GuardFromNull(file, "file");
@@ -1037,7 +1037,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to delete</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void DeleteFile(Action onSuccess, Action<Error> onFailure, string id, string etag = null)
         {
             GuardFromNull(id, "id");

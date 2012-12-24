@@ -71,7 +71,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
         public Folder Get(Folder folder, Field[] fields = null, string etag = null)
         {
@@ -86,7 +86,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
@@ -98,7 +98,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
         public Folder GetFolder(string id, Field[] fields = null, string etag = null)
         {
@@ -113,7 +113,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
         public Folder GetFolder(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
@@ -129,7 +129,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -146,7 +146,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
@@ -246,7 +246,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
         public void Delete(Folder folder, bool recursive = false, string etag = null)
         {
@@ -259,7 +259,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
         public void DeleteFolder(string id, bool recursive = false, string etag = null)
         {
@@ -275,7 +275,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
         public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Folder folder, bool recursive = false, string etag = null)
         {
@@ -290,7 +290,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to delete</param>
         /// <param name="recursive">Remove a non-empty folder and all of its contents</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <exception cref="BoxException">Thrown if folder is not empty and recursive is false.</exception>
         public void DeleteFolder(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id, bool recursive = false, string etag = null)
         {
@@ -434,7 +434,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public Folder ShareLink(Folder folder, SharedLink sharedLink, Field[] fields = null, string etag = null)
@@ -449,7 +449,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public Folder ShareFolderLink(string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
@@ -468,7 +468,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
@@ -484,7 +484,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder for which to create a shared link</param>
         /// <param name="sharedLink">The properties of the shared link</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
         public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
         {
@@ -501,7 +501,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
         public Folder Move(Folder folder, Folder newParent, Field[] fields = null, string etag = null)
         {
@@ -515,7 +515,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
         public Folder Move(Folder folder, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -529,7 +529,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
         public Folder MoveFolder(string id, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -546,7 +546,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParent">The destination folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, Field[] fields = null, string etag = null)
         {
@@ -561,7 +561,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -576,7 +576,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to move</param>
         /// <param name="newParentId">The ID of the destination folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null, string etag = null)
         {
@@ -593,7 +593,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed folder</returns>
         public Folder Rename(Folder folder, string newName, Field[] fields = null, string etag = null)
         {
@@ -607,7 +607,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed folder</returns>
         public Folder RenameFolder(string id, string newName, Field[] fields = null, string etag = null)
         {
@@ -624,7 +624,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, Field[] fields = null, string etag = null)
         {
@@ -639,7 +639,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to rename</param>
         /// <param name="newName">The new name for the folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null, string etag = null)
         {
@@ -656,7 +656,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
         public Folder UpdateDescription(Folder folder, string description, Field[] fields = null, string etag = null)
         {
@@ -670,7 +670,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
         public Folder UpdateFolderDescription(string id, string description, Field[] fields = null, string etag = null)
         {
@@ -687,7 +687,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, Field[] fields = null, string etag = null)
         {
@@ -702,7 +702,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to update</param>
         /// <param name="description">The new description for the folder</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null, string etag = null)
         {
@@ -717,7 +717,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
         public Folder Update(Folder folder, Field[] fields = null, string etag = null)
         {
@@ -734,7 +734,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxException with HTTP Status Code 412 will be returned if your item is stale.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Field[] fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");

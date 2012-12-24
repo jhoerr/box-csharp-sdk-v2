@@ -12,7 +12,7 @@ namespace BoxApi.V2
         /// <typeparam name="T">The shared item's type (File or Folder)</typeparam>
         /// <param name="sharedLinkUrl">The link to the shared item (SharedLink.Url)</param>
         /// <param name="fields">The properties that should be set on the returned File/Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The shared File/Folder</returns>
         /// <remarks>The user does not need an authorization token to use this method. Only the API key and shared link url are required.</remarks>
         public T GetSharedItem<T>(string sharedLinkUrl, Field[] fields = null, string etag = null) where T : File, new()
@@ -29,7 +29,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform on a failed Shared Item operation</param>
         /// <param name="sharedLinkUrl">The link to the shared item (SharedLink.Url)</param>
         /// <param name="fields">The properties that should be set on the returned File/Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxException with HTTP Status Code 304 will be returned if your item is up to date.</param>
+        /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <remarks>The user does not need an authorization token to use this method. Only the API key and shared link url are required.</remarks>
         public void GetSharedItem<T>(Action<T> onSuccess, Action<Error> onFailure, string sharedLinkUrl, Field[] fields = null, string etag = null) where T : File, new()
         {
