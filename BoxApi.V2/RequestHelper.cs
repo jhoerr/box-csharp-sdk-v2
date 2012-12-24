@@ -10,9 +10,10 @@ namespace BoxApi.V2
 {
     internal class RequestHelper
     {
-        public IRestRequest Get(ResourceType resourceResourceType, Field[] fields = null)
+        public IRestRequest Get(ResourceType resourceResourceType, Field[] fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, null, Method.GET, fields);
+            TryAddIfNoneMatchHeader(request, etag);
             return request;
         }
 

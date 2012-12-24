@@ -30,6 +30,14 @@ namespace BoxApi.V2.Tests.Client
             AssertFileConstraints(file, "shared file.txt", null, SharedFileId);
         }
 
+        [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
+        public void GetSharedFileThrowsNotModifiedOnSubsequentRequest()
+        {
+            var file = Client.GetSharedItem<File>(SharedFileLink);
+            Client.GetSharedItem<File>(SharedFileLink, null, file.Etag);
+            Assert.Fail();
+        }
+
         [Test]
         public void ReadSharedFile()
         {
@@ -47,6 +55,14 @@ namespace BoxApi.V2.Tests.Client
             AssertFolderConstraints(folder, "shared folder", null, SharedFolderId);
             // An ItemCollection is not returned with GetSharedItem() -- you have to do a GetFolder() for that.
             Assert.That(folder.ItemCollection, Is.Null);
+        }
+
+        [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
+        public void GetSharedFolderThrowsNotModifiedOnSubsequentRequest()
+        {
+            var folder = Client.GetSharedItem<Folder>(SharedFolderLink);
+            Client.GetSharedItem<Folder>(SharedFolderLink, null, folder.Etag);
+            Assert.Fail();
         }
 
         [Test]
