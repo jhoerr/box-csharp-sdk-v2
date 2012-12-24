@@ -140,10 +140,10 @@ namespace BoxApi.V2
         /// <param name="file">The file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The fetched file</returns>
-        public File Get(File file, Field[] fields = null)
+        public File Get(File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
-            return GetFile(file.Id, fields);
+            return GetFile(file.Id, fields, etag);
         }
 
         /// <summary>
@@ -152,9 +152,9 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The fetched file</returns>
-        public File GetFile(string id, Field[] fields = null)
+        public File GetFile(string id, Field[] fields = null, string etag = null)
         {
-            return GetFile(id, 0, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields);
+            return GetFile(id, 0, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields, etag);
         }
 
         /// <summary>
@@ -164,12 +164,12 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The shared file</returns>
-        public File GetFile(string id, string sharedLinkUrl, Field[] fields = null)
+        public File GetFile(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
-            return GetFile(id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields);
+            return GetFile(id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields, etag);
         }
 
-        private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null)
+        private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null, string etag = null)
         {
             var getFile = getFileOperation;
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
@@ -177,7 +177,7 @@ namespace BoxApi.V2
             {
                 Backoff(attempt);
             }
-            var request = _requestHelper.Get(ResourceType.File, id, fields);
+            var request = _requestHelper.Get(ResourceType.File, id, fields, etag);
             var file = getFile(request);
             return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, _restClient.ExecuteAndDeserialize<File>, fields) : file;
         }
@@ -189,7 +189,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
+        public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             GetFile(onSuccess, onFailure, file.Id, fields);
@@ -202,7 +202,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="id">The ID of the file to get</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
             GetFile(onSuccess, onFailure, id, 0, _restClient.ExecuteAsync, fields);
         }
@@ -215,12 +215,12 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to get</param>
         /// <param name="sharedLinkUrl">The shared link for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
             GetFile(onSuccess, onFailure, id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields);
         }
 
-        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null)
+        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);

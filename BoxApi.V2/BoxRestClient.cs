@@ -39,8 +39,10 @@ namespace BoxApi.V2
             {
                 switch (error.Status)
                 {
+                    case 304: // precondition (If-None-Match) failed
+                        throw new BoxItemNotModifiedException(error);
                     case 412: // precondition (If-Match) failed
-                        throw new BoxPreconditionException(error);
+                        throw new BoxItemModifiedException(error);
                     default:
                         throw new BoxException(error);
                 }
@@ -147,6 +149,11 @@ namespace BoxApi.V2
             else if (restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
             {
                 error = new Error {Code = "Internal Server Error", Status = 500};
+                success = false;
+            }
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
+            {
+                error = new Error { Code = "Not Modified", Status = 304 };
                 success = false;
             }
             else if (restResponse.ContentType.Equals(JsonMimeType))

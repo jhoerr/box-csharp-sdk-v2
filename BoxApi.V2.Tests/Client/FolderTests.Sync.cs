@@ -132,7 +132,7 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(folder, true);
         }
 
-        [Test, ExpectedException(typeof(BoxPreconditionException))]
+        [Test, ExpectedException(typeof(BoxItemModifiedException))]
         public void DeleteFolderFailsIfEtagIsStale()
         {
             var folderName = TestItemName();

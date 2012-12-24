@@ -1,29 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BoxApi.V2.Authentication;
-using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Serialization;
 using RestSharp;
-using RestSharp.Serializers;
 
 namespace BoxApi.V2
 {
     internal class RequestHelper
     {
-        private readonly Authentication.OAuth2.RequestHelper _requestHelper = new Authentication.OAuth2.RequestHelper();
-
         public IRestRequest Get(ResourceType resourceResourceType, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, null, Method.GET, fields);
             return request;
         }
 
-        public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
+            TryAddIfNoneMatchHeader(request, etag);
             request.AddUrlSegment("id", id);
             return request;
         }
@@ -115,7 +111,7 @@ namespace BoxApi.V2
             TryAddIfMatchHeader(request, etag);
 
             var body = new Dictionary<string, object>();
-            TryAddToBody(body, "parent", parentId, new { id = parentId });
+            TryAddToBody(body, "parent", parentId, new {id = parentId});
             TryAddToBody(body, "name", name);
             TryAddToBody(body, "description", description);
             TryAddToBody(body, "shared_link", sharedLink);
@@ -132,7 +128,7 @@ namespace BoxApi.V2
                 request.AddHeader("If-Match", etag);
             }
         }
-        
+
         private static void TryAddIfNoneMatchHeader(IRestRequest request, string etag)
         {
             if (!string.IsNullOrWhiteSpace(etag))
@@ -374,7 +370,7 @@ namespace BoxApi.V2
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT);
             request.AddUrlSegment("id", userId);
-            request.AddBody(new { login });
+            request.AddBody(new {login});
             return request;
         }
 
@@ -397,7 +393,7 @@ namespace BoxApi.V2
 
         private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource, Method method, Field[] fields = null)
         {
-            string fieldList =null;
+            string fieldList = null;
             if (fields != null && fields.Any())
             {
                 fieldList = string.Join(",", fields.Select(f => f.Description()));

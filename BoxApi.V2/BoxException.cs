@@ -51,16 +51,32 @@ namespace BoxApi.V2
     }
 
     /// <summary>
-    /// A special case exception for when the operation failed an If-Match precondition check.
+    /// A special case exception for when the operation failed an If-Match precondition check.  This exception indicates that the target item has been modified since it was last retrieved.
     /// </summary>
-    public class BoxPreconditionException : BoxException
+    public class BoxItemModifiedException : BoxException
     {
         /// <summary>
-        ///     Creates a BoxPreconditionFailedException instance
+        ///     Creates a BoxPreconditionException instance
         /// </summary>
         /// <param name="error">The error returned by Box following the failed API call</param>
-        public BoxPreconditionException(Error error) : base(error)
+        public BoxItemModifiedException(Error error) : base(error)
         {
         }
     }
+
+    /// <summary>
+    /// A special case exception for when the operation failed an If-Not-Match precondition check.  This exception indicates that the requested item or collection has not been modified.
+    /// </summary>
+    public class BoxItemNotModifiedException : BoxException
+    {
+        /// <summary>
+        ///     Creates a BoxItemNotModifiedException instance
+        /// </summary>
+        /// <param name="error">The error returned by Box following the failed API call</param>
+        public BoxItemNotModifiedException(Error error)
+            : base(error)
+        {
+        }
+    }
+
 }

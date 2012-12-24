@@ -73,6 +73,21 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(file);
         }
 
+        [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
+        public void SubsequentGetThrowsNotModifiedException()
+        {
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            try
+            {
+                file = Client.Get(file, null, file.Etag);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFileWithSameNameInSameParentFails()
         {
@@ -245,7 +260,7 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
-        [Test, ExpectedException(typeof (BoxPreconditionException))]
+        [Test, ExpectedException(typeof (BoxItemModifiedException))]
         public void UpdateFailsIfEtagIsStale()
         {
             string fileName = TestItemName();
@@ -285,7 +300,7 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
-        [Test, ExpectedException(typeof (BoxPreconditionException))]
+        [Test, ExpectedException(typeof (BoxItemModifiedException))]
         public void WriteFailsIfEtagIsStale()
         {
             // Arrange
@@ -321,7 +336,7 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(file);
         }
 
-        [Test, ExpectedException(typeof(BoxPreconditionException))]
+        [Test, ExpectedException(typeof(BoxItemModifiedException))]
         public void DeleteFailsIfEtagIsStale()
         {
             // Arrange
