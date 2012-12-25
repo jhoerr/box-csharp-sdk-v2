@@ -1,7 +1,5 @@
 # Box C# SDK (API v2)
 
-## About
-
 This is a C# client implementation of the [Box v2 REST API](http://developers.box.com/docs/).  Please feel free to open an issue if you find a bug or would like to request a feature.
 
 ## License
