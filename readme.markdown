@@ -14,7 +14,7 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Known Issues
 
-Due to limitations in the underlying request model, long-polling of events is not currently supported.
+Long-polling of events is not currently supported due to limitations in the underlying request model.
 
 ## Usage Example
 
