@@ -1,14 +1,22 @@
-# box-csharp-sdk-v2
+# Box C# SDK (API v2)
 
 ## About
 
-A C# client for the [Box v2 REST API](http://developers.box.com/docs/).  Published under the [MIT License](http://opensource.org/licenses/MIT).  Please feel free to open an Issue if you find a bug or a missing feature.
+This is a C# client implementation of the [Box v2 REST API](http://developers.box.com/docs/).  Please feel free to open an issue if you find a bug or would like to request a feature.
+
+## License
+
+[Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/)
 
 ## Nuget
 
 This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  There is also an [MVC-based example](http://nuget.org/packages/Box.v2.SDK.Sample.Oauth2) of the Box OAuth2 authentication flow available.
 
-## Usage
+## Known Issues
+
+Due to limitations in the underlying request model, long-polling of events is not currently supported.
+
+## Usage Example
 
 ```csharp
 // Instantiate a BoxManager with your api key and a user's auth token
@@ -58,7 +66,3 @@ using (var stream = new MemoryStream())
 
 // Delete the folder and its contents
 boxManager.Delete(subfolder, recursive: true);
-
-## Known Issues
-
-Due to limitations in the underlying request model, long-polling of events is not currently supported.
