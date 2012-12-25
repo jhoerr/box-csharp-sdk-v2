@@ -2,68 +2,63 @@
 
 ## About
 
-A C# client for the [Box v2 REST API](http://developers.box.com/docs/).  Published under the [MIT License](http://opensource.org/licenses/MIT).
+A C# client for the [Box v2 REST API](http://developers.box.com/docs/).  Published under the [MIT License](http://opensource.org/licenses/MIT).  Please feel free to open an Issue if you find a bug or a missing feature.
 
 ## Nuget
 
-This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  
-
-## Status
-
-This client is currently in beta and is still under active development.  Breaking changes should be expected until version 1.0.
-
-Support currently exists for:
-
-* Authentication (V1 and OAuth)
-* Files
-* Folders
-* Shared Items
-* Comments
-* Discussions
-* Collaborations
-* Events (User and Enterprise)
-* Tokens
-* Users
-
-Support is planned but not yet implemented for:
-
-* Long-polling Events
-* If-Match/If-Not-Match for Files/Folders
+This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  There is also an [MVC-based example](http://nuget.org/packages/Box.v2.SDK.Sample.Oauth2) of the Box OAuth2 authentication flow available.
 
 ## Usage
 
 ```csharp
 // Instantiate a BoxManager with your api key and a user's auth token
-var boxManager = new BoxManager("api_key", "auth_token");
+var boxManager = new BoxManager("ClientId", "ClientSecret", "AccessToken", "RefreshToken");
 
-// Get all contents of the root folder
-Folder rootFolder = boxManager.GetFolder(Folder.Root);
+// Optionally refresh the access token (they are only good for an hour!)
+// You can persist these new values for later use.
+var refreshedAccessToken = boxManager.RefreshAccessToken();
 
-// Find a file
-var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
+// Create a new file in the root folder
+boxManager.CreateFile(Folder.Root, "a new file.txt", Encoding.UTF8.GetBytes("hello, world!"));
+            
+// Fetch the root folder
+var folder = boxManager.GetFolder(Folder.Root);
 
-// Change the file's name and description
-file.Name = "the new name.txt";
-file.Description = "the new description";
+// Find a 'mini' representation of the created file among the root folder's contents
+var file = folder.Files.Single(f => f.Name.Equals("a new file.txt"));
 
-// Update the file
-// A new file object is always returned with an updated ETag.
-file = boxManager.Update(file);
+// Get the file with all properties populated.
+file = boxManager.Get(file);
+
+// Rename the file
+file = boxManager.Rename(file, "the new name.txt");
 
 // Create a new subfolder
-Folder subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
+var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
 
 // Move the file to the subfolder
 file = boxManager.Move(file, subfolder);
 
 // Write some content to the file
-file = boxManager.Write(file, new byte[] {1, 2, 3});
+using (var stream = new MemoryStream(Encoding.UTF8.GetBytes("goodbye, world!")))
+{
+    file = boxManager.Write(file, stream);
+}
 
-// Read the contents to a stream
+// Read the contents to a stream and write them to the console
 using (var stream = new MemoryStream())
 {
     boxManager.Read(file, stream);
+    using (var reader = new StreamReader(stream))
+    {
+        stream.Position = 0;
+        Console.Out.WriteLine("File content: '{0}'", reader.ReadToEnd());
+    }
 }
 
-// Delete the file
-boxManager.Delete(file);
+// Delete the folder and its contents
+boxManager.Delete(subfolder, recursive: true);
+
+## Known Issues
+
+Due to limitations in the underlying request model, long-polling of events is not currently supported.

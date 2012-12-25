@@ -53,7 +53,6 @@ namespace BoxApi.V2
             _requestHelper = new RequestHelper();
         }
 
-
         private void ConfigureRestClient(string accessToken, string refreshToken)
         {
             _refreshToken = refreshToken;

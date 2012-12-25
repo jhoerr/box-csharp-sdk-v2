@@ -30,6 +30,10 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
         
+        /// <summary>
+        /// Uses the supplied Refresh Token to update the client's Access Token.
+        /// </summary>
+        /// <returns>An updated token object</returns>
         public OAuthToken RefreshAccessToken()
         {
             var authenticator = new TokenProvider(_clientId, _clientSecret, _proxy);

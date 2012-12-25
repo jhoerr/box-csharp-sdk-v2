@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using BoxApi.V2;
-using BoxApi.V2.Authentication.Legacy;
+using System.Text;
+using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
-using BoxApi.V2.Model.Enum;
-using Microsoft.Win32;
+using File = BoxApi.V2.Model.File;
 
 namespace BoxApi.V2.Samples
 {
     public class Program
     {
-        //
-        // NOTE - The api_key and auth_token need to be changed from the ones below
-        //
         private static void Main(string[] args)
         {
             ExecuteAPIMethods("YOUR CLIENT ID", "YOUR CLIENT SECRET", "YOUR ACCESS TOKEN", "YOUR REFRESH TOKEN");
@@ -25,39 +20,55 @@ namespace BoxApi.V2.Samples
             // Instantiate a BoxManager with your api key and a user's auth token
             var boxManager = new BoxManager(clientId, clientSecret, accessToken, refreshToken);
 
-            // Get all contents of the root folder
-            // Specify that we only want the Name, Etag, Size, CreatedAt properties returned for the folder contents.
-            var rootFolder = boxManager.GetFolder(Folder.Root, new[]{Field.Name, Field.Etag, Field.Size, Field.CreatedAt });
+            // Optionally refresh the access token (they are only good for an hour!)
+            // You can persist these new values for later use.
+            OAuthToken refreshedAccessToken = boxManager.RefreshAccessToken();
 
-            // Find a file
-            var file = rootFolder.Files.Single(f => f.Name.Equals("my file.txt"));
+            // Create a new file in the root folder
+            boxManager.CreateFile(Folder.Root, "a new file.txt", Encoding.UTF8.GetBytes("hello, world!"));
 
-            // Change the file's name and description
-            file.Name = "the new name.txt";
-            file.Description = "the new description";
+            // Fetch the root folder
+            Folder folder = boxManager.GetFolder(Folder.Root);
 
-            // Update the file
-            // A new file object is always returned with an updated ETag.
-            // Specify that we only want the Name, Etag, and Size of the file returned.
-            file = boxManager.Update(file);
+            // Find a 'mini' representation of the created file among the root folder's contents
+            File file = folder.Files.Single(f => f.Name.Equals("a new file.txt"));
+
+            // Get the file with all properties populated.
+            file = boxManager.Get(file);
+
+            // Rename the file
+            file = boxManager.Rename(file, "the new name.txt");
 
             // Create a new subfolder
-            var subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
+            Folder subfolder = boxManager.CreateFolder(Folder.Root, "my subfolder");
 
             // Move the file to the subfolder
             file = boxManager.Move(file, subfolder);
 
             // Write some content to the file
-            file = boxManager.Write(file, new byte[] { 1, 2, 3 });
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes("goodbye, world!")))
+            {
+                file = boxManager.Write(file, stream);
+            }
 
             // Read the contents to a stream
             using (var stream = new MemoryStream())
             {
                 boxManager.Read(file, stream);
+                using (var reader = new StreamReader(stream))
+                {
+                    stream.Position = 0;
+                    Console.Out.WriteLine("File content: '{0}'", reader.ReadToEnd());
+                }
             }
 
-            // Delete the file
-            boxManager.Delete(file);
+            // Delete the folder and its contents
+            boxManager.Delete(subfolder, recursive: true);
+        }
+
+        private static void Persist(OAuthToken refreshedAccessToken)
+        {
+            // Save the access and refresh token for later use.
         }
     }
 }
