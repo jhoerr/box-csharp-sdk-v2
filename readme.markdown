@@ -19,11 +19,11 @@ Due to limitations in the underlying request model, long-polling of events is no
 ## Usage Example
 
 ```csharp
-// Instantiate a BoxManager with your api key and a user's auth token
+// Instantiate a BoxManager client.
 var boxManager = new BoxManager("ClientId", "ClientSecret", "AccessToken", "RefreshToken");
 
 // Optionally refresh the access token (they are only good for an hour!)
-// You can persist these new values for later use.
+// You may want to persist these new values for later use.
 var refreshedAccessToken = boxManager.RefreshAccessToken();
 
 // Create a new file in the root folder
