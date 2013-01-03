@@ -42,7 +42,7 @@ namespace BoxApi.V2
         /// <param name="authToken"> The Authorization Token provided by Box for this User.</param>
         /// <param name="proxy">Proxy information</param>
         [Obsolete("This uses the deprecated v1 authentication scheme.  Please transition to the v2 scheme (OAuth2), which is supported by the other BoxManager constructor")]
-        public BoxManager(string apiKey, string authToken = null, IWebProxy proxy = null) : this(proxy)
+        public BoxManager(string apiKey, string authToken, IWebProxy proxy) : this(proxy)
         {
             _restClient = new BoxRestClient(new RequestAuthenticator(apiKey, authToken), proxy);
         }
