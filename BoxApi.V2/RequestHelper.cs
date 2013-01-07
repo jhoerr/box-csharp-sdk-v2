@@ -315,11 +315,11 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateUser(ManagedUser user, Field[] fields = null)
+        public IRestRequest UpdateUser(ManagedUser user, bool includeEnterpriseSettings = false, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", user.Id);
-            request.AddBody(user.ToUpdateRequestBody());
+            request.AddBody(user.ToUpdateRequestBody(includeEnterpriseSettings));
             return request;
         }
 

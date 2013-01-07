@@ -147,11 +147,12 @@ namespace BoxApi.V2
         /// Updates the settings and information about a user. This method only works for enterprise admins
         /// </summary>
         /// <param name="user">The user with udpated information</param>
+        /// <param name="includeEnterpriseFields">Some enterprise-level fields are not set by default when Box returns user information.  This parameter prevents those from being unintentionally overwritten.</param>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A user with the updated information</returns>
-        public User UpdateUser(ManagedUser user, Field[] fields = null)
+        public User UpdateUser(ManagedUser user, bool includeEnterpriseFields = false, Field[] fields = null)
         {
-            var request = _requestHelper.UpdateUser(user, fields);
+            var request = _requestHelper.UpdateUser(user, includeEnterpriseFields, fields);
             return _restClient.ExecuteAndDeserialize<User>(request);
         }
 
@@ -161,11 +162,12 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the updated user</param>
         /// <param name="onFailure">Action to perform following a failed User operation</param>
         /// <param name="user">The user with udpated information</param>
+        /// <param name="includeEnterpriseFields">Some enterprise-level fields are not set by default when Box returns user information.  This parameter prevents those from being unintentionally overwritten.</param>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A user with the updated information</returns>
-        public void UpdateUser(Action<User> onSuccess, Action<Error> onFailure, ManagedUser user, Field[] fields = null)
+        public void UpdateUser(Action<User> onSuccess, Action<Error> onFailure, ManagedUser user, bool includeEnterpriseFields = false, Field[] fields = null)
         {
-            var request = _requestHelper.UpdateUser(user, fields);
+            var request = _requestHelper.UpdateUser(user, includeEnterpriseFields, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

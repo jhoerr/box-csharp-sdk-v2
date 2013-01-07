@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using BoxApi.V2.Model.Enum;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace BoxApi.V2.Model
 {
     /// <summary>
-    /// The set of User properties that can be managed by an administrator
+    ///     The set of User properties that can be managed by an administrator
     /// </summary>
     public class ManagedUser : UserEntity
     {
@@ -66,35 +65,46 @@ namespace BoxApi.V2.Model
         public string Address { get; set; }
 
         /// <summary>
-        /// Whether to exempt this user from Enterprise device limits
+        ///     Whether to exempt this user from Enterprise device limits
         /// </summary>
         [JsonProperty(PropertyName = "is_exempt_from_device_limits")]
         public bool IsExemptFromDeviceLimits { get; set; }
 
         /// <summary>
-        /// Whether or not this user must use two-factor authentication
+        ///     Whether or not this user must use two-factor authentication
         /// </summary>
         [JsonProperty(PropertyName = "is_exempt_from_login_verification")]
         public bool IsExemptFromLoginVerification { get; set; }
 
-        public object ToUpdateRequestBody()
+        public object ToUpdateRequestBody(bool includeEnterpriseFields)
         {
-            return new
-                {
-                    name = Name,
-                    role = Role,
-                    language = Language,
-                    is_sync_enabled = IsSyncEnabled,
-                    job_title = JobTitle,
-                    phone = Phone,
-                    address = Address,
-                    space_amount = SpaceAmount,
-                    tracking_codes = TrackingCodes,
-                    can_see_managed_users = CanSeeManagedUsers,
-                    status = Status,
-                    is_exempt_from_device_limits = IsExemptFromDeviceLimits,
-                    is_exempt_from_login_verification = IsExemptFromLoginVerification,
-                };
+            return includeEnterpriseFields
+                       ? (object) new
+                           {
+                               name = Name,
+                               role = Role,
+                               language = Language,
+                               is_sync_enabled = IsSyncEnabled,
+                               job_title = JobTitle,
+                               phone = Phone,
+                               address = Address,
+                               space_amount = SpaceAmount,
+                               tracking_codes = TrackingCodes,
+                               can_see_managed_users = CanSeeManagedUsers,
+                               status = Status,
+                               is_exempt_from_device_limits = IsExemptFromDeviceLimits,
+                               is_exempt_from_login_verification = IsExemptFromLoginVerification,
+                           }
+                       : new
+                           {
+                               name = Name,
+                               language = Language,
+                               job_title = JobTitle,
+                               phone = Phone,
+                               address = Address,
+                               space_amount = SpaceAmount,
+                               status = Status,
+                           };
         }
     }
 }
