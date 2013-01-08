@@ -10,9 +10,21 @@ namespace BoxApi.V2
     public class BoxException : Exception
     {
         /// <summary>
+        ///     Creates a BoxException instance
+        /// </summary>
+        /// <param name="error">The error returned by Box following the failed API call</param>
+        public BoxException(Error error)
+        {
+            Error = error;
+        }
+
+        /// <summary>
         ///     The HTTP status code of the error (eg, 500)
         /// </summary>
-        public HttpStatusCode HttpStatusCode { get; private set; }
+        public HttpStatusCode HttpStatusCode
+        {
+            get { return (HttpStatusCode) Error.Status; }
+        }
 
         /// <summary>
         ///     A short description of the error
@@ -35,15 +47,6 @@ namespace BoxApi.V2
         /// </summary>
         public Error Error { get; private set; }
 
-        /// <summary>
-        ///     Creates a BoxException instance
-        /// </summary>
-        /// <param name="error">The error returned by Box following the failed API call</param>
-        public BoxException(Error error)
-        {
-            HttpStatusCode = (HttpStatusCode)error.Status;
-        }
-
         public override string ToString()
         {
             return string.Format("Box returned HTTP Code {0} ({1}): {2}", HttpStatusCode, ShortDescription, Message);
@@ -51,7 +54,7 @@ namespace BoxApi.V2
     }
 
     /// <summary>
-    /// A special case exception for when the operation failed an If-Match precondition check.  This exception indicates that the target item has been modified since it was last retrieved.
+    ///     A special case exception for when the operation failed an If-Match precondition check.  This exception indicates that the target item has been modified since it was last retrieved.
     /// </summary>
     public class BoxItemModifiedException : BoxException
     {
@@ -65,7 +68,7 @@ namespace BoxApi.V2
     }
 
     /// <summary>
-    /// A special case exception for when the operation failed an If-Not-Match precondition check.  This exception indicates that the requested item or collection has not been modified.
+    ///     A special case exception for when the operation failed an If-Not-Match precondition check.  This exception indicates that the requested item or collection has not been modified.
     /// </summary>
     public class BoxItemNotModifiedException : BoxException
     {
@@ -78,5 +81,4 @@ namespace BoxApi.V2
         {
         }
     }
-
 }

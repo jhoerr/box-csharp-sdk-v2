@@ -62,6 +62,7 @@
     <Compile Include="Client\EnterpriseUserAliasTests.cs" />
     <Compile Include="Client\EnterpriseUserTests.cs" />
     <Compile Include="Client\EventTests.Sync.cs" />
+    <Compile Include="Client\ExceptionTests.cs" />
     <Compile Include="Client\FileTests.Async.cs" />
     <Compile Include="Client\FileTests.Sync.cs" />
     <Compile Include="Client\FolderTests.Async.cs" />
