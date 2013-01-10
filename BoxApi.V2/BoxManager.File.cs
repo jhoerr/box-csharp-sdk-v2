@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using RestSharp;
@@ -1097,6 +1098,25 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             IRestRequest request = _requestHelper.GetVersions(fileId, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        private static void Backoff(int attempt)
+        {
+            Thread.Sleep((int)Math.Pow(2, attempt) * 100);
+        }
+
+        private static byte[] ReadFully(Stream input)
+        {
+            var buffer = new byte[16 * 1024];
+            using (var ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }
