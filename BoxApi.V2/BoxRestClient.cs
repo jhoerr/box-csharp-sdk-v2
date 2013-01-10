@@ -18,7 +18,7 @@ namespace BoxApi.V2
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
 
-        public BoxRestClient(IBoxAuthenticator authenticator = null, IWebProxy proxy = null) :
+        public BoxRestClient(IRequestAuthenticator authenticator = null, IWebProxy proxy = null) :
             base(ServiceUrl)
         {
             Authenticator = authenticator;
@@ -189,13 +189,13 @@ namespace BoxApi.V2
         {
             if (Authenticator != null)
             {
-                ((IBoxAuthenticator) Authenticator).ClearSharedLink();
+                ((IRequestAuthenticator) Authenticator).ClearSharedLink();
             }
         }
 
         public BoxRestClient WithSharedLink(string sharedLink)
         {
-            ((IBoxAuthenticator) Authenticator).SetSharedLink(sharedLink);
+            ((IRequestAuthenticator) Authenticator).SetSharedLink(sharedLink);
             return this;
         }
     }

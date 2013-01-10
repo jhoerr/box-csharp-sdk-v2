@@ -17,7 +17,7 @@ namespace BoxApi.V2.Tests.Harness
         {
             RefreshAccessToken();
             TestConfigInfo testInfo = TestConfigInfo.Get();
-            Client = new BoxManager(testInfo.ClientId, testInfo.ClientSecret, testInfo.AccessToken, testInfo.RefreshToken);
+            Client = new BoxManager(new OAuth2RequestAuthenticator(testInfo.AccessToken));
             CollaboratingUser = testInfo.CollaboratingUserId;
             MaxWaitInSeconds = 20;
         }

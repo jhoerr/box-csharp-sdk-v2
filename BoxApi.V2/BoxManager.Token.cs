@@ -1,6 +1,5 @@
 ﻿using System;
 using BoxApi.V2.Authentication.Legacy;
-using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 
 namespace BoxApi.V2
@@ -28,18 +27,6 @@ namespace BoxApi.V2
         {
             var request = _requestHelper.CreateToken(emailAddress);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
-        }
-        
-        /// <summary>
-        /// Uses the supplied Refresh Token to update the client's Access Token.
-        /// </summary>
-        /// <returns>An updated token object</returns>
-        public OAuthToken RefreshAccessToken()
-        {
-            var authenticator = new TokenProvider(_clientId, _clientSecret, _proxy);
-            var refreshAccessToken = authenticator.RefreshAccessToken(_refreshToken);
-            ConfigureRestClient(refreshAccessToken.AccessToken, refreshAccessToken.RefreshToken);
-            return refreshAccessToken;
         }
     }
 }

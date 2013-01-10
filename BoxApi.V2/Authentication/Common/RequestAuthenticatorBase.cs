@@ -2,9 +2,9 @@ using System.Text;
 
 namespace BoxApi.V2.Authentication.Common
 {
-    internal abstract class RequestAuthenticatorBase
+    public abstract class RequestAuthenticatorBase
     {
-        protected string AccessToken;
+        protected readonly string AccessToken;
         protected string SharedLink;
 
         protected RequestAuthenticatorBase(string accessToken)

@@ -4,11 +4,19 @@ using RestSharp;
 
 namespace BoxApi.V2.Authentication.Legacy
 {
-    internal class RequestAuthenticator : RequestAuthenticatorBase, IBoxAuthenticator
+    /// <summary>
+    /// Adds v1 authentication headers to HTTP requests
+    /// </summary>
+    public class LegacyRequestAuthenticator : RequestAuthenticatorBase, IRequestAuthenticator
     {
         private readonly string _applicationApiKey;
 
-        public RequestAuthenticator(string applicationApiKey, string accessToken):base(accessToken)
+        /// <summary>
+        /// Instantiates a request authenticator
+        /// </summary>
+        /// <param name="applicationApiKey">The Box application's API key</param>
+        /// <param name="accessToken">The Box user's v1 access token</param>
+        public LegacyRequestAuthenticator(string applicationApiKey, string accessToken):base(accessToken)
         {
             _applicationApiKey = applicationApiKey;
         }

@@ -67,13 +67,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\Common\IBoxAuthenticator.cs" />
+    <Compile Include="Authentication\Common\IRequestAuthenticator.cs" />
     <Compile Include="Authentication\Common\RequestAuthenticatorBase.cs" />
     <Compile Include="Authentication\Legacy\BoxAuthenticator.cs" />
     <Compile Include="Authentication\Legacy\BoxAuthToken.cs" />
     <Compile Include="Authentication\Legacy\BoxTicket.cs" />
     <Compile Include="Authentication\Legacy\BoxToken.cs" />
-    <Compile Include="Authentication\Legacy\RequestAuthenticator.cs" />
+    <Compile Include="Authentication\Legacy\LegacyRequestAuthenticator.cs" />
     <Compile Include="Authentication\Legacy\RequestHelper.cs" />
     <Compile Include="Authentication\OAuth2\OAuth2RequestAuthenticator.cs" />
     <Compile Include="Authentication\OAuth2\RequestHelper.cs" />

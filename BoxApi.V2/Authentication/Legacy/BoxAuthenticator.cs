@@ -24,7 +24,7 @@ namespace BoxApi.V2.Authentication.Legacy
             Ticket = ticket;
             Proxy = proxy;
             _requestHelper = new RequestHelper();
-            _restClient = new BoxRestClient(new RequestAuthenticator(ApiKey, null), proxy);
+            _restClient = new BoxRestClient(new LegacyRequestAuthenticator(ApiKey, null), proxy);
         }
 
         /// <summary>

@@ -4,8 +4,15 @@ using RestSharp;
 
 namespace BoxApi.V2.Authentication.OAuth2
 {
-    internal class OAuth2RequestAuthenticator : RequestAuthenticatorBase, IBoxAuthenticator
+    /// <summary>
+    /// Adds v2 (OAuth 2.0) authentication headers to HTTP requests
+    /// </summary>
+    public class OAuth2RequestAuthenticator : RequestAuthenticatorBase, IRequestAuthenticator
     {
+        /// <summary>
+        /// Instantiates a request authenticator
+        /// </summary>
+        /// <param name="accessToken">The Box user's OAuth 2.0 access token.</param>
         public OAuth2RequestAuthenticator(string accessToken) : base(accessToken)
         {
         }
