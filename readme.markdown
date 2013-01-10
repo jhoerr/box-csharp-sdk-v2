@@ -18,7 +18,7 @@ Long-polling of events is not currently supported due to limitations in the unde
 
 ```csharp
 // Instantiate a BoxManager client.
-var boxManager = new BoxManager("ClientId", "ClientSecret", "AccessToken", "RefreshToken");
+var boxManager = new BoxManager("AccessToken");
 
 // Optionally refresh the access token (they are only good for an hour!)
 // You may want to persist these new values for later use.
