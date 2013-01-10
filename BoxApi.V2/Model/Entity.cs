@@ -1,5 +1,6 @@
 using System.Text;
 using BoxApi.V2.Model.Enum;
+using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
 {
@@ -11,6 +12,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The type of item being returned.
         /// </summary>
+        [JsonIgnore]
         public ResourceType Type { get; set; }
     }
 
@@ -19,6 +21,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The item's ID
         /// </summary>
+        [JsonIgnore]
         public string Id { get; set; }
     }
 

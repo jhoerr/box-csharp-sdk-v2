@@ -15,8 +15,8 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void GetAliasesWhenNoneExist()
         {
-            var user = Client.Me(new[]{Field.Login, });
-            var aliasCollection = Client.GetEmailAliases(user);
+            var user = Client.Me();
+            var aliasCollection = Client.GetEmailAliases(new EnterpriseUser(){Id=user.Id});
             Assert.That(aliasCollection.TotalCount, Is.EqualTo(0));
             Assert.That(aliasCollection.Entries.Any(), Is.False);
         }
@@ -25,7 +25,7 @@ namespace BoxApi.V2.Tests.Client
         public void AddAlias(string domain)
         {
             var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
-            User user = CreateUser(domain);
+            var user = CreateUser(domain);
 
             try
             {
@@ -43,7 +43,7 @@ namespace BoxApi.V2.Tests.Client
         public void GetAddedAlias(string domain)
         {
             var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
-            User user = CreateUser(domain);
+            var user = CreateUser(domain);
 
             try
             {
@@ -64,7 +64,7 @@ namespace BoxApi.V2.Tests.Client
         public void DeleteAlias(string domain)
         {
             var expectedAlias = string.Format("box.api.test.secondary@{0}", domain);
-            User user = CreateUser(domain);
+            var user = CreateUser(domain);
 
             try
             {
@@ -79,9 +79,9 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
-        private User CreateUser(string domain)
+        private EnterpriseUser CreateUser(string domain)
         {
-            return Client.CreateUser(new ManagedUser() { Name = "test user", Status = UserStatus.Inactive, Login = string.Format("box.api.test.primary@{0}", domain) });
+            return Client.CreateUser(new EnterpriseUser() { Name = "test user", Status = UserStatus.Inactive, Login = string.Format("box.api.test.primary@{0}", domain) });
         }
     }
 }

@@ -95,6 +95,7 @@
     <Compile Include="Model\Discussion.cs" />
     <Compile Include="Model\DiscussionCollection.cs" />
     <Compile Include="Model\EmailAlias.cs" />
+    <Compile Include="Model\EnterpriseUser.cs" />
     <Compile Include="Model\Enum\Access.cs" />
     <Compile Include="Model\Enum\CollaborationRole.cs" />
     <Compile Include="Model\Enum\EnterpriseEventType.cs" />
@@ -110,9 +111,8 @@
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
-    <Compile Include="Model\ManagedUser.cs" />
     <Compile Include="Model\TrackingCode.cs" />
-    <Compile Include="Model\UserCollection.cs" />
+    <Compile Include="Model\EnterpriseUserCollection.cs" />
     <Compile Include="BoxException.cs" />
     <Compile Include="BoxManager.cs" />
     <Compile Include="Model\Comment.cs" />

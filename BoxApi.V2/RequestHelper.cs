@@ -4,6 +4,7 @@ using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Serialization;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace BoxApi.V2
@@ -283,9 +284,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetUsers(string filterTerm, int? limit, int? offset, Field[] fields = null)
+        public IRestRequest GetUsers(string filterTerm, int? limit, int? offset)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, null, Method.GET, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, null, Method.GET, EnterpriseUser.Fields);
             if (!string.IsNullOrWhiteSpace(filterTerm))
             {
                 request.AddParameter("filter_term", filterTerm);
@@ -301,25 +302,25 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetUser(string id, Field[] fields = null)
+        public IRestRequest GetUser(string id)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.GET, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.GET, EnterpriseUser.Fields);
             request.AddUrlSegment("id", id);
             return request;
         }
 
-        public IRestRequest CreateUser(ManagedUser user, Field[] fields)
+        public IRestRequest CreateUser(EnterpriseUser user)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, null, Method.POST, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, null, Method.POST, EnterpriseUser.Fields);
             request.AddBody(user);
             return request;
         }
 
-        public IRestRequest UpdateUser(ManagedUser user, bool includeEnterpriseSettings = false, Field[] fields = null)
+        public IRestRequest UpdateUser(EnterpriseUser user)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUser.Fields);
             request.AddUrlSegment("id", user.Id);
-            request.AddBody(user.ToUpdateRequestBody(includeEnterpriseSettings));
+            request.AddBody(new UpdateableEnterpriseUser(user));
             return request;
         }
 
@@ -332,9 +333,9 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify, Field[] fields = null)
+        public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, EnterpriseUser.Fields);
             request.AddUrlSegment("userId", currentOwnerId);
             request.AddUrlSegment("folderType", ResourceType.Folder.Description());
             request.AddUrlSegment("folderId", folderId);
@@ -404,6 +405,29 @@ namespace BoxApi.V2
             request.RequestFormat = DataFormat.Json;
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;
+        }
+
+        private class UpdateableEnterpriseUser : EnterpriseUser
+        {
+            public UpdateableEnterpriseUser(EnterpriseUser user)
+            {
+                Address = user.Address;
+                CanSeeManagedUsers = user.CanSeeManagedUsers;
+                IsExemptFromDeviceLimits = user.IsExemptFromDeviceLimits;
+                IsExemptFromLoginVerification = user.IsExemptFromLoginVerification;
+                IsSyncEnabled = user.IsSyncEnabled;
+                JobTitle = user.JobTitle;
+                Language = user.Language;
+                Name = user.Name;
+                Phone = user.Phone;
+                Role = user.Role;
+                SpaceAmount = user.SpaceAmount;
+                Status = user.Status;
+                TrackingCodes = user.TrackingCodes;
+            }
+
+            [JsonIgnore]
+            public new string Login { get; set; }
         }
     }
 }
