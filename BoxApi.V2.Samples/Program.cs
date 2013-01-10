@@ -25,7 +25,7 @@ namespace BoxApi.V2.Samples
                 accessToken = oAuthToken.AccessToken;
 
                 // Instantiate a BoxManager with your api key and a user's auth token
-                var boxManager = new BoxManager(new OAuth2RequestAuthenticator(accessToken));
+                var boxManager = new BoxManager(accessToken);
 
                 // Create a new file in the root folder
                 boxManager.CreateFile(Folder.Root, "a new file.txt", Encoding.UTF8.GetBytes("hello, world!"));

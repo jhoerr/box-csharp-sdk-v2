@@ -17,38 +17,26 @@ namespace BoxApi.V2
         private readonly BoxRestClient _restClient;
 
         /// <summary>
-        ///     Instantiates BoxManager
-        /// </summary>
-        /// <param name="clientId">The client ID for your Box application</param>
-        /// <param name="clientSecret">The client secret for your Box application</param>
-        /// <param name="accessToken"> The Access Token provided by Box for this User.</param>
-        /// <param name="refreshToken"> The Refresh Token provided by Box for this User.</param>
-        /// <param name="proxy">Proxy information</param>
-        [Obsolete("Please use BoxManager(OAuth2RequestAuthenticator)")]
-        public BoxManager(string clientId, string clientSecret, string accessToken = null, string refreshToken = null, IWebProxy proxy = null)
-            : this(new OAuth2RequestAuthenticator(accessToken), proxy)
-        {
-        }
-
-        /// <summary>
         ///     Creates a BoxManager client using the v2 authentication scheme
         /// </summary>
-        /// <param name="requestAuthenticator">Generates v2 request authentication headers</param>
+        /// <param name="oauth2AccessToken">The OAuth 2.0 access token for this user</param>
         /// <param name="proxy">HTTP proxy configuration information</param>
-        public BoxManager(OAuth2RequestAuthenticator requestAuthenticator, IWebProxy proxy = null): this()
+        public BoxManager(string oauth2AccessToken, IWebProxy proxy = null)
+            : this()
         {
-            _restClient = new BoxRestClient(requestAuthenticator, proxy);
+            _restClient = new BoxRestClient(new OAuth2RequestAuthenticator(oauth2AccessToken), proxy);
         }
 
         /// <summary>
         ///     Creates a BoxManager client using the v1 authentication scheme
         /// </summary>
-        /// <param name="requestAuthenticator">Generates v1 request authentication headers</param>
+        /// <param name="v1ApiKey">The v1 API key for your Box app</param>
+        /// <param name="v1AuthToken">The Box user's v1 auth token</param>
         /// <param name="proxy">HTTP proxy configuration information</param>
-        [Obsolete("Please transition to the v2 authentication scheme and use BoxManager(OAuth2RequestAuthenticator)")]
-        public BoxManager(LegacyRequestAuthenticator requestAuthenticator, IWebProxy proxy = null) : this()
+        [Obsolete("Please transition to the v2 authentication scheme and use BoxManager(oauth2AccessToken)")]
+        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null) : this()
         {
-            _restClient = new BoxRestClient(requestAuthenticator, proxy);
+            _restClient = new BoxRestClient(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy);
         }
 
         private BoxManager()
