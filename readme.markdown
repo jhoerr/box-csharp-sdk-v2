@@ -12,12 +12,12 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Release Notes
 
-1.1:
+###1.1
  + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
  + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
  + Bug Fix: BoxException information is now properly saved.
 
-1.0:
+###1.0
  + Initial release 
 
 ## Known Issues
