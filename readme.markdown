@@ -8,11 +8,22 @@ This is a C# client implementation of the [Box v2 REST API](http://developers.bo
 
 ## Nuget
 
-This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  There is also an [MVC-based example](http://nuget.org/packages/Box.v2.SDK.Sample.Oauth2) of the Box OAuth2 authentication flow available.
+This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  There is also an [MVC-based example](https://github.com/jhoerr/box-csharp-sdk-v2.sample.oauth) of the Box OAuth2 authentication flow available.
+
+## Release Notes
+
+1.1:
+ + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
+ + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
+ + Bug Fix: BoxException information is now properly saved.
+
+1.0:
+ + Initial release 
 
 ## Known Issues
 
-Long-polling of events is not currently supported due to limitations in the underlying request model.
++ Support for several features is planned but not yet available, including Search and removing a user from an enterprise.
++ Long-polling of events is not currently supported due to limitations in the underlying request model.
 
 ## Usage Example
 
@@ -26,7 +37,7 @@ var refreshedAccessToken = boxManager.RefreshAccessToken();
 
 // Create a new file in the root folder
 boxManager.CreateFile(Folder.Root, "a new file.txt", Encoding.UTF8.GetBytes("hello, world!"));
-            
+
 // Fetch the root folder
 var folder = boxManager.GetFolder(Folder.Root);
 
