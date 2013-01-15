@@ -12,6 +12,10 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Release Notes
 
+###1.2
+ + BoxManager now honors the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
+ + Peformance improvements.
+
 ###1.1
  + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
  + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
