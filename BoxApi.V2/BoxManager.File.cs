@@ -482,14 +482,7 @@ namespace BoxApi.V2
         public File WriteFile(IRestRequest request)
         {
             var itemCollection = _restClient.ExecuteAndDeserialize<ItemCollection>(request);
-
-            // TODO: There are two side effects to to deal with here:
-            // 1. Box requires some non-trivial amount of time to calculate the file's etag.
-            // 2. This calculation is not performed before the 'upload file' request returns.
-            // see also: http://stackoverflow.com/questions/12205183/why-is-etag-null-from-the-returned-file-object-when-uploading-a-file
-            // As a result we must wait a bit and then re-fetch the file from the server.
-
-            return GetFile(itemCollection.Entries.Single().Id);
+            return itemCollection.Entries.Single();
         }
 
         /// <summary>
