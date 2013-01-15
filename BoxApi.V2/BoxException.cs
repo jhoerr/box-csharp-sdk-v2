@@ -43,6 +43,14 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        ///     The number of seconds after which this request can be retried (0 = immediately)
+        /// </summary>
+        public int RetryAfter
+        {
+            get { return Error.RetryAfter; }
+        }
+
+        /// <summary>
         ///     The raw error information, as return by Box
         /// </summary>
         public Error Error { get; private set; }
@@ -83,21 +91,16 @@ namespace BoxApi.V2
     }
 
     /// <summary>
-    ///     A special case exception for when the requested file is not yet ready for download.  Wait at least the amount of time in 'RetryAfter' before trying again.
+    ///     A special case exception for when the requested file is not yet ready for download.  Wait at least the amount of seconds specified in 'RetryAfter' before trying again. 
     /// </summary>
-    public class BoxDownloadNotReadyException : Exception
+    public class BoxDownloadNotReadyException : BoxException
     {
         /// <summary>
         ///     Creates a BoxDownloadNotReadyException instance
         /// </summary>
-        public BoxDownloadNotReadyException(int retryAfter)
+        public BoxDownloadNotReadyException(Error error)
+            : base(error)
         {
-            RetryAfter = retryAfter;
         }
-
-        /// <summary>
-        /// The amount of time, in seconds, after which the download will be ready.
-        /// </summary>
-        public int RetryAfter { get; private set; }
     }
 }

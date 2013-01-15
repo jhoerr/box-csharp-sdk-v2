@@ -363,7 +363,19 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
-            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
+            Action<Error> onFailureWrapper = error =>
+                {
+                    if (error.RetryAfter > 0)
+                    {
+                        Thread.Sleep(error.RetryAfter*1000);
+                        Read(onSuccess, onFailure, id);
+                    }
+                    else
+                    {
+                        onFailure(error);
+                    }
+                };
+            _restClient.ExecuteAsync(request, onSuccessWrapper, onFailureWrapper);
         }
 
         /// <summary>
@@ -379,7 +391,19 @@ namespace BoxApi.V2
             GuardFromNullCallbacks(onSuccess, onFailure);
             IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
-            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailure);
+            Action<Error> onFailureWrapper = error =>
+                {
+                    if (error.RetryAfter > 0)
+                    {
+                        Thread.Sleep(error.RetryAfter*1000);
+                        Read(onSuccess, onFailure, id, sharedLinkUrl);
+                    }
+                    else
+                    {
+                        onFailure(error);
+                    }
+                };
+            _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailureWrapper);
         }
 
         /// <summary>

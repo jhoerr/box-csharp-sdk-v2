@@ -32,6 +32,11 @@
         ///     a unique ID for this request helpful for troubleshooting
         /// </summary>
         public string RequestId { get; set; }
+
+        /// <summary>
+        ///     the amount of time after which this request can be tried again
+        /// </summary>
+        public int RetryAfter { get; set; }
     }
 
     public class AuthError

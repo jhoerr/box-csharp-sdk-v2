@@ -39,6 +39,8 @@ namespace BoxApi.V2
             {
                 switch (error.Status)
                 {
+                    case 202:
+                        throw new BoxDownloadNotReadyException(error);
                     case 304: // precondition (If-None-Match) failed
                         throw new BoxItemNotModifiedException(error);
                     case 412: // precondition (If-Match) failed
@@ -153,7 +155,7 @@ namespace BoxApi.V2
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
-                error = new Error { Code = "Not Modified", Status = 304 };
+                error = new Error { Code = "Not Modified", Status = 304, HelpUrl = "http://developers.box.com/docs/#if-match" };
                 success = false;
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Accepted))
@@ -161,7 +163,8 @@ namespace BoxApi.V2
                 var retryAfter = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Retry-After", StringComparison.InvariantCultureIgnoreCase));
                 if (retryAfter != null)
                 {
-                    throw new BoxDownloadNotReadyException(int.Parse((string)retryAfter.Value));
+                    error = new Error { Code = "Download Not Ready", Message = "This file is not yet ready to be downloaded. Please wait and try again.", HelpUrl = "http://developers.box.com/docs/#files-download-a-file", Status = 202, RetryAfter = int.Parse((string)retryAfter.Value) };
+                    success = false;
                 }
             }
 
