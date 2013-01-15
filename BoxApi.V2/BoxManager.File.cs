@@ -63,7 +63,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(parentId, "parentFolderId");
             GuardFromNull(name, "name");
-            var request = _requestHelper.CreateFile(parentId, name, content, fields);
+            IRestRequest request = _requestHelper.CreateFile(parentId, name, content, fields);
             return WriteFile(request);
         }
 
@@ -123,7 +123,7 @@ namespace BoxApi.V2
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.CreateFile(parentId, name, content, fields);
+            IRestRequest request = _requestHelper.CreateFile(parentId, name, content, fields);
 
             // TODO: There are two side effects to to deal with here:
             // 1. Box requires some non-trivial amount of time to calculate the file's etag.
@@ -175,14 +175,14 @@ namespace BoxApi.V2
 
         private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null, string etag = null)
         {
-            var getFile = getFileOperation;
+            Func<IRestRequest, File> getFile = getFileOperation;
             // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
             if (attempt > 0)
             {
                 Backoff(attempt);
             }
-            var request = _requestHelper.Get(ResourceType.File, id, fields, etag);
-            var file = getFile(request);
+            IRestRequest request = _requestHelper.Get(ResourceType.File, id, fields, etag);
+            File file = getFile(request);
             return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, _restClient.ExecuteAndDeserialize<File>, fields) : file;
         }
 
@@ -232,7 +232,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
 
-            var request = _requestHelper.Get(ResourceType.File, id, fields, etag);
+            IRestRequest request = _requestHelper.Get(ResourceType.File, id, fields, etag);
 
             Action<File> onSuccessWrapper = file =>
                 {
@@ -270,8 +270,16 @@ namespace BoxApi.V2
         public byte[] Read(string id)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Read(id);
-            return _restClient.Execute(request).RawBytes;
+            try
+            {
+                IRestRequest request = _requestHelper.Read(id);
+                return _restClient.Execute(request).RawBytes;
+            }
+            catch (BoxDownloadNotReadyException e)
+            {
+                Thread.Sleep(e.RetryAfter*1000);
+                return Read(id);
+            }
         }
 
         /// <summary>
@@ -283,8 +291,16 @@ namespace BoxApi.V2
         public byte[] Read(string id, string sharedLinkUrl)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Read(id);
-            return _restClient.WithSharedLink(sharedLinkUrl).Execute(request).RawBytes;
+            try
+            {
+                IRestRequest request = _requestHelper.Read(id);
+                return _restClient.WithSharedLink(sharedLinkUrl).Execute(request).RawBytes;
+            }
+            catch (BoxDownloadNotReadyException e)
+            {
+                Thread.Sleep(e.RetryAfter*1000);
+                return Read(id);
+            }
         }
 
         /// <summary>
@@ -306,7 +322,7 @@ namespace BoxApi.V2
         public void Read(string id, Stream output)
         {
             GuardFromNull(id, "id");
-            var buffer = Read(id);
+            byte[] buffer = Read(id);
             output.Write(buffer, 0, buffer.Length);
         }
 
@@ -319,7 +335,7 @@ namespace BoxApi.V2
         public void Read(string id, string sharedLinkUrl, Stream output)
         {
             GuardFromNull(id, "id");
-            var buffer = Read(id, sharedLinkUrl);
+            byte[] buffer = Read(id, sharedLinkUrl);
             output.Write(buffer, 0, buffer.Length);
         }
 
@@ -345,7 +361,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Read(id);
+            IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
             _restClient.ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
@@ -361,7 +377,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Read(id);
+            IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response => onSuccess(response.RawBytes);
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccessWrapper, onFailure);
         }
@@ -388,7 +404,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Read(id);
+            IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response =>
                 {
                     using (var stream = new MemoryStream(response.RawBytes))
@@ -410,7 +426,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Read(id);
+            IRestRequest request = _requestHelper.Read(id);
             Action<IRestResponse> onSuccessWrapper = response =>
                 {
                     using (var stream = new MemoryStream(response.RawBytes))
@@ -471,15 +487,11 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(name, "name");
-            var request = _requestHelper.Write(id, name, etag, content);
+            IRestRequest request = _requestHelper.Write(id, name, etag, content);
             return WriteFile(request);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public File WriteFile(IRestRequest request)
+        private File WriteFile(IRestRequest request)
         {
             var itemCollection = _restClient.ExecuteAndDeserialize<ItemCollection>(request);
             return itemCollection.Entries.Single();
@@ -542,7 +554,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(content, "content");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Write(id, name, etag, content);
+            IRestRequest request = _requestHelper.Write(id, name, etag, content);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -587,7 +599,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            IRestRequest request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
@@ -604,7 +616,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            IRestRequest request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>(request);
         }
 
@@ -653,7 +665,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            IRestRequest request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -672,7 +684,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
+            IRestRequest request = _requestHelper.Copy(ResourceType.File, id, newParentId, newName, fields);
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -704,7 +716,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, sharedLink: sharedLink);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, sharedLink: sharedLink);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
@@ -739,7 +751,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, sharedLink: sharedLink);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, sharedLink: sharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -783,7 +795,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, newParentId);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, newParentId);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
@@ -831,7 +843,7 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, newParentId);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, newParentId);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -861,7 +873,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, name: newName);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, name: newName);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
@@ -894,11 +906,11 @@ namespace BoxApi.V2
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, name: newName);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, name: newName);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-         /// <summary>
+        /// <summary>
         ///     Updates a file's description
         /// </summary>
         /// <param name="file">The file to update</param>
@@ -910,7 +922,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(file, "file");
             return UpdateFileDescription(file.Id, description, fields, etag);
-       }
+        }
 
         /// <summary>
         ///     Updates a file's description
@@ -924,11 +936,11 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, description: description);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, description: description);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
-                 /// <summary>
+        /// <summary>
         ///     Updates a file's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
@@ -943,7 +955,7 @@ namespace BoxApi.V2
             UpdateFileDescription(onSuccess, onFailure, file.Id, description, fields, etag);
         }
 
-         /// <summary>
+        /// <summary>
         ///     Updates a file's description
         /// </summary>
         /// <param name="onSuccess">Action to perform with the update file</param>
@@ -956,7 +968,7 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
-            var request = _requestHelper.Update(ResourceType.File, id, etag, fields, description: description);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, id, etag, fields, description: description);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -970,7 +982,7 @@ namespace BoxApi.V2
         public File Update(File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
             return _restClient.ExecuteAndDeserialize<File>(request);
         }
 
@@ -985,7 +997,7 @@ namespace BoxApi.V2
         public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
-            var request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
+            IRestRequest request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -1008,7 +1020,7 @@ namespace BoxApi.V2
         public void DeleteFile(string id, string etag = null)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.DeleteFile(id, etag);
+            IRestRequest request = _requestHelper.DeleteFile(id, etag);
             _restClient.Execute(request);
         }
 
@@ -1036,12 +1048,12 @@ namespace BoxApi.V2
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.DeleteFile(id, etag);
+            IRestRequest request = _requestHelper.DeleteFile(id, etag);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         /// <summary>
-        /// Retrieves metadata about older versions of a file
+        ///     Retrieves metadata about older versions of a file
         /// </summary>
         /// <param name="file">The file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -1053,7 +1065,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves metadata about older versions of a file
+        ///     Retrieves metadata about older versions of a file
         /// </summary>
         /// <param name="fileId">The ID of the file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
@@ -1066,7 +1078,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves metadata about older versions of a file
+        ///     Retrieves metadata about older versions of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved metadata</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -1079,7 +1091,7 @@ namespace BoxApi.V2
         }
 
         /// <summary>
-        /// Retrieves metadata about older versions of a file
+        ///     Retrieves metadata about older versions of a file
         /// </summary>
         /// <param name="onSuccess">Action to perform with the retrieved metadata</param>
         /// <param name="onFailure">Action to perform following a failed File operation</param>
@@ -1095,12 +1107,12 @@ namespace BoxApi.V2
 
         private static void Backoff(int attempt)
         {
-            Thread.Sleep((int)Math.Pow(2, attempt) * 100);
+            Thread.Sleep((int) Math.Pow(2, attempt)*100);
         }
 
         private static byte[] ReadFully(Stream input)
         {
-            var buffer = new byte[16 * 1024];
+            var buffer = new byte[16*1024];
             using (var ms = new MemoryStream())
             {
                 int read;

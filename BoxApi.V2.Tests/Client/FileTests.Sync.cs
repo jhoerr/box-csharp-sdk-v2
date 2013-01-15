@@ -73,21 +73,6 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(file);
         }
 
-        [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
-        public void SubsequentGetThrowsNotModifiedException()
-        {
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            try
-            {
-                file = Client.Get(file, null, file.Etag);
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFileWithSameNameInSameParentFails()
         {
@@ -101,6 +86,51 @@ namespace BoxApi.V2.Tests.Client
             finally
             {
                 Client.Delete(file);
+            }
+        }
+
+        [Test, ExpectedException(typeof (BoxItemModifiedException))]
+        public void DeleteFailsIfEtagIsStale()
+        {
+            // Arrange
+            string testItemName = TestItemName();
+            File original = Client.CreateFile(RootId, testItemName);
+            File current = Client.Write(original, new byte[] {1, 2, 3});
+            try
+            {
+                // Act
+                Client.Delete(original, original.Etag);
+                Assert.Fail();
+            }
+            finally
+            {
+                Client.Delete(current);
+            }
+        }
+
+        [Test]
+        public void EtagsAreValid()
+        {
+            string testItemName = TestItemName();
+            File file = null;
+            try
+            {
+                file = Client.CreateFile(RootId, testItemName);
+                string firstEtag = file.Etag;
+                Assert.That(firstEtag, Is.Not.Null);
+                file = Client.Write(file, new byte[] {1, 2, 3});
+                string secondEtag = file.Etag;
+                Assert.That(secondEtag, Is.Not.Null);
+                Assert.That(secondEtag, Is.Not.EqualTo(firstEtag));
+                file = Client.Write(file, new byte[] {1, 2, 3, 4, 5, 6});
+                string thirdEtag = file.Etag;
+                Assert.That(thirdEtag, Is.Not.Null);
+                Assert.That(thirdEtag, Is.Not.EqualTo(firstEtag));
+                Assert.That(thirdEtag, Is.Not.EqualTo(secondEtag));
+            }
+            finally
+            {
+                Client.DeleteFile(file.Id);
             }
         }
 
@@ -217,6 +247,21 @@ namespace BoxApi.V2.Tests.Client
             AssertSharedLink(linkedFile.SharedLink, expectedLink);
         }
 
+        [Test, ExpectedException(typeof (BoxItemNotModifiedException))]
+        public void SubsequentGetThrowsNotModifiedException()
+        {
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            try
+            {
+                file = Client.Get(file, null, file.Etag);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
         [Test]
         public void UpdateDescription()
         {
@@ -306,7 +351,7 @@ namespace BoxApi.V2.Tests.Client
             // Arrange
             string testItemName = TestItemName();
             File original = Client.CreateFile(RootId, testItemName);
-            File current = Client.Write(original, new byte[] { 1, 2, 3 });
+            File current = Client.Write(original, new byte[] {1, 2, 3});
             try
             {
                 // Act
@@ -327,32 +372,13 @@ namespace BoxApi.V2.Tests.Client
             string testItemName = TestItemName();
             File file = Client.CreateFile(RootId, testItemName);
             // Act
-            Client.Write(file, expected);
+            file = Client.Write(file, expected);
             // Assert
             byte[] actual = Client.Read(file);
             Assert.That(actual, Is.EqualTo(expected));
             // Cleanup
             file = Client.GetFile(file.Id);
             Client.Delete(file);
-        }
-
-        [Test, ExpectedException(typeof(BoxItemModifiedException))]
-        public void DeleteFailsIfEtagIsStale()
-        {
-            // Arrange
-            string testItemName = TestItemName();
-            File original = Client.CreateFile(RootId, testItemName);
-            File current = Client.Write(original, new byte[] { 1, 2, 3 });
-            try
-            {
-                // Act
-                Client.Delete(original, original.Etag);
-                Assert.Fail();
-            }
-            finally
-            {
-                Client.Delete(current);
-            }
         }
     }
 }
