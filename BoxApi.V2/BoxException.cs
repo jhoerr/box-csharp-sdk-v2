@@ -81,4 +81,23 @@ namespace BoxApi.V2
         {
         }
     }
+
+    /// <summary>
+    ///     A special case exception for when the requested file is not yet ready for download.  Wait at least the amount of time in 'RetryAfter' before trying again.
+    /// </summary>
+    public class BoxDownloadNotReadyException : Exception
+    {
+        /// <summary>
+        ///     Creates a BoxDownloadNotReadyException instance
+        /// </summary>
+        public BoxDownloadNotReadyException(int retryAfter)
+        {
+            RetryAfter = retryAfter;
+        }
+
+        /// <summary>
+        /// The amount of time, in seconds, after which the download will be ready.
+        /// </summary>
+        public int RetryAfter { get; private set; }
+    }
 }

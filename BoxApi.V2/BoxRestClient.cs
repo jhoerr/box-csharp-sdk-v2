@@ -156,6 +156,15 @@ namespace BoxApi.V2
                 error = new Error { Code = "Not Modified", Status = 304 };
                 success = false;
             }
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.Accepted))
+            {
+                var retryAfter = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Retry-After", StringComparison.InvariantCultureIgnoreCase));
+                if (retryAfter != null)
+                {
+                    throw new BoxDownloadNotReadyException(int.Parse((string)retryAfter.Value));
+                }
+            }
+
             else if (restResponse.ContentType.Equals(JsonMimeType))
             {
                 var jsonDeserializer = new JsonDeserializer();
