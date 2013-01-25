@@ -73,6 +73,16 @@ namespace BoxApi.V2.Tests.Client
             Client.Delete(file);
         }
 
+        [Test]
+        public void GetFile()
+        {
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            File actual = Client.Get(file);
+            AssertFileConstraints(actual, testItemName, RootId);
+            Client.Delete(actual);
+        }
+
         [Test, ExpectedException(typeof (BoxException))]
         public void CreateFileWithSameNameInSameParentFails()
         {
@@ -267,6 +277,20 @@ namespace BoxApi.V2.Tests.Client
         {
             string fileName = TestItemName();
             string newDescription = "new description";
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            File updatedFile = Client.UpdateDescription(file, newDescription);
+            Client.Delete(updatedFile);
+            // Assert
+            AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
+            Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
+        }
+
+        [Test]
+        public void MultiLineDescription()
+        {
+            string fileName = TestItemName();
+            string newDescription = "new\ndescription";
             File file = Client.CreateFile(RootId, fileName);
             // Act
             File updatedFile = Client.UpdateDescription(file, newDescription);
