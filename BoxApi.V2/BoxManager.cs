@@ -12,7 +12,6 @@ namespace BoxApi.V2
     /// </summary>
     public partial class BoxManager
     {
-        private readonly IWebProxy _proxy;
         private readonly RequestHelper _requestHelper;
         private readonly BoxRestClient _restClient;
 
