@@ -376,6 +376,15 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest Search(string query, uint limit, uint offset)
+        {
+            IRestRequest request = JsonRequest(ResourceType.Search, null, Method.GET);
+            request.AddParameter("query", query);
+            request.AddParameter("limit", limit);
+            request.AddParameter("offset", offset);
+            return request;
+        }
+
         private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET, string fieldList = null)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
