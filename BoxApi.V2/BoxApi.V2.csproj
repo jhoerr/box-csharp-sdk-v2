@@ -111,6 +111,8 @@
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
+    <Compile Include="Model\MiniFolderEntity.cs" />
+    <Compile Include="Model\PathCollection.cs" />
     <Compile Include="Model\TrackingCode.cs" />
     <Compile Include="Model\EnterpriseUserCollection.cs" />
     <Compile Include="BoxException.cs" />

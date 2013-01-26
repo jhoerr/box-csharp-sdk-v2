@@ -404,5 +404,28 @@ namespace BoxApi.V2.Tests.Client
             file = Client.GetFile(file.Id);
             Client.Delete(file);
         }
+
+        [Test]
+        public void PathCollection()
+        {
+            // Arrange
+            Folder folder = Client.CreateFolder(RootId, TestItemName());
+            Folder subFolder = Client.CreateFolder(folder.Id, TestItemName());
+            Folder subsubFolder = Client.CreateFolder(subFolder.Id, TestItemName());
+            File file = Client.CreateFile(subsubFolder.Id, TestItemName(), new[]{Field.PathCollection, });
+
+            try
+            {
+                //Assert
+                Assert.That(file.PathCollection.TotalCount, Is.EqualTo(4));
+                Assert.That(file.PathCollection.Entries.Select(e => e.Id), Is.EqualTo(new[]{Folder.Root, folder.Id, subFolder.Id, subsubFolder.Id}));
+            }
+            finally
+            {
+                //Cleanup
+                Client.Delete(folder, true);
+            }
+
+        }
     }
 }

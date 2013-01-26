@@ -402,5 +402,27 @@ namespace BoxApi.V2.Tests.Client
                 Client.Delete(newParent, true);
             }
         }
+
+        [Test]
+        public void PathCollection()
+        {
+            // Arrange
+            Folder folder = Client.CreateFolder(RootId, TestItemName());
+            Folder subFolder = Client.CreateFolder(folder.Id, TestItemName());
+            Folder subsubFolder = Client.CreateFolder(subFolder.Id, TestItemName());
+
+            try
+            {
+                //Assert
+                Assert.That(subsubFolder.PathCollection.TotalCount, Is.EqualTo(3));
+                Assert.That(subsubFolder.PathCollection.Entries.Select(e => e.Id), Is.EqualTo(new[] { Folder.Root, folder.Id, subFolder.Id }));
+            }
+            finally
+            {
+                //Cleanup
+                Client.Delete(folder, true);
+            }
+
+        }
     }
 }

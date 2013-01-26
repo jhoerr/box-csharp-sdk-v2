@@ -20,10 +20,16 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The folder that contains this item
         /// </summary>
-        public Entity Parent { get; set; }
+        public MiniFolderEntity Parent { get; set; }
 
         /// <summary>
-        ///     The sha1 hash of the file.  Useful for quickly determining if the contents of the file have changed.
+        /// The path of folders to this item, starting at the root
+        /// </summary>
+        [JsonProperty(PropertyName = "path_collection")]
+        public PathCollection PathCollection { get; set; }
+
+        /// <summary>
+        ///     A unique string identifying the version of this file.
         /// </summary>
         public string Etag { get; set; }
 
