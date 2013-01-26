@@ -110,6 +110,7 @@
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\FolderUploadEmail.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
     <Compile Include="Model\MiniFolderEntity.cs" />
     <Compile Include="Model\PathCollection.cs" />

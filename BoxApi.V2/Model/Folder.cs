@@ -20,6 +20,11 @@ namespace BoxApi.V2.Model
         public ItemCollection ItemCollection { get; set; }
 
         /// <summary>
+        /// The upload email address for this folder
+        /// </summary>
+        public FolderUploadEmail FolderUploadEmail { get; set; }
+
+        /// <summary>
         ///     The files contained within this folder
         /// </summary>
         public IEnumerable<File> Files

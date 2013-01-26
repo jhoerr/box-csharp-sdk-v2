@@ -424,5 +424,17 @@ namespace BoxApi.V2.Tests.Client
             }
 
         }
+
+        [TestCase("607928938", Access.Collaborators, "upload.email_u.7hnxx05dhw@u.box.com"), Ignore("There is no known way to programatically enable folder email uploads, so this is one in my test account.")]
+        public void FolderUploadEmailExists(string folderId, Access expectedAccess, string expectedEmail)
+        {
+            // Arrange
+            var folder = Client.GetFolder(folderId);
+            
+            //Assert
+            Assert.That(folder.FolderUploadEmail, Is.Not.Null);
+            Assert.That(folder.FolderUploadEmail.Access, Is.EqualTo(expectedAccess));
+            Assert.That(folder.FolderUploadEmail.Email, Is.EqualTo(expectedEmail));
+        }
     }
 }
