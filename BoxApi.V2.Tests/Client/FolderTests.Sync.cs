@@ -43,6 +43,30 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
+
+        [Test]
+        public void GetFolderItemsByProperty()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subFolderA = Client.CreateFolder(testFolder.Id, TestItemName());
+            var subFolderB = Client.CreateFolder(testFolder.Id, TestItemName());
+            var fileA = Client.CreateFile(testFolder.Id, TestItemName());
+            var fileB = Client.CreateFile(testFolder.Id, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder);
+                Assert.That(folder.Folders.Count(), Is.EqualTo(2));
+                Assert.That(folder.Folders.Select(f=>f.Name), Is.EquivalentTo(new[]{subFolderA.Name, subFolderB.Name}));
+                Assert.That(folder.Files.Count(), Is.EqualTo(2));
+                Assert.That(folder.Files.Select(f => f.Name), Is.EquivalentTo(new[] { fileA.Name, fileB.Name }));
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
         [Test]
         public void FieldsWorksOnGetFolder()
         {
