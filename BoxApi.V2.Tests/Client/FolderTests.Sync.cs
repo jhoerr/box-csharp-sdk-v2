@@ -339,10 +339,20 @@ namespace BoxApi.V2.Tests.Client
         public void RenameFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
+            var folder = Client.CreateFolder(RootId, folderName);
             var newName = TestItemName();
             var moved = Client.Rename(folder, newName);
             AssertFolderConstraints(moved, newName, RootId, folder.Id);
+            Client.DeleteFolder(folder.Id, true);
+        }
+
+        [Test]
+        public void RenameFolder_RegressionTest()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName);
+            var moved = Client.Rename(folder, "1680020000");
+            AssertFolderConstraints(moved, "1680020000", RootId, folder.Id);
             Client.DeleteFolder(folder.Id, true);
         }
 
