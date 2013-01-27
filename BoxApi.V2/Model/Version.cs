@@ -5,7 +5,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The item size in bytes
         /// </summary>
-        public long Size { get; set; }
+        public double Size { get; set; }
     }
 
     public class VersionCollection : Collection<Version>
