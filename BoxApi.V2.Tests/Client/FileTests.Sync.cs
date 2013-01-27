@@ -359,25 +359,28 @@ namespace BoxApi.V2.Tests.Client
             try
             {
                 file = PostFileStream("testimage.jpg");
-                bool retry;
-                do
-                {
-                    try
-                    {
-                        byte[] thumbnail = Client.GetThumbnail(file);
-                        retry = false;
-                        Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
-                    }
-                    catch (BoxDownloadNotReadyException e)
-                    {
-                        retry = true;
-                        Thread.Sleep(e.RetryAfter*1000);
-                    }
-                } while (retry);
+                var thumbnail = GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
             }
             finally
             {
                 Client.Delete(file);
+            }
+        }
+
+        private byte[] GetThumbnail(File file)
+        {
+            while(true)
+            {
+                try
+                {
+                    return Client.GetThumbnail(file);
+                }
+                catch (BoxDownloadNotReadyException e)
+                {
+                    Console.Out.WriteLine("Waiting {0} seconds before retrying...", e.RetryAfter);
+                    Thread.Sleep(e.RetryAfter*1000);
+                }
             }
         }
 
