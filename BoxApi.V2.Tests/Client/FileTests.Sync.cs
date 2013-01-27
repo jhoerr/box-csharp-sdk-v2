@@ -6,7 +6,6 @@ using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Tests.Harness;
-using BoxApi.V2.Tests.Properties;
 using NUnit.Framework;
 using File = BoxApi.V2.Model.File;
 
@@ -15,6 +14,15 @@ namespace BoxApi.V2.Tests.Client
     [TestFixture]
     public class FileTestsSync : BoxApiTestHarness
     {
+        private File PostFileStream(string fileName)
+        {
+            const string resource = "BoxApi.V2.Tests.Properties.Resources.resources";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                return Client.CreateFile(Folder.Root, fileName, stream);
+            }
+        }
+
         [Test]
         public void CopyFile()
         {
@@ -79,13 +87,18 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
-        public void GetFile()
+        public void CreateFileFromStream()
         {
-            string testItemName = TestItemName();
-            File file = Client.CreateFile(RootId, testItemName);
-            File actual = Client.Get(file);
-            AssertFileConstraints(actual, testItemName, RootId);
-            Client.Delete(actual);
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                Assert.That(file.Size, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
         }
 
         [Test, ExpectedException(typeof (BoxException))]
@@ -150,6 +163,32 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void GenericThumbnail()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream(TestItemName());
+                byte[] thumbnail = Client.GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void GetFile()
+        {
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName);
+            File actual = Client.Get(file);
+            AssertFileConstraints(actual, testItemName, RootId);
+            Client.Delete(actual);
+        }
+
+        [Test]
         public void MoveFile()
         {
             string fileName = TestItemName();
@@ -184,6 +223,42 @@ namespace BoxApi.V2.Tests.Client
             finally
             {
                 Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void MultiLineDescription()
+        {
+            string fileName = TestItemName();
+            string newDescription = "new\ndescription";
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            File updatedFile = Client.UpdateDescription(file, newDescription);
+            Client.Delete(updatedFile);
+            // Assert
+            AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
+            Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
+        }
+
+        [Test]
+        public void PathCollection()
+        {
+            // Arrange
+            Folder folder = Client.CreateFolder(RootId, TestItemName());
+            Folder subFolder = Client.CreateFolder(folder.Id, TestItemName());
+            Folder subsubFolder = Client.CreateFolder(subFolder.Id, TestItemName());
+            File file = Client.CreateFile(subsubFolder.Id, TestItemName(), new[] {Field.PathCollection,});
+
+            try
+            {
+                //Assert
+                Assert.That(file.PathCollection.TotalCount, Is.EqualTo(4));
+                Assert.That(file.PathCollection.Entries.Select(e => e.Id), Is.EqualTo(new[] {Folder.Root, folder.Id, subFolder.Id, subsubFolder.Id}));
+            }
+            finally
+            {
+                //Cleanup
+                Client.Delete(folder, true);
             }
         }
 
@@ -278,24 +353,55 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void Thumbnail()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                bool retry;
+                do
+                {
+                    try
+                    {
+                        byte[] thumbnail = Client.GetThumbnail(file);
+                        retry = false;
+                        Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+                    }
+                    catch (BoxDownloadNotReadyException e)
+                    {
+                        retry = true;
+                        Thread.Sleep(e.RetryAfter*1000);
+                    }
+                } while (retry);
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test, ExpectedException(typeof (BoxDownloadNotReadyException))]
+        public void ThumbnailNotReady()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                byte[] thumbnail = Client.GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
         public void UpdateDescription()
         {
             string fileName = TestItemName();
             string newDescription = "new description";
-            File file = Client.CreateFile(RootId, fileName);
-            // Act
-            File updatedFile = Client.UpdateDescription(file, newDescription);
-            Client.Delete(updatedFile);
-            // Assert
-            AssertFileConstraints(updatedFile, fileName, RootId, file.Id);
-            Assert.That(updatedFile.Description, Is.EqualTo(newDescription));
-        }
-
-        [Test]
-        public void MultiLineDescription()
-        {
-            string fileName = TestItemName();
-            string newDescription = "new\ndescription";
             File file = Client.CreateFile(RootId, fileName);
             // Act
             File updatedFile = Client.UpdateDescription(file, newDescription);
@@ -408,102 +514,6 @@ namespace BoxApi.V2.Tests.Client
             // Cleanup
             file = Client.GetFile(file.Id);
             Client.Delete(file);
-        }
-
-        [Test]
-        public void PathCollection()
-        {
-            // Arrange
-            Folder folder = Client.CreateFolder(RootId, TestItemName());
-            Folder subFolder = Client.CreateFolder(folder.Id, TestItemName());
-            Folder subsubFolder = Client.CreateFolder(subFolder.Id, TestItemName());
-            File file = Client.CreateFile(subsubFolder.Id, TestItemName(), new[]{Field.PathCollection, });
-
-            try
-            {
-                //Assert
-                Assert.That(file.PathCollection.TotalCount, Is.EqualTo(4));
-                Assert.That(file.PathCollection.Entries.Select(e => e.Id), Is.EqualTo(new[]{Folder.Root, folder.Id, subFolder.Id, subsubFolder.Id}));
-            }
-            finally
-            {
-                //Cleanup
-                Client.Delete(folder, true);
-            }
-
-        }
-
-        [Test]
-        public void CreateFileFromStream()
-        {
-            File file = null;
-            try
-            {
-                file = PostFileStream("testimage.jpg");
-                Assert.That(file.Size, Is.Not.EqualTo(0));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-        [Test, ExpectedException(typeof(BoxDownloadNotReadyException))]
-        public void ThumbnailNotReady()
-        {
-            File file = null;
-            try
-            {
-                file = PostFileStream("testimage.jpg");
-                byte[] thumbnail = Client.GetThumbnail(file);
-                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-        [Test, Ignore("Need to add retry handling.")]
-        public void Thumbnail()
-        {
-            File file = null;
-            try
-            {
-                file = PostFileStream("testimage.jpg");
-                byte[] thumbnail = Client.GetThumbnail(file);
-                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-        [Test]
-        public void GenericThumbnail()
-        {
-            File file = null;
-            try
-            {
-                file = PostFileStream(TestItemName());
-                byte[] thumbnail = Client.GetThumbnail(file);
-                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
-            }
-            finally
-            {
-                Client.Delete(file);
-            }
-        }
-
-
-        private File PostFileStream(string fileName)
-        {
-            const string resource = "BoxApi.V2.Tests.Properties.Resources.resources";
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
-            {
-                return Client.CreateFile(Folder.Root, fileName, stream);
-            }
         }
     }
 }
