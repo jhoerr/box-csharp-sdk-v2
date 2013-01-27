@@ -16,7 +16,7 @@ namespace BoxApi.V2.Tests.Client
     {
         private File PostFileStream(string fileName)
         {
-            const string resource = "BoxApi.V2.Tests.Properties.Resources.resources";
+            const string resource = "BoxApi.V2.Tests.Resources.corgilobster.jpg";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
             {
                 return Client.CreateFile(Folder.Root, fileName, stream);
