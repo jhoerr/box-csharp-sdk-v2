@@ -385,6 +385,14 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest GetThumbnail(string fileId, string extension = "png")
+        {
+            IRestRequest request = JsonRequest(ResourceType.File, "{id}/thumbnail.{extension}", Method.GET);
+            request.AddUrlSegment("id", fileId);
+            request.AddUrlSegment("extension", extension);
+            return request;
+        }
+
         private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET, string fieldList = null)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));

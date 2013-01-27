@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -12,6 +13,7 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         private const int MaxFileGetAttempts = 4;
+        private const string PngExtension = "png";
 
         /// <summary>
         ///     Creates a new empty file in the specified folder
@@ -35,6 +37,32 @@ namespace BoxApi.V2
         public File CreateFile(string parentId, string name, Field[] fields = null)
         {
             return CreateFile(parentId, name, new byte[0], fields);
+        }
+
+        /// <summary>
+        ///     Creates a new empty file in the specified folder
+        /// </summary>
+        /// <param name="parent">The folder in which to create the file</param>
+        /// <param name="name">The file's name</param>
+        /// <param name="content">The file's data</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The created file</returns>
+        public File CreateFile(Folder parent, string name, Stream content, Field[] fields = null)
+        {
+            return CreateFile(parent, name, ReadFully(content), fields);
+        }
+
+        /// <summary>
+        ///     Creates a new empty file in the specified folder
+        /// </summary>
+        /// <param name="parentId">The ID of the folder in which to create the file</param>
+        /// <param name="name">The file's name</param>
+        /// <param name="content">The file's data</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The created file</returns>
+        public File CreateFile(string parentId, string name, Stream content, Field[] fields = null)
+        {
+            return CreateFile(parentId, name, ReadFully(content), fields);
         }
 
         /// <summary>
@@ -77,8 +105,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Field[] fields = null)
         {
-            GuardFromNull(parent, "folder");
-            CreateFile(onSuccess, onFailure, parent.Id, name, new byte[0], fields);
+            CreateFile(onSuccess, onFailure, parent, name, new byte[0], fields);
         }
 
         /// <summary>
@@ -92,6 +119,34 @@ namespace BoxApi.V2
         public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parentId, name, new byte[0], fields);
+        }
+
+        /// <summary>
+        ///     Creates a new file with the provided content in the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
+        /// <param name="parent">The folder in which to create the file</param>
+        /// <param name="content">The file's data</param>
+        /// <param name="name">The file's name</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Stream content, Field[] fields = null)
+        {
+            CreateFile(onSuccess, onFailure, parent, name, ReadFully(content), fields);
+        }
+
+        /// <summary>
+        ///     Creates a new file with the provided content in the specified folder
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the created File</param>
+        /// <param name="onFailure">Action to perform following a failed File creation</param>
+        /// <param name="parentId">The ID of the folder in which to create the file</param>
+        /// <param name="content">The file's data</param>
+        /// <param name="name">The file's name</param>
+        /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Stream content, Field[] fields = null)
+        {
+            CreateFile(onSuccess, onFailure, parentId, name, ReadFully(content), fields);
         }
 
         /// <summary>
@@ -157,7 +212,7 @@ namespace BoxApi.V2
         /// <returns>The fetched file</returns>
         public File GetFile(string id, Field[] fields = null, string etag = null)
         {
-            return GetFile(id, 0, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields, etag);
+            return GetFile(id, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields, etag);
         }
 
         /// <summary>
@@ -170,20 +225,13 @@ namespace BoxApi.V2
         /// <returns>The shared file</returns>
         public File GetFile(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
-            return GetFile(id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields, etag);
+            return GetFile(id, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields, etag);
         }
 
-        private File GetFile(string id, int attempt, Func<IRestRequest, File> getFileOperation, Field[] fields = null, string etag = null)
+        private File GetFile(string id, Func<IRestRequest, File> getFileOperation, Field[] fields = null, string etag = null)
         {
-            Func<IRestRequest, File> getFile = getFileOperation;
-            // Exponential backoff to give Etag time to populate.  Wait 200ms, then 400ms, then 800ms.
-            if (attempt > 0)
-            {
-                Backoff(attempt);
-            }
             IRestRequest request = _requestHelper.Get(ResourceType.File, id, fields, etag);
-            File file = getFile(request);
-            return string.IsNullOrEmpty(file.Etag) && (attempt < MaxFileGetAttempts) ? GetFile(id, ++attempt, _restClient.ExecuteAndDeserialize<File>, fields) : file;
+            return getFileOperation(request);
         }
 
         /// <summary>
@@ -210,7 +258,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
         {
-            GetFile(onSuccess, onFailure, id, 0, _restClient.ExecuteAsync, fields, etag);
+            GetFile(onSuccess, onFailure, id, _restClient.ExecuteAsync, fields, etag);
         }
 
         /// <summary>
@@ -224,31 +272,16 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
         {
-            GetFile(onSuccess, onFailure, id, 0, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields, etag);
+            GetFile(onSuccess, onFailure, id, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields, etag);
         }
 
-        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, int attempt, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null, string etag = null)
+        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
 
             IRestRequest request = _requestHelper.Get(ResourceType.File, id, fields, etag);
-
-            Action<File> onSuccessWrapper = file =>
-                {
-                    if (String.IsNullOrEmpty(file.Etag) && attempt++ < MaxFileGetAttempts)
-                    {
-                        // Exponential backoff to give Etag time to populate.  Wait 100ms, then 200ms, then 400ms, then 800ms.
-                        Backoff(attempt);
-                        GetFile(onSuccess, onFailure, id, attempt, getFileAsync, fields);
-                    }
-                    else
-                    {
-                        onSuccess(file);
-                    }
-                };
-
-            getFileAsync(request, onSuccessWrapper, onFailure);
+            getFileAsync(request, onSuccess, onFailure);
         }
 
         /// <summary>
@@ -1129,11 +1162,6 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-        private static void Backoff(int attempt)
-        {
-            Thread.Sleep((int) Math.Pow(2, attempt)*100);
-        }
-
         private static byte[] ReadFully(Stream input)
         {
             var buffer = new byte[16*1024];
@@ -1146,6 +1174,38 @@ namespace BoxApi.V2
                 }
                 return ms.ToArray();
             }
+        }
+
+        public byte[] GetThumbnail(File file, string extension = PngExtension)
+        {
+            GuardFromNull(file, "file");
+            return GetThumbnail(file.Id, extension);
+        }
+
+        private byte[] GetThumbnail(string fileId, string extension = PngExtension)
+        {
+            GuardFromNull(fileId, "fileId");
+            GuardFromNull(extension, "extension");
+            IRestRequest request = _requestHelper.GetThumbnail(fileId, extension);
+            var restResponse = _restClient.Execute(request);
+            if (restResponse.StatusCode.Equals(HttpStatusCode.Redirect))
+            {
+                return GetRedirectedThumbnail(restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Location")));
+            }
+            return restResponse.RawBytes;
+        }
+
+        private byte[] GetRedirectedThumbnail(Parameter locationHeader)
+        {
+            if (locationHeader == null)
+            {
+                return new byte[0];
+            }
+
+            var redirectUri = new Uri((string) locationHeader.Value);
+            var restClient = new RestClient(redirectUri.Host);
+            var restRequest = new RestRequest(redirectUri.AbsolutePath);
+            return restClient.Execute(restRequest).RawBytes;
         }
     }
 }

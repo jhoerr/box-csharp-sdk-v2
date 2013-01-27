@@ -1,9 +1,14 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Tests.Harness;
+using BoxApi.V2.Tests.Properties;
 using NUnit.Framework;
+using File = BoxApi.V2.Model.File;
 
 namespace BoxApi.V2.Tests.Client
 {
@@ -426,6 +431,79 @@ namespace BoxApi.V2.Tests.Client
                 Client.Delete(folder, true);
             }
 
+        }
+
+        [Test]
+        public void CreateFileFromStream()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                Assert.That(file.Size, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test, ExpectedException(typeof(BoxDownloadNotReadyException))]
+        public void ThumbnailNotReady()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                byte[] thumbnail = Client.GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test, Ignore("Need to add retry handling.")]
+        public void Thumbnail()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                byte[] thumbnail = Client.GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [Test]
+        public void GenericThumbnail()
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream(TestItemName());
+                byte[] thumbnail = Client.GetThumbnail(file);
+                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+
+        private File PostFileStream(string fileName)
+        {
+            const string resource = "BoxApi.V2.Tests.Properties.Resources.resources";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                return Client.CreateFile(Folder.Root, fileName, stream);
+            }
         }
     }
 }
