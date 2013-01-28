@@ -1,8 +1,11 @@
 using System;
+using System.IO;
+using System.Reflection;
 using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using NUnit.Framework;
+using File = BoxApi.V2.Model.File;
 
 namespace BoxApi.V2.Tests.Harness
 {
@@ -76,6 +79,15 @@ namespace BoxApi.V2.Tests.Harness
             Assert.That(actual.UnsharedAt, Is.LessThan(DateTime.MaxValue));
             Assert.That(actual.Permissions.CanDownload, Is.True);
             Assert.That(actual.Permissions.CanPreview, Is.True);
+        }
+
+        protected File PostImageFile(string fileName)
+        {
+            const string resource = "BoxApi.V2.Tests.Resources.corgilobster.jpg";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                return Client.CreateFile(Folder.Root, fileName, stream);
+            }
         }
     }
 }

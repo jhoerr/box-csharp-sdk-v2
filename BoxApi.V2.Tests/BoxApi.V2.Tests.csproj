@@ -70,6 +70,7 @@
     <Compile Include="Client\SearchTests.cs" />
     <Compile Include="Client\SharedItemTests.cs" />
     <Compile Include="Client\SingleUserTests.cs" />
+    <Compile Include="Client\ThumbnailTests.cs" />
     <Compile Include="Client\TokenTests.Sync.cs" />
     <Compile Include="Harness\BoxApiTestHarness.cs" />
     <Compile Include="Harness\TestConfigInfo.cs" />
