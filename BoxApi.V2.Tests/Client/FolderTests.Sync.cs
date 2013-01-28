@@ -22,7 +22,21 @@ namespace BoxApi.V2.Tests.Client
         {
             try
             {
-                Client.GetFolder("123491249148184112412");
+                Client.GetFolder("611128642               ");
+            }
+            catch (Exception e)
+            {
+                var message = e.ToString();
+                throw;
+            }
+        }
+
+        [Test, ExpectedException(typeof(BoxException))]
+        public void DeleteRegression()
+        {
+            try
+            {
+                Client.DeleteFolder("611128642               ");
             }
             catch (Exception e)
             {
