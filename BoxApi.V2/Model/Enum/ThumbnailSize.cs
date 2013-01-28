@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace BoxApi.V2.Model.Enum
 {
     public enum ThumbnailSize
     {
         /// <summary>
-        /// A 32x32 pixel thumbnail
+        ///     A 32x32 pixel thumbnail
         /// </summary>
-        Small = 1,
+        [Description("32")] Small = 1,
+
         /// <summary>
-        /// A 64x64 pixel thumbnail
+        ///     A 64x64 pixel thumbnail
         /// </summary>
-        Medium = 2,
+        [Description("64")] Medium = 2,
+
         /// <summary>
-        /// A 128x128 thumbnail
+        ///     A 128x128 thumbnail
         /// </summary>
-        Large = 3,
+        [Description("128")] Large = 3,
+
         /// <summary>
-        /// A 256x256 thumbnail
+        ///     A 256x256 thumbnail
         /// </summary>
-        Jumbo = 4,
+        [Description("256")] Jumbo = 4,
     }
 }

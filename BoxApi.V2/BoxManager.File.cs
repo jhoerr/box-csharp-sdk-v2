@@ -1176,17 +1176,17 @@ namespace BoxApi.V2
             }
         }
 
-        public byte[] GetThumbnail(File file, string extension = PngExtension)
+        public byte[] GetThumbnail(File file, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = PngExtension)
         {
             GuardFromNull(file, "file");
-            return GetThumbnail(file.Id, extension);
+            return GetThumbnail(file.Id, minHeight, minWidth, maxHeight, maxWidth, extension);
         }
 
-        private byte[] GetThumbnail(string fileId, string extension = PngExtension)
+        private byte[] GetThumbnail(string fileId, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = PngExtension)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(extension, "extension");
-            IRestRequest request = _requestHelper.GetThumbnail(fileId, extension);
+            IRestRequest request = _requestHelper.GetThumbnail(fileId, minHeight, minWidth, maxHeight, maxWidth, extension);
             var restResponse = _restClient.Execute(request);
             if (restResponse.StatusCode.Equals(HttpStatusCode.Redirect))
             {

@@ -370,35 +370,76 @@ namespace BoxApi.V2.Tests.Client
                 Client.Delete(file);
             }
         }
-        /*
-        [TestCase(32)]
-        [TestCase(64)]
-        [TestCase(128)]
-        [TestCase(256)]
-        public void ThumbnailMinHeight(int minHeight)
+        
+        [TestCase(ThumbnailSize.Small)]
+        [TestCase(ThumbnailSize.Medium)]
+        [TestCase(ThumbnailSize.Large)]
+        [TestCase(ThumbnailSize.Jumbo)]
+        public void ThumbnailMinHeight(ThumbnailSize size)
         {
             File file = null;
             try
             {
                 file = PostFileStream("testimage.jpg");
-                var thumbnail = GetThumbnail(file);
+                var thumbnail = GetThumbnail(file, minHeight: size);
                 Assert.That(thumbnail, Is.Not.Null);
-                Assert.That(thumbnail.Width, Is.GreaterThanOrEqualTo(32));
-                Assert.That(thumbnail.Height, Is.GreaterThanOrEqualTo(32));
+                Assert.That(thumbnail.Height, Is.GreaterThanOrEqualTo(int.Parse(size.Description())));
             }
             finally
             {
                 Client.Delete(file);
             }
         }
-        */
-        private Image GetThumbnail(File file)
+
+        [TestCase(ThumbnailSize.Small)]
+        [TestCase(ThumbnailSize.Medium)]
+        [TestCase(ThumbnailSize.Large)]
+        [TestCase(ThumbnailSize.Jumbo)]
+        public void ThumbnailMaxHeight(ThumbnailSize size)
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                var thumbnail = GetThumbnail(file, maxHeight: size);
+                Assert.That(thumbnail, Is.Not.Null);
+                Assert.That(thumbnail.Height, Is.LessThanOrEqualTo(int.Parse(size.Description())));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+        [TestCase(ThumbnailSize.Small, ThumbnailSize.Medium)]
+        [TestCase(ThumbnailSize.Small, ThumbnailSize.Jumbo)]
+        [TestCase(ThumbnailSize.Large, ThumbnailSize.Jumbo)]
+        public void ThumbnailHeightBounded(ThumbnailSize minHeight, ThumbnailSize maxHeight)
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                var thumbnail = GetThumbnail(file, minHeight: minHeight, maxHeight: maxHeight);
+                Assert.That(thumbnail, Is.Not.Null);
+                Assert.That(thumbnail.Height, Is.GreaterThanOrEqualTo(int.Parse(minHeight.Description())));
+                Assert.That(thumbnail.Height, Is.LessThanOrEqualTo(int.Parse(maxHeight.Description())));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+
+
+
+        private Image GetThumbnail(File file, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null)
         {
             while(true)
             {
                 try
                 {
-                    var thumbnail = Client.GetThumbnail(file);
+                    var thumbnail = Client.GetThumbnail(file, minHeight, minWidth, maxHeight, maxWidth);
                     using (var stream = new MemoryStream(thumbnail))
                     {
                         return Image.FromStream(stream);

@@ -385,11 +385,27 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetThumbnail(string fileId, string extension = "png")
+        public IRestRequest GetThumbnail(string fileId, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = "png")
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/thumbnail.{extension}", Method.GET);
             request.AddUrlSegment("id", fileId);
             request.AddUrlSegment("extension", extension);
+            if (minHeight != null)
+            {
+                request.AddParameter("min_height", minHeight.Description());
+            }
+            if (minWidth != null)
+            {
+                request.AddParameter("min_width", minWidth.Description());
+            }
+            if (maxHeight != null)
+            {
+                request.AddParameter("max_height", maxHeight.Description());
+            }
+            if (maxWidth != null)
+            {
+                request.AddParameter("max_width", maxWidth.Description());
+            }
             return request;
         }
 
