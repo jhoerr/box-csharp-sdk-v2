@@ -22,14 +22,14 @@ namespace BoxApi.V2
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest GetItems(string id, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
 
             return request;
         }
@@ -37,28 +37,28 @@ namespace BoxApi.V2
         public IRestRequest GetDiscussions(string folderId, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET, fields);
-            request.AddUrlSegment("id", folderId);
+            request.AddUrlSegment("id", folderId.Trim());
             return request;
         }
 
         public IRestRequest CreateFolder(string parentId, string name, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, null, Method.POST, fields);
-            request.AddBody(new {name, parent = new {id = parentId}});
+            request.AddBody(new {name, parent = new {id = parentId.Trim()}});
             return request;
         }
 
         public IRestRequest CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "content", Method.POST, fields);
-            request.AddFile("filename1", content, name);
-            request.AddParameter("folder_id", parentId);
+            request.AddFile("filename1", content, name.Trim());
+            request.AddParameter("folder_id", parentId.Trim());
             return request;
         }
 
         public IRestRequest DeleteFolder(string id, bool recursive, string etag)
         {
-            IRestRequest request = GetDeleteRequest(ResourceType.Folder, id);
+            IRestRequest request = GetDeleteRequest(ResourceType.Folder, id.Trim());
             TryAddIfMatchHeader(request, etag);
             request.AddParameter("recursive", recursive.ToString().ToLower());
             return request;
@@ -66,41 +66,41 @@ namespace BoxApi.V2
 
         public IRestRequest DeleteFile(string id, string etag)
         {
-            IRestRequest request = GetDeleteRequest(ResourceType.File, id);
+            IRestRequest request = GetDeleteRequest(ResourceType.File, id.Trim());
             TryAddIfMatchHeader(request, etag);
             return request;
         }
 
         public IRestRequest DeleteComment(string id)
         {
-            IRestRequest request = GetDeleteRequest(ResourceType.Comment, id);
+            IRestRequest request = GetDeleteRequest(ResourceType.Comment, id.Trim());
             return request;
         }
 
         public IRestRequest DeleteDiscussion(string id)
         {
-            IRestRequest request = GetDeleteRequest(ResourceType.Discussion, id);
+            IRestRequest request = GetDeleteRequest(ResourceType.Discussion, id.Trim());
             return request;
         }
 
         private IRestRequest GetDeleteRequest(ResourceType resourceResourceType, string id)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.DELETE);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             if (string.IsNullOrWhiteSpace(name))
             {
-                request.AddBody(new {parent = new {id = newParentId}});
+                request.AddBody(new {parent = new {id = newParentId.Trim()}});
             }
             else
             {
-                request.AddBody(new {parent = new {id = newParentId}, name});
+                request.AddBody(new {parent = new {id = newParentId.Trim()}, name = name.Trim()});
             }
             return request;
         }
@@ -108,19 +108,24 @@ namespace BoxApi.V2
         public IRestRequest Update(ResourceType resourceResourceType, string id, string etag, Field[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.PUT, fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
 
             TryAddIfMatchHeader(request, etag);
 
             var body = new Dictionary<string, object>();
-            TryAddToBody(body, "parent", parentId, new {id = parentId});
-            TryAddToBody(body, "name", name);
-            TryAddToBody(body, "description", description);
+            TryAddToBody(body, "parent", Massage(parentId), new { id = Massage(parentId) });
+            TryAddToBody(body, "name", Massage(name));
+            TryAddToBody(body, "description", Massage(description));
             TryAddToBody(body, "shared_link", sharedLink);
-            TryAddToBody(body, "message", message);
+            TryAddToBody(body, "message", Massage(message));
 
             request.AddBody(body);
             return request;
+        }
+
+        private static string Massage(string name)
+        {
+            return name == null ? null : name.Trim();
         }
 
         private static void TryAddIfMatchHeader(IRestRequest request, string etag)
@@ -150,16 +155,16 @@ namespace BoxApi.V2
         public IRestRequest Read(string id)
         {
             IRestRequest request = RawRequest(ResourceType.File, "{id}/content");
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest Write(string id, string name, string etag, byte[] content)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/content", Method.POST);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             TryAddIfMatchHeader(request, etag);
-            request.AddFile("filename", content, name);
+            request.AddFile("filename", content, name.Trim());
 
             return request;
         }
@@ -167,14 +172,14 @@ namespace BoxApi.V2
         public IRestRequest GetVersions(string fileId, Field[] fields)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/versions", Method.GET, fields);
-            request.AddUrlSegment("id", fileId);
+            request.AddUrlSegment("id", fileId.Trim());
             return request;
         }
 
         public IRestRequest CreateComment(ResourceType resourceType, string id, string message, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceType, "{id}/comments", Method.POST, fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             request.AddBody(new {message});
             return request;
         }
@@ -182,35 +187,35 @@ namespace BoxApi.V2
         public IRestRequest GetComments(ResourceType resourceResourceType, string id, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET, fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest CreateDiscussion(string parentId, string name, string description, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Discussion, null, Method.POST, fields);
-            request.AddBody(new {parent = new {id = parentId}, name, description});
+            request.AddBody(new {parent = new {id = parentId.Trim()}, name, description});
             return request;
         }
 
         public IRestRequest CreateCollaboration(string folderId, string userId, string role, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
-            request.AddBody(new {item = new {type = "folder", id = folderId}, accessible_by = new {id = userId}, role});
+            request.AddBody(new {item = new {type = "folder", id = folderId.Trim()}, accessible_by = new {id = userId.Trim()}, role});
             return request;
         }
 
         public IRestRequest GetCollaboration(string collaborationId, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET, fields);
-            request.AddUrlSegment("id", collaborationId);
+            request.AddUrlSegment("id", collaborationId.Trim());
             return request;
         }
 
         public IRestRequest GetCollaborations(string folderId, bool onlyPending, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/collaborations", Method.GET, fields);
-            request.AddUrlSegment("id", folderId);
+            request.AddUrlSegment("id", folderId.Trim());
             if (onlyPending)
             {
                 request.AddParameter("status", "pending");
@@ -221,7 +226,7 @@ namespace BoxApi.V2
         public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
-            request.AddUrlSegment("id", collaborationId);
+            request.AddUrlSegment("id", collaborationId.Trim());
             request.AddBody(new {role = role.Description()});
             return request;
         }
@@ -229,14 +234,14 @@ namespace BoxApi.V2
         public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, Field[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
-            request.AddUrlSegment("id", collaborationId);
+            request.AddUrlSegment("id", collaborationId.Trim());
             request.AddBody(new {role = role.Description(), status = status.Description()});
             return request;
         }
 
         public IRestRequest DeleteCollaboration(string collaborationId)
         {
-            IRestRequest request = GetDeleteRequest(ResourceType.Collaboration, collaborationId);
+            IRestRequest request = GetDeleteRequest(ResourceType.Collaboration, collaborationId.Trim());
             return request;
         }
 
@@ -289,7 +294,7 @@ namespace BoxApi.V2
             IRestRequest request = JsonRequest(ResourceType.User, null, Method.GET, EnterpriseUser.Fields);
             if (!string.IsNullOrWhiteSpace(filterTerm))
             {
-                request.AddParameter("filter_term", filterTerm);
+                request.AddParameter("filter_term", filterTerm.Trim());
             }
             if (limit.HasValue)
             {
@@ -305,7 +310,7 @@ namespace BoxApi.V2
         public IRestRequest GetUser(string id)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.GET, EnterpriseUser.Fields);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
@@ -319,7 +324,7 @@ namespace BoxApi.V2
         public IRestRequest UpdateUser(EnterpriseUser user)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUser.Fields);
-            request.AddUrlSegment("id", user.Id);
+            request.AddUrlSegment("id", user.Id.Trim());
             request.AddBody(new UpdateableEnterpriseUser(user));
             return request;
         }
@@ -327,7 +332,7 @@ namespace BoxApi.V2
         public IRestRequest DeleteUser(string id, bool notify, bool force)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.DELETE);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             request.AddParameter("notify", notify);
             request.AddParameter("force", force);
             return request;
@@ -335,44 +340,44 @@ namespace BoxApi.V2
 
         public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT, EnterpriseUser.Fields);
-            request.AddUrlSegment("userId", currentOwnerId);
+            IRestRequest request = JsonRequest(ResourceType.User, "{userId.Trim()}/{folderType}/{folderId.Trim()}", Method.PUT, EnterpriseUser.Fields);
+            request.AddUrlSegment("userId", currentOwnerId.Trim());
             request.AddUrlSegment("folderType", ResourceType.Folder.Description());
-            request.AddUrlSegment("folderId", folderId);
+            request.AddUrlSegment("folderId", folderId.Trim());
             // Notify URL parameter seems to result in a 400..
             // request.AddParameter("notify", notify);
-            request.AddBody(new {owned_by = new {id = newOwnerId}});
+            request.AddBody(new {owned_by = new {id = newOwnerId.Trim()}});
             return request;
         }
 
         public IRestRequest GetEmailAliases(string id)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases", Method.GET);
-            request.AddUrlSegment("id", id);
+            request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest AddAlias(string id, string alias)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases", Method.POST);
-            request.AddUrlSegment("id", id);
-            request.AddBody(new {email = alias});
+            request.AddUrlSegment("id", id.Trim());
+            request.AddBody(new {email = alias.Trim()});
             return request;
         }
 
         public IRestRequest DeleteAlias(string userId, string aliasId)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases/{aliasId}", Method.DELETE);
-            request.AddUrlSegment("id", userId);
-            request.AddUrlSegment("aliasId", aliasId);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}/email_aliases/{aliasId.Trim()}", Method.DELETE);
+            request.AddUrlSegment("id", userId.Trim());
+            request.AddUrlSegment("aliasId", aliasId.Trim());
             return request;
         }
 
         public IRestRequest UpdateLogin(string userId, string login)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT);
-            request.AddUrlSegment("id", userId);
-            request.AddBody(new {login});
+            request.AddUrlSegment("id", userId.Trim());
+            request.AddBody(new {login = login.Trim()});
             return request;
         }
 
@@ -388,7 +393,7 @@ namespace BoxApi.V2
         public IRestRequest GetThumbnail(string fileId, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = "png")
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/thumbnail.{extension}", Method.GET);
-            request.AddUrlSegment("id", fileId);
+            request.AddUrlSegment("id", fileId.Trim());
             request.AddUrlSegment("extension", extension);
             if (minHeight != null)
             {
