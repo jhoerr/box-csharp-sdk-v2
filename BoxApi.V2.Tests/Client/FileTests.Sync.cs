@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -353,28 +354,55 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
-        public void Thumbnail()
+        public void GetThumbnail()
         {
             File file = null;
             try
             {
                 file = PostFileStream("testimage.jpg");
                 var thumbnail = GetThumbnail(file);
-                Assert.That(thumbnail.Length, Is.Not.EqualTo(0));
+                Assert.That(thumbnail, Is.Not.Null);
+                Assert.That(thumbnail.Width, Is.GreaterThanOrEqualTo(32));
+                Assert.That(thumbnail.Height, Is.GreaterThanOrEqualTo(32));
             }
             finally
             {
                 Client.Delete(file);
             }
         }
-
-        private byte[] GetThumbnail(File file)
+        /*
+        [TestCase(32)]
+        [TestCase(64)]
+        [TestCase(128)]
+        [TestCase(256)]
+        public void ThumbnailMinHeight(int minHeight)
+        {
+            File file = null;
+            try
+            {
+                file = PostFileStream("testimage.jpg");
+                var thumbnail = GetThumbnail(file);
+                Assert.That(thumbnail, Is.Not.Null);
+                Assert.That(thumbnail.Width, Is.GreaterThanOrEqualTo(32));
+                Assert.That(thumbnail.Height, Is.GreaterThanOrEqualTo(32));
+            }
+            finally
+            {
+                Client.Delete(file);
+            }
+        }
+        */
+        private Image GetThumbnail(File file)
         {
             while(true)
             {
                 try
                 {
-                    return Client.GetThumbnail(file);
+                    var thumbnail = Client.GetThumbnail(file);
+                    using (var stream = new MemoryStream(thumbnail))
+                    {
+                        return Image.FromStream(stream);
+                    }
                 }
                 catch (BoxDownloadNotReadyException e)
                 {

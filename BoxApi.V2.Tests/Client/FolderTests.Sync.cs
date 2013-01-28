@@ -17,6 +17,20 @@ namespace BoxApi.V2.Tests.Client
             AssertFolderConstraints(folder, "All Files", null, RootId);
         }
 
+        [Test, ExpectedException(typeof(BoxException))]
+        public void NotFoundRegression()
+        {
+            try
+            {
+                Client.GetFolder("123491249148184112412");
+            }
+            catch (Exception e)
+            {
+                var message = e.ToString();
+                throw;
+            }
+        }
+
         [Test]
         public void GetFolderItems()
         {
