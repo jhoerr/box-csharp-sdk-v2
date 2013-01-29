@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace BoxApi.V2.Tests.Client
 {
     [Ignore("These tests are by necessity geared towards an enterprise account.  You'll need to change things about them to run them for yourself.")]
+    [TestFixture]
     public class EnterpriseUserTests : BoxApiTestHarness
     {
         [Test]
@@ -215,30 +216,6 @@ namespace BoxApi.V2.Tests.Client
                 };
 
             Client.CreateUser(enterpriseUser);
-        }
-
-        [Test]
-        public void CanCreateCoAdminUser()
-        {   
-            var enterpriseUser = new EnterpriseUser
-                {
-                    Role = UserRole.User,
-                    Login = "box.csharp.sdk2@gmail.com",
-                    Name = "SDK2",
-                };
-
-            EnterpriseUser user = null;
-            try
-            {
-                user = Client.CreateUser(enterpriseUser);
-            }
-            finally
-            {
-                if (user != null)
-                {
-                    Client.Delete(user, force: true);
-                }
-            }
         }
     }
 }
