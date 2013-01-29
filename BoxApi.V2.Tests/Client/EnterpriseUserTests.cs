@@ -14,7 +14,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void CreateEnterpriseUser()
         {
-            Thread.Sleep(2000);  // give any user deletes time to happen
+            Thread.Sleep(2000); // give any user deletes time to happen
             const string expectedName = "foo bar";
             const string expectedLogin = "ajoioejwofiwej@gmail.com";
             const string expectedAddress = "some address";
@@ -29,7 +29,7 @@ namespace BoxApi.V2.Tests.Client
                     SpaceAmount = expectedSpaceAmount,
                 };
 
-            var actualUser = Client.CreateUser(user);
+            EnterpriseUser actualUser = Client.CreateUser(user);
 
             try
             {
@@ -50,19 +50,19 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void CreateCoAdminUser()
         {
-            Thread.Sleep(2000);  // give any user deletes time to happen
+            Thread.Sleep(2000); // give any user deletes time to happen
             const string expectedName = "foo bar";
             const string expectedLogin = "ajoioejwofiwej@gmail.com";
 
             var user = new EnterpriseUser
-            {
-                Name = expectedName,
-                Login = expectedLogin,
-                Status = UserStatus.Inactive,
-                Role = UserRole.CoAdmin,
-            };
+                {
+                    Name = expectedName,
+                    Login = expectedLogin,
+                    Status = UserStatus.Inactive,
+                    Role = UserRole.CoAdmin,
+                };
 
-            var actualUser = Client.CreateUser(user);
+            EnterpriseUser actualUser = Client.CreateUser(user);
 
             try
             {
@@ -84,7 +84,7 @@ namespace BoxApi.V2.Tests.Client
         [Ignore("You'll need to change the user's ID to something meaningful (and hopefully one you won't miss.)")]
         public void DeleteUser()
         {
-            var user = Client.GetUser("186819348");
+            EnterpriseUser user = Client.GetUser("186819348");
             Client.Delete(user);
             // Should fail when trying to re-fetch the user!
             Client.GetUser("186819348");
@@ -110,8 +110,8 @@ namespace BoxApi.V2.Tests.Client
         [Test, Ignore("You'll need to change the current owner and new owner ID to something meaningful.")]
         public void MoveRootFolderToAnotherUser()
         {
-            var currentOwner = Client.GetUser("186819348");
-            var newOwner = Client.GetUser("182238740");
+            EnterpriseUser currentOwner = Client.GetUser("186819348");
+            EnterpriseUser newOwner = Client.GetUser("182238740");
             Folder folder = Client.MoveRootFolderToAnotherUser(currentOwner, newOwner);
             Assert.That(folder.OwnedBy.Id, Is.EqualTo(newOwner.Id));
             Client.Delete(folder);
@@ -130,14 +130,14 @@ namespace BoxApi.V2.Tests.Client
                     new TrackingCode("Bar", "value2"),
                 };
 
-            var managedUser = new EnterpriseUser()
+            var managedUser = new EnterpriseUser
                 {
                     Name = expectedName,
                     Login = expectedLogin,
                     TrackingCodes = expectedTrackingCodes,
                 };
 
-            var user = Client.CreateUser(managedUser);
+            EnterpriseUser user = Client.CreateUser(managedUser);
 
             try
             {
@@ -154,7 +154,7 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void UpdateEnterpriseUser()
         {
-            Thread.Sleep(2000);  // give any user deletes time to happen
+            Thread.Sleep(2000); // give any user deletes time to happen
             var managedUser = new EnterpriseUser
                 {
                     Name = "will change",
@@ -169,7 +169,7 @@ namespace BoxApi.V2.Tests.Client
                     Role = UserRole.User,
                 };
 
-            var user = Client.CreateUser(managedUser);
+            EnterpriseUser user = Client.CreateUser(managedUser);
 
             const string expectedName = "foo bar";
             const string expectedAddress = "some address";
@@ -184,10 +184,10 @@ namespace BoxApi.V2.Tests.Client
             user.IsSyncEnabled = true;
             user.CanSeeManagedUsers = true;
             user.Role = UserRole.CoAdmin;
-          
+
             try
             {
-                var updatedUser = Client.UpdateUser(user);
+                EnterpriseUser updatedUser = Client.UpdateUser(user);
                 Assert.That(updatedUser.Name, Is.EqualTo(expectedName));
                 Assert.That(updatedUser.Address, Is.EqualTo(expectedAddress));
                 Assert.That(updatedUser.IsExemptFromDeviceLimits, Is.True);
@@ -204,5 +204,41 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
+        [Test, ExpectedException(typeof (BoxException))]
+        public void CannotCreateAdminUser()
+        {
+            var enterpriseUser = new EnterpriseUser
+                {
+                    Role = UserRole.Admin,
+                    Login = "no.body@gmail.com",
+                    Name = "No Body",
+                };
+
+            Client.CreateUser(enterpriseUser);
+        }
+
+        [Test]
+        public void CanCreateCoAdminUser()
+        {   
+            var enterpriseUser = new EnterpriseUser
+                {
+                    Role = UserRole.User,
+                    Login = "box.csharp.sdk2@gmail.com",
+                    Name = "SDK2",
+                };
+
+            EnterpriseUser user = null;
+            try
+            {
+                user = Client.CreateUser(enterpriseUser);
+            }
+            finally
+            {
+                if (user != null)
+                {
+                    Client.Delete(user, force: true);
+                }
+            }
+        }
     }
 }

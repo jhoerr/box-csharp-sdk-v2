@@ -60,8 +60,13 @@ namespace BoxApi.V2
         {
             IRestRequest request = GetDeleteRequest(ResourceType.Folder, id.Trim());
             TryAddIfMatchHeader(request, etag);
-            request.AddParameter("recursive", recursive.ToString().ToLower());
+            request.AddParameter("recursive", AddBoolParameter(recursive));
             return request;
+        }
+
+        private static string AddBoolParameter(bool parameter)
+        {
+            return parameter.ToString().ToLower();
         }
 
         public IRestRequest DeleteFile(string id, string etag)
@@ -333,8 +338,8 @@ namespace BoxApi.V2
         {
             IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.DELETE);
             request.AddUrlSegment("id", id.Trim());
-            request.AddParameter("notify", notify);
-            request.AddParameter("force", force);
+            request.AddParameter("notify", AddBoolParameter(notify));
+            request.AddParameter("force", AddBoolParameter(force));
             return request;
         }
 
@@ -344,8 +349,7 @@ namespace BoxApi.V2
             request.AddUrlSegment("userId", currentOwnerId.Trim());
             request.AddUrlSegment("folderType", ResourceType.Folder.Description());
             request.AddUrlSegment("folderId", folderId.Trim());
-            // Notify URL parameter seems to result in a 400..
-            // request.AddParameter("notify", notify);
+            request.AddParameter("notify", AddBoolParameter(notify));
             request.AddBody(new {owned_by = new {id = newOwnerId.Trim()}});
             return request;
         }
