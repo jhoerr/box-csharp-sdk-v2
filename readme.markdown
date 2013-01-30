@@ -12,14 +12,22 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Release Notes
 
+###1.3
+ + Feature: Search
+ + Feature: File thumbnails
+ + Feature: File/Folder path collections now provided
+ + Improvement: Strings are now trimmed, which prevents request problems in certain circumstances
+ + Bug: File/Folder size value would fail to deserialize when very large
+ + Bug: Boolean values in query strings were improperly serialized
+
 ###1.2
- + BoxManager now honors the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
- + Performance improvements when uploading files.
+ + Improvement: Now honoring the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
+ + Improvement: Faster performance when uploading files.
 
 ###1.1
  + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
  + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
- + Bug Fix: BoxException information is now properly saved.
+ + Bug: BoxException information is now properly saved.
 
 ###1.0
  + Initial release 
