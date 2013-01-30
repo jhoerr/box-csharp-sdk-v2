@@ -17,9 +17,11 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
  + Feature: File thumbnails
  + Feature: File/Folder path collections now provided
  + Improvement: Strings are now trimmed, which prevents request problems in certain circumstances
- + Bug: File/Folder size value would fail to deserialize when very large
+ + Bug: File/Folder size would fail to deserialize when very large
  + Bug: Boolean values in query strings were improperly serialized
-
+ + Breaking Change: File/Folder Path and PathId have been removed from the API
+ + Breaking Change: File/Folder Size is now a double (was an int)
+ 
 ###1.2
  + Improvement: Now honoring the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
  + Improvement: Faster performance when uploading files.
