@@ -382,7 +382,6 @@ namespace BoxApi.V2
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
-
         /// <summary>
         /// Delete an email alias for a user
         /// </summary>
@@ -490,6 +489,31 @@ namespace BoxApi.V2
             GuardFromNull(login, "login");
             IRestRequest request = _requestHelper.UpdateLogin(userId, login);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// converts them to a standalone free user.
+        /// </summary>
+        /// <param name="user">The enterprise user to convert</param>
+        /// <returns>The standalone user</returns>
+        public User ConvertToStandaloneUser(EnterpriseUser user)
+        {
+            user.Enterprise = null;
+            var restRequest = _requestHelper.UpdateUser(user);
+            return _restClient.ExecuteAndDeserialize<User>(restRequest);
+        }
+
+        /// <summary>
+        /// Rolls a user out of an enterprise and converts them to a standalone free user.
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the standalone user</param>
+        /// <param name="onFailure">Action to perform following failed conversion</param>
+        /// <param name="user">The enterprise user to convert</param>
+        public void ConvertToStandaloneUser(Action<User> onSuccess, Action<Error> onFailure, EnterpriseUser user)
+        {
+            user.Enterprise = null;
+            var restRequest = _requestHelper.UpdateUser(user);
+            _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
     }
 }

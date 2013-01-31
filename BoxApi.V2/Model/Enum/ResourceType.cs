@@ -16,6 +16,7 @@ namespace BoxApi.V2.Model.Enum
         [Description("shared_items")] SharedItem,
         [Description("error")]Error,
         [Description("email_alias")]EmailAlias,
-        [Description("search")]Search
+        [Description("search")]Search,
+        [Description("enterprise")]Enterprise,
     }
 }

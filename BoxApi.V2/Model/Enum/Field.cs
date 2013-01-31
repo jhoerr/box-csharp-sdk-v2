@@ -15,6 +15,7 @@ namespace BoxApi.V2.Model.Enum
         [Description("created_at")] CreatedAt,
         [Description("created_by")] CreatedBy,
         [Description("description")] Description,
+        [Description("enterprise")] Enterprise,
         [Description("etag")] Etag,
         [Description("expires_at")] ExpiresAt,
         [Description("item_collection")] ItemCollection,
@@ -42,7 +43,7 @@ namespace BoxApi.V2.Model.Enum
         [Description("status")] Status,
         [Description("is_sync_enabled")] IsSyncEnabled,
         [Description("tracking_codes")] TrackingCodes,
-        [Description("is_exempt_from_login_verification")]IsExemptFromLoginVerification,
-        [Description("is_exempt_from_device_limits")]IsExemptFromDeviceLimits,
+        [Description("is_exempt_from_login_verification")] IsExemptFromLoginVerification,
+        [Description("is_exempt_from_device_limits")] IsExemptFromDeviceLimits,
     }
 }
