@@ -89,3 +89,7 @@ using (var stream = new MemoryStream())
 
 // Delete the folder and its contents
 boxManager.Delete(subfolder, recursive: true);
+
+## Copyright
+
+(c) 2012-2013 John Hoerr, The Trustees of Indiana University
