@@ -13,7 +13,7 @@ namespace BoxApi.V2
         /// <param name="limit">Number of search results to return. If both an offset and limit are specified, the offset must be a multiple of the limit.</param>
         /// <param name="offset">The search result at which to start the response. If both an offset and limit are specified, the offset must be a multiple of the limit.</param>
         /// <returns>A collection of items resulting from the search</returns>
-        public SearchResultCollection Search(string query, uint limit = 30, uint offset = 0)
+        public SearchResultCollection Search(string query, uint? limit = null, uint? offset = null)
         {
             GuardFromNull(query, "query");
             EnsureOffsetIsMultipleOfLimit(limit, offset);
@@ -29,7 +29,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed search</param>
         /// <param name="limit">Number of search results to return. If both an offset and limit are specified, the offset must be a multiple of the limit.</param>
         /// <param name="offset">The search result at which to start the response. If both an offset and limit are specified, the offset must be a multiple of the limit.</param>
-        public void Search(Action<SearchResultCollection> onSuccess, Action<Error> onFailure, string query, uint limit = 30, uint offset = 0)
+        public void Search(Action<SearchResultCollection> onSuccess, Action<Error> onFailure, string query, uint? limit = null, uint? offset = null)
         {
             GuardFromNull(query, "query");
             EnsureOffsetIsMultipleOfLimit(limit, offset);
@@ -43,9 +43,9 @@ namespace BoxApi.V2
         /// <param name="limit">Number of search results to return.</param>
         /// <param name="offset">The search result at which to start the response.</param>
         /// <exception cref="ArgumentException"></exception>
-        public static void EnsureOffsetIsMultipleOfLimit(uint limit, uint offset)
+        public static void EnsureOffsetIsMultipleOfLimit(uint? limit, uint? offset)
         {
-            if (offset != 0 && offset % limit != 0)
+            if (offset != null && limit != null && offset != 0 && limit != 0 && offset % limit != 0)
             {
                 throw new ArgumentException("The offset must be a multiple of limit", "offset");
             }

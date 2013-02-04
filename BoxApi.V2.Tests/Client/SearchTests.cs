@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Tests.Harness;
@@ -47,6 +48,20 @@ namespace BoxApi.V2.Tests.Client
         public void OffsetAndLimitAreMultiplesIfSpecified(uint limit, uint offset)
         {
             BoxManager.EnsureOffsetIsMultipleOfLimit(limit, offset);
+        }
+
+        [Test, Ignore("This breaks.  The search API seems to be working improperly at the moment.")]
+        public void SearchForExtension()
+        {
+            uint fetched = 0;
+            var results = new List<Entity>();
+            SearchResultCollection searchResults;
+            do
+            {
+                searchResults = Client.Search(".xlsx", offset:fetched);
+                results.AddRange(searchResults.Entries);
+                fetched += (uint)searchResults.Entries.Count;
+            } while (fetched < searchResults.TotalCount);
         }
     }
 }
