@@ -35,7 +35,7 @@ namespace BoxApi.V2
         {
             IRestResponse restResponse = base.Execute(request);
             Error error;
-            if (!HandleResponse(restResponse, out error))
+            if (!Successful(restResponse, out error))
             {
                 switch (error.Status)
                 {
@@ -64,7 +64,7 @@ namespace BoxApi.V2
             base.ExecuteAsync<T>(request, (response, handle) =>
                 {
                     Error error;
-                    if (HandleResponse(response, out error))
+                    if (Successful(response, out error))
                     {
                         onSuccess(response.Data);
                         return;
@@ -79,7 +79,7 @@ namespace BoxApi.V2
             base.ExecuteAsync(request, (response, handle) =>
                 {
                     Error error;
-                    if (HandleResponse(response, out error))
+                    if (Successful(response, out error))
                     {
                         onSuccess(response);
                         return;
@@ -94,7 +94,7 @@ namespace BoxApi.V2
             base.ExecuteAsync(request, (response, handle) =>
                 {
                     Error error;
-                    if (HandleResponse(response, out error))
+                    if (Successful(response, out error))
                     {
                         onSuccess();
                         return;
@@ -137,26 +137,26 @@ namespace BoxApi.V2
             }
         }
 
-        public bool HandleResponse(IRestResponse restResponse, out Error error)
+        public bool Successful(IRestResponse restResponse, out Error error)
         {
             error = null;
-            bool success = true;
-
             TryClearSharedLink();
 
             if (restResponse == null)
             {
-                success = false;
+                error = new Error() { Code = "RestSharp error", Status = 500, Message = "No response was received.", };
+            }
+            else if (restResponse.ErrorException != null)
+            {
+                error = new Error() { Code = "RestSharp error", Status = 500, Message = restResponse.ErrorException.Message, };
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
             {
                 error = new Error {Code = "Internal Server Error", Status = 500};
-                success = false;
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
                 error = new Error { Code = "Not Modified", Status = 304, HelpUrl = "http://developers.box.com/docs/#if-match" };
-                success = false;
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Accepted))
             {
@@ -164,16 +164,13 @@ namespace BoxApi.V2
                 if (retryAfter != null)
                 {
                     error = new Error { Code = "Download Not Ready", Message = "This file is not yet ready to be downloaded. Please wait and try again.", HelpUrl = "http://developers.box.com/docs/#files-download-a-file", Status = 202, RetryAfter = int.Parse((string)retryAfter.Value) };
-                    success = false;
                 }
             }
-
             else if (restResponse.ContentType.Equals(JsonMimeType))
             {
                 var jsonDeserializer = new JsonDeserializer();
                 if (restResponse.Content.Contains(@"""type"":""error"""))
                 {
-                    success = false;
                     error = TryGetSingleError(restResponse, jsonDeserializer) ?? TryGetFirstErrorFromCollection(restResponse, jsonDeserializer);
                 }
                 else if (restResponse.Content.Contains(@"""error"":"))
@@ -182,7 +179,7 @@ namespace BoxApi.V2
                     error = new Error(){Code = authError.Error, Status = 400, Message = authError.ErrorDescription, Type = ResourceType.Error};
                 }
             }
-            return success;
+            return error == null;
         }
 
         private static Error TryGetSingleError(IRestResponse restResponse, JsonDeserializer jsonDeserializer)
