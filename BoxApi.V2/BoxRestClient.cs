@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using BoxApi.V2.Authentication.Common;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -51,8 +52,9 @@ namespace BoxApi.V2
                     case 412: // precondition (If-Match) failed
                         throw new BoxItemModifiedException(error);
                     case 500: // internal server error
-                        if (lastResponse.Equals(HttpStatusCode.OK) && _options.HasFlag(BoxManagerOptions.RetryRequestWhenHttp500Received))
+                        if (lastResponse.Equals(HttpStatusCode.OK) && _options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
                         {
+                            Thread.Sleep(1000); // wait a second before retrying.
                             return Try(request, HttpStatusCode.InternalServerError);
                         }
                         throw new BoxException(error);

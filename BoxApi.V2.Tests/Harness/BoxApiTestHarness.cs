@@ -20,7 +20,7 @@ namespace BoxApi.V2.Tests.Harness
         {
             RefreshAccessToken();
             TestConfigInfo testInfo = TestConfigInfo.Get();
-            Client = new BoxManager(testInfo.AccessToken, null, BoxManagerOptions.RetryRequestWhenHttp500Received);
+            Client = new BoxManager(testInfo.AccessToken, null, BoxManagerOptions.RetryRequestOnceWhenHttp500Received);
             CollaboratingUser = testInfo.CollaboratingUserId;
             MaxWaitInSeconds = 20;
         }
