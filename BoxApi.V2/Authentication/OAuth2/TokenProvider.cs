@@ -1,4 +1,5 @@
 using System.Net;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 
 namespace BoxApi.V2.Authentication.OAuth2
@@ -10,12 +11,12 @@ namespace BoxApi.V2.Authentication.OAuth2
         private readonly RequestHelper _requestHelper;
         private readonly BoxRestClient _restClient;
 
-        public TokenProvider(string clientId, string clientSecret, IWebProxy webProxy = null)
+        public TokenProvider(string clientId, string clientSecret, IWebProxy webProxy = null, BoxManagerOptions options = BoxManagerOptions.None)
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
             _requestHelper = new RequestHelper();
-            _restClient = new BoxRestClient(null, webProxy);
+            _restClient = new BoxRestClient(null, webProxy, options);
         }
 
         public string GetAuthorizationUrl(string redirectUri = null)

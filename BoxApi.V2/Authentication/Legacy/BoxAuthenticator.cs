@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using BoxApi.V2.Model.Enum;
 using RestSharp;
 
 namespace BoxApi.V2.Authentication.Legacy
@@ -18,13 +19,13 @@ namespace BoxApi.V2.Authentication.Legacy
         /// <param name="apiKey">The API key for your application</param>
         /// <param name="ticket">The ticket associated with the current authorization token request, if you already have one.</param>
         /// <param name="proxy">An optional web proxy that should be used in conjunction with any calls to Box</param>
-        public BoxAuthenticator(string apiKey, string ticket = null, WebProxy proxy = null)
+        public BoxAuthenticator(string apiKey, string ticket = null, WebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
         {
             ApiKey = apiKey;
             Ticket = ticket;
             Proxy = proxy;
             _requestHelper = new RequestHelper();
-            _restClient = new BoxRestClient(new LegacyRequestAuthenticator(ApiKey, null), proxy);
+            _restClient = new BoxRestClient(new LegacyRequestAuthenticator(ApiKey, null), proxy, options);
         }
 
         /// <summary>

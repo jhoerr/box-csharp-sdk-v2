@@ -1,9 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
-using BoxApi.V2.Authentication;
 using BoxApi.V2.Authentication.Common;
-using BoxApi.V2.Authentication.Legacy;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using RestSharp;
@@ -17,10 +15,12 @@ namespace BoxApi.V2
         public const string JsonMimeType = "application/json";
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
+        private readonly BoxManagerOptions _options;
 
-        public BoxRestClient(IRequestAuthenticator authenticator = null, IWebProxy proxy = null) :
+        public BoxRestClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
             base(ServiceUrl)
         {
+            _options = options;
             Authenticator = authenticator;
             Proxy = proxy;
             ClearHandlers();
@@ -33,18 +33,29 @@ namespace BoxApi.V2
 
         public override IRestResponse Execute(IRestRequest request)
         {
+            return Try(request);
+        }
+
+        private IRestResponse Try(IRestRequest request, HttpStatusCode lastResponse = HttpStatusCode.OK)
+        {
             IRestResponse restResponse = base.Execute(request);
             Error error;
             if (!Successful(restResponse, out error))
             {
                 switch (error.Status)
                 {
-                    case 202:
+                    case 202: // not ready
                         throw new BoxDownloadNotReadyException(error);
                     case 304: // precondition (If-None-Match) failed
                         throw new BoxItemNotModifiedException(error);
                     case 412: // precondition (If-Match) failed
                         throw new BoxItemModifiedException(error);
+                    case 500: // internal server error
+                        if (lastResponse.Equals(HttpStatusCode.OK) && _options.HasFlag(BoxManagerOptions.RetryRequestWhenHttp500Received))
+                        {
+                            return Try(request, HttpStatusCode.InternalServerError);
+                        }
+                        throw new BoxException(error);
                     default:
                         throw new BoxException(error);
                 }
@@ -144,11 +155,11 @@ namespace BoxApi.V2
 
             if (restResponse == null)
             {
-                error = new Error() { Code = "RestSharp error", Status = 500, Message = "No response was received.", };
+                error = new Error {Code = "RestSharp error", Status = 500, Message = "No response was received.",};
             }
             else if (restResponse.ErrorException != null)
             {
-                error = new Error() { Code = "RestSharp error", Status = 500, Message = restResponse.ErrorException.Message, };
+                error = new Error {Code = "RestSharp error", Status = 500, Message = restResponse.ErrorException.Message,};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.InternalServerError))
             {
@@ -156,14 +167,21 @@ namespace BoxApi.V2
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
-                error = new Error { Code = "Not Modified", Status = 304, HelpUrl = "http://developers.box.com/docs/#if-match" };
+                error = new Error {Code = "Not Modified", Status = 304, HelpUrl = "http://developers.box.com/docs/#if-match"};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Accepted))
             {
-                var retryAfter = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Retry-After", StringComparison.InvariantCultureIgnoreCase));
+                Parameter retryAfter = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Retry-After", StringComparison.InvariantCultureIgnoreCase));
                 if (retryAfter != null)
                 {
-                    error = new Error { Code = "Download Not Ready", Message = "This file is not yet ready to be downloaded. Please wait and try again.", HelpUrl = "http://developers.box.com/docs/#files-download-a-file", Status = 202, RetryAfter = int.Parse((string)retryAfter.Value) };
+                    error = new Error
+                        {
+                            Code = "Download Not Ready",
+                            Message = "This file is not yet ready to be downloaded. Please wait and try again.",
+                            HelpUrl = "http://developers.box.com/docs/#files-download-a-file",
+                            Status = 202,
+                            RetryAfter = int.Parse((string) retryAfter.Value)
+                        };
                 }
             }
             else if (restResponse.ContentType.Equals(JsonMimeType))
@@ -176,7 +194,7 @@ namespace BoxApi.V2
                 else if (restResponse.Content.Contains(@"""error"":"))
                 {
                     var authError = jsonDeserializer.Deserialize<AuthError>(restResponse);
-                    error = new Error(){Code = authError.Error, Status = 400, Message = authError.ErrorDescription, Type = ResourceType.Error};
+                    error = new Error {Code = authError.Error, Status = 400, Message = authError.ErrorDescription, Type = ResourceType.Error};
                 }
             }
             return error == null;

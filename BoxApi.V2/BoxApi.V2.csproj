@@ -98,6 +98,7 @@
     <Compile Include="Model\EmailAlias.cs" />
     <Compile Include="Model\EnterpriseUser.cs" />
     <Compile Include="Model\Enum\Access.cs" />
+    <Compile Include="Model\Enum\BoxManagerOptions.cs" />
     <Compile Include="Model\Enum\CollaborationRole.cs" />
     <Compile Include="Model\Enum\EnterpriseEventType.cs" />
     <Compile Include="Model\Enum\EnumExtensions.cs" />
