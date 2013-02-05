@@ -18,6 +18,6 @@ namespace BoxApi.V2.Model.Enum
         /// <summary>
         /// Any request that receives an HTTP 500 (Internal Server Error) response should be retried once.
         /// </summary>
-        RetryRequestWhenHttp500Received,
+        RetryRequestOnceWhenHttp500Received,
     }
 }
