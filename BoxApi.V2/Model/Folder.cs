@@ -33,6 +33,12 @@ namespace BoxApi.V2.Model
         }
 
         /// <summary>
+        /// Whether this folder will be synced by the Box sync clients or not
+        /// </summary>
+        [JsonProperty(PropertyName = "sync_state")]
+        public string SyncState { get; set; }
+
+        /// <summary>
         ///     The subfolders contained within this folder
         /// </summary>
         public IEnumerable<Folder> Folders
