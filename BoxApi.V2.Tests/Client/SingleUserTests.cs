@@ -23,7 +23,7 @@ namespace BoxApi.V2.Tests.Client
             User user = Client.Me(new[] { Field.SpaceUsed, });
             var initialSpaceUsed = user.SpaceUsed;
             File file = Client.CreateFile(Folder.Root, TestItemName(), new byte[] { 0x0, 0x1, 0x2, 0x3, 0x4 });
-            Thread.Sleep(1*1000);
+            Thread.Sleep(3*1000);
             user = Client.Me(new[] { Field.SpaceUsed, });
             var spaceUsed = user.SpaceUsed - initialSpaceUsed;
             Assert.That(spaceUsed, Is.EqualTo(file.Size));
