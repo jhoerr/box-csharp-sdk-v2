@@ -115,6 +115,7 @@
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\Field\CollaborationField.cs" />
+    <Compile Include="Model\Field\CommentField.cs" />
     <Compile Include="Model\Field\ContentFieldBase.cs" />
     <Compile Include="Model\Field\Field.cs" />
     <Compile Include="Model\Field\FileField.cs" />
