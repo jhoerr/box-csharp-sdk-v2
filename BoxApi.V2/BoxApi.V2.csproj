@@ -114,11 +114,13 @@
     <Compile Include="Model\ErrorCollection.cs" />
     <Compile Include="Model\EventCollection.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\Field\CollaborationField.cs" />
     <Compile Include="Model\Field\ContentFieldBase.cs" />
     <Compile Include="Model\Field\Field.cs" />
     <Compile Include="Model\Field\FileField.cs" />
     <Compile Include="Model\Field\FolderField.cs" />
     <Compile Include="Model\Field\IContentField.cs" />
+    <Compile Include="Model\Field\TemporalField.cs" />
     <Compile Include="Model\FolderUploadEmail.cs" />
     <Compile Include="Model\HierarchyEntity.cs" />
     <Compile Include="Model\MiniFolderEntity.cs" />
