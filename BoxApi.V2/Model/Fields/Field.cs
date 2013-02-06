@@ -1,6 +1,11 @@
 namespace BoxApi.V2.Model.Fields
 {
-    public class Field
+    public interface IField
+    {
+        string Value { get; }
+    }
+
+    public class Field : IField
     {
         public Field(string value)
         {

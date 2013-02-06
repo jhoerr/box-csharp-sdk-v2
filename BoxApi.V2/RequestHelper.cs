@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Serialization;
 using Newtonsoft.Json;
 using RestSharp;
+using Field = BoxApi.V2.Model.Enum.Field;
 
 namespace BoxApi.V2
 {
@@ -34,7 +36,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetDiscussions(string folderId, Field[] fields = null)
+        public IRestRequest GetDiscussions(string folderId, DiscussionField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET, fields);
             request.AddUrlSegment("id", folderId.Trim());
@@ -196,7 +198,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateDiscussion(string parentId, string name, string description, Field[] fields = null)
+        public IRestRequest CreateDiscussion(string parentId, string name, string description, DiscussionField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Discussion, null, Method.POST, fields);
             request.AddBody(new {parent = new {id = parentId.Trim()}, name, description});
@@ -454,6 +456,21 @@ namespace BoxApi.V2
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
+
+        private IRestRequest JsonRequest<TField>(ResourceType resourceResourceType, string resource, Method method, TField[] fields = null) where TField : IField 
+        {
+            string fieldList = null;
+            if (fields != null && fields.Any())
+            {
+                fieldList = string.Join(",", fields.Select(f => f.Value));
+            }
+
+            IRestRequest request = RawRequest(resourceResourceType, resource, method, fieldList);
+            request.RequestFormat = DataFormat.Json;
+            request.JsonSerializer = new AttributableJsonSerializer();
+            return request;
+        }
+
 
         private class UpdateableEnterpriseUser : EnterpriseUser
         {
