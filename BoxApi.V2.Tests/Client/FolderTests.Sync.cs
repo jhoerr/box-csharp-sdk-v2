@@ -103,7 +103,7 @@ namespace BoxApi.V2.Tests.Client
             try
             {
                 var folder = Client.Get(testFolder, new[]{Field.SyncState, });
-                Assert.That(folder.SyncState, Is.EqualTo("not_synced"));
+                Assert.That(folder.SyncState, Is.EqualTo(SyncState.NotSynced));
             }
             finally
             {
@@ -119,7 +119,7 @@ namespace BoxApi.V2.Tests.Client
             try
             {
                 var folder = Client.Get(testFolder);
-                Assert.That(folder.SyncState, Is.Null);
+                Assert.That(folder.SyncState, Is.EqualTo(SyncState.Unknown));
             }
             finally
             {

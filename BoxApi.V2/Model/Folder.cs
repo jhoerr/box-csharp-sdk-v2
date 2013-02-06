@@ -36,7 +36,7 @@ namespace BoxApi.V2.Model
         /// Whether this folder will be synced by the Box sync clients or not.  This field is not returned by default; it must be explicitly requested via the 'fields' parameter.
         /// </summary>
         [JsonProperty(PropertyName = "sync_state")]
-        public string SyncState { get; set; }
+        public SyncState SyncState { get; set; }
 
         /// <summary>
         ///     The subfolders contained within this folder
