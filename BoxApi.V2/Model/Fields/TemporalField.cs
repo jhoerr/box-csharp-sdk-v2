@@ -1,4 +1,4 @@
-namespace BoxApi.V2.Model.Field
+namespace BoxApi.V2.Model.Fields
 {
     public class TemporalField
     {
