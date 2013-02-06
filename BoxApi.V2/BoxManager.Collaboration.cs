@@ -1,7 +1,9 @@
 ﻿using System;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using RestSharp;
+using Field = BoxApi.V2.Model.Enum.Field;
 
 namespace BoxApi.V2
 {
@@ -15,7 +17,7 @@ namespace BoxApi.V2
         /// <param name="role">The role of the collaborating user</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new collaboration</returns>
-        public Collaboration CreateCollaboration(Folder folder, string userId, CollaborationRole role, Field[] fields = null)
+        public Collaboration CreateCollaboration(Folder folder, string userId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return CreateCollaboration(folder.Id, userId, role, fields);
@@ -29,7 +31,7 @@ namespace BoxApi.V2
         /// <param name="role">The role of the collaborating user</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new collaboration</returns>
-        public Collaboration CreateCollaboration(string folderId, string userId, CollaborationRole role, Field[] fields = null)
+        public Collaboration CreateCollaboration(string folderId, string userId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(userId, "userId");
@@ -47,7 +49,7 @@ namespace BoxApi.V2
         /// <param name="userId">The ID of the collaborating user</param>
         /// <param name="role">The role of the collaborating user</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, Folder folder, string userId, CollaborationRole role, Field[] fields = null)
+        public void CreateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, Folder folder, string userId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(folder, "folder");
             CreateCollaboration(onSuccess, onFailure, folder.Id, userId, role, fields);
@@ -62,7 +64,7 @@ namespace BoxApi.V2
         /// <param name="userId">The ID of the collaborating user</param>
         /// <param name="role">The role of the collaborating user</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string folderId, string userId, CollaborationRole role, Field[] fields = null)
+        public void CreateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string folderId, string userId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(userId, "userId");
@@ -77,7 +79,7 @@ namespace BoxApi.V2
         /// <param name="collaboration">The collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The existing collaboration</returns>
-        public Collaboration Get(Collaboration collaboration, Field[] fields = null)
+        public Collaboration Get(Collaboration collaboration, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             return GetCollaboration(collaboration.Id, fields);
@@ -89,7 +91,7 @@ namespace BoxApi.V2
         /// <param name="collaborationId">The ID of the collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The existing collaboration</returns>
-        public Collaboration GetCollaboration(string collaborationId, Field[] fields = null)
+        public Collaboration GetCollaboration(string collaborationId, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             var request = _requestHelper.GetCollaboration(collaborationId, fields);
@@ -103,7 +105,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
         /// <param name="collaboration">The collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Get(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, Field[] fields = null)
+        public void Get(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             GetCollaboration(onSuccess, onFailure, collaboration.Id, fields);
@@ -116,7 +118,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
         /// <param name="collaborationId">The ID of the collaboration to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, Field[] fields = null)
+        public void GetCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -131,7 +133,7 @@ namespace BoxApi.V2
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned CollaborationCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's collaborations</returns>
-        public CollaborationCollection GetCollaborations(Folder folder, bool pendingCollaborationsOnly = false, Field[] fields = null)
+        public CollaborationCollection GetCollaborations(Folder folder, bool pendingCollaborationsOnly = false, CollaborationField[] fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetCollaborations(folder.Id, pendingCollaborationsOnly, fields);
@@ -144,7 +146,7 @@ namespace BoxApi.V2
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned CollaborationCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's collaborations</returns>
-        public CollaborationCollection GetCollaborations(string folderId, bool pendingCollaborationsOnly = false, Field[] fields = null)
+        public CollaborationCollection GetCollaborations(string folderId, bool pendingCollaborationsOnly = false, CollaborationField[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             var request = _requestHelper.GetCollaborations(folderId, pendingCollaborationsOnly, fields);
@@ -159,7 +161,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder whose collaborations should be retrieved</param>
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned CollaborationCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetCollaborations(Action<CollaborationCollection> onSuccess, Action<Error> onFailure, Folder folder, bool pendingCollaborationsOnly = false, Field[] fields = null)
+        public void GetCollaborations(Action<CollaborationCollection> onSuccess, Action<Error> onFailure, Folder folder, bool pendingCollaborationsOnly = false, CollaborationField[] fields = null)
         {
             GuardFromNull(folder, "folder");
             GetCollaborations(onSuccess, onFailure, folder.Id, pendingCollaborationsOnly, fields);
@@ -173,7 +175,7 @@ namespace BoxApi.V2
         /// <param name="folderId">The ID of the folder whose collaborations should be retrieved</param>
         /// <param name="pendingCollaborationsOnly">Retrieve only those collaborations whose status is 'Pending'</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned CollaborationCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetCollaborations(Action<CollaborationCollection> onSuccess, Action<Error> onFailure, string folderId, bool pendingCollaborationsOnly = false, Field[] fields = null)
+        public void GetCollaborations(Action<CollaborationCollection> onSuccess, Action<Error> onFailure, string folderId, bool pendingCollaborationsOnly = false, CollaborationField[] fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -188,7 +190,7 @@ namespace BoxApi.V2
         /// <param name="role">The collaborator's new role</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated collaboration</returns>
-        public Collaboration Update(Collaboration collaboration, CollaborationRole role, Field[] fields = null)
+        public Collaboration Update(Collaboration collaboration, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             return UpdateCollaboration(collaboration.Id, role, fields);
@@ -202,7 +204,7 @@ namespace BoxApi.V2
         /// <param name="status">The collaborator's new status</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated collaboration</returns>
-        public Collaboration Update(Collaboration collaboration, CollaborationRole role, Status status, Field[] fields = null)
+        public Collaboration Update(Collaboration collaboration, CollaborationRole role, Status status, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             return UpdateCollaboration(collaboration.Id, role, status, fields);
@@ -215,7 +217,7 @@ namespace BoxApi.V2
         /// <param name="role">The collaborator's new role</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated collaboration</returns>
-        public Collaboration UpdateCollaboration(string collaborationId, CollaborationRole role, Field[] fields = null)
+        public Collaboration UpdateCollaboration(string collaborationId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             var request = _requestHelper.UpdateCollaboration(collaborationId, role, fields);
@@ -230,7 +232,7 @@ namespace BoxApi.V2
         /// <param name="status">The collaborator's new status</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated collaboration</returns>
-        public Collaboration UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, Field[] fields = null)
+        public Collaboration UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             var request = _requestHelper.UpdateCollaboration(collaborationId, role, status, fields);
@@ -245,7 +247,7 @@ namespace BoxApi.V2
         /// <param name="collaboration">The collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Update(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, CollaborationRole role, Field[] fields = null)
+        public void Update(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             UpdateCollaboration(onSuccess, onFailure, collaboration.Id, role, fields);
@@ -260,7 +262,7 @@ namespace BoxApi.V2
         /// <param name="role">The collaborator's new role</param>
         /// <param name="status">The collaborator's new status</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Update(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, CollaborationRole role, Status status, Field[] fields = null)
+        public void Update(Action<Collaboration> onSuccess, Action<Error> onFailure, Collaboration collaboration, CollaborationRole role, Status status, CollaborationField[] fields = null)
         {
             GuardFromNull(collaboration, "collaboration");
             UpdateCollaboration(onSuccess, onFailure, collaboration.Id, role, status, fields);
@@ -274,7 +276,7 @@ namespace BoxApi.V2
         /// <param name="collaborationId">The ID of the collaboration to update</param>
         /// <param name="role">The collaborator's new role</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, CollaborationRole role, Field[] fields = null)
+        public void UpdateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, CollaborationRole role, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             var request = _requestHelper.UpdateCollaboration(collaborationId, role, fields);
@@ -290,7 +292,7 @@ namespace BoxApi.V2
         /// <param name="role">The collaborator's new role</param>
         /// <param name="status">The collaborator's new status</param>
         /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, CollaborationRole role, Status status, Field[] fields = null)
+        public void UpdateCollaboration(Action<Collaboration> onSuccess, Action<Error> onFailure, string collaborationId, CollaborationRole role, Status status, CollaborationField[] fields = null)
         {
             GuardFromNull(collaborationId, "collaborationId");
             var request = _requestHelper.UpdateCollaboration(collaborationId, role, status, fields);
