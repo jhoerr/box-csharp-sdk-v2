@@ -1,9 +1,16 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class CommentField : TemporalField
+    public class CommentField : Field
     {
-        public static Field IsReplyComment = new Field("is_reply_comment");
-        public static Field Message = new Field("message");
-        public static Field Item = new Field("item");
+        public static CommentField IsReplyComment = new CommentField("is_reply_comment");
+        public static CommentField Message = new CommentField("message");
+        public static CommentField Item = new CommentField("item");
+        public static CommentField CreatedAt = new CommentField("created_at");
+        public static CommentField ModifiedAt = new CommentField("modified_at");
+        public static CommentField CreatedBy = new CommentField("created_by");
+
+        public CommentField(string value) : base(value)
+        {
+        }
     }
 }

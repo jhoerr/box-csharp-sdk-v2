@@ -1,12 +1,19 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class CollaborationField : TemporalField
+    public class CollaborationField : Field
     {
-        public static Field ExpiresAt = new Field("expires_at");
-        public static Field Status = new Field("status");
-        public static Field AccessibleBy = new Field("accessible_by");
-        public static Field Role = new Field("role");
-        public static Field AcknowledgedAt = new Field("acknowledged_at");
-        public static Field Item = new Field("item");
+        public static CollaborationField Status = new CollaborationField("status");
+        public static CollaborationField AccessibleBy = new CollaborationField("accessible_by");
+        public static CollaborationField Role = new CollaborationField("role");
+        public static CollaborationField AcknowledgedAt = new CollaborationField("acknowledged_at");
+        public static CollaborationField Item = new CollaborationField("item");
+        public static CollaborationField CreatedAt = new CollaborationField("created_at");
+        public static CollaborationField ModifiedAt = new CollaborationField("modified_at");
+        public static CollaborationField CreatedBy = new CollaborationField("created_by");
+        public static CollaborationField ExpiresAt = new CollaborationField("expires_at");
+
+        public CollaborationField(string value) : base(value)
+        {
+        }
     }
 }
