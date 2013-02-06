@@ -118,6 +118,7 @@
     <Compile Include="Model\Fields\CommentField.cs" />
     <Compile Include="Model\Fields\ContentFieldBase.cs" />
     <Compile Include="Model\Fields\DiscussionField.cs" />
+    <Compile Include="Model\Fields\EnterpriseUserField.cs" />
     <Compile Include="Model\Fields\Field.cs" />
     <Compile Include="Model\Fields\FileField.cs" />
     <Compile Include="Model\Fields\FolderField.cs" />
