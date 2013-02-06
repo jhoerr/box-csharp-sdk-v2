@@ -33,7 +33,7 @@ namespace BoxApi.V2.Model
         }
 
         /// <summary>
-        /// Whether this folder will be synced by the Box sync clients or not
+        /// Whether this folder will be synced by the Box sync clients or not.  This field is not returned by default; it must be explicitly requested via the 'fields' parameter.
         /// </summary>
         [JsonProperty(PropertyName = "sync_state")]
         public string SyncState { get; set; }

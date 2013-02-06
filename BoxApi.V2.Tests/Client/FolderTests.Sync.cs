@@ -96,6 +96,37 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void GetSyncState()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder, new[]{Field.SyncState, });
+                Assert.That(folder.SyncState, Is.EqualTo("not_synced"));
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        [Test]
+        public void SyncStateNotReturnedByDefault()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder);
+                Assert.That(folder.SyncState, Is.Null);
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+        [Test]
         public void FieldsWorksOnGetFolder()
         {
             var fileName = TestItemName();
