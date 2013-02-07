@@ -1,6 +1,7 @@
 ﻿using System;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using RestSharp;
 
 namespace BoxApi.V2
@@ -14,7 +15,7 @@ namespace BoxApi.V2
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The file's new comment</returns>
-        public Comment CreateComment(File file, string message, Field[] fields = null)
+        public Comment CreateComment(File file, string message, CommentField[] fields = null)
         {
             GuardFromNull(file, "file");
             return CreateFileComment(file.Id, message, fields);
@@ -27,7 +28,7 @@ namespace BoxApi.V2
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new comment</returns>
-        public Comment CreateFileComment(string fileId, string message, Field[] fields = null)
+        public Comment CreateFileComment(string fileId, string message, CommentField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(message, "message");
@@ -43,7 +44,7 @@ namespace BoxApi.V2
         /// <param name="file">The file on which to commment</param>
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, File file, string message, Field[] fields = null)
+        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, File file, string message, CommentField[] fields = null)
         {
             GuardFromNull(file, "file");
             CreateFileComment(onSuccess, onFailure, file.Id, message, fields);
@@ -57,7 +58,7 @@ namespace BoxApi.V2
         /// <param name="fileId">The ID of the file on which to comment</param>
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFileComment(Action<Comment> onSuccess, Action<Error> onFailure, string fileId, string message, Field[] fields = null)
+        public void CreateFileComment(Action<Comment> onSuccess, Action<Error> onFailure, string fileId, string message, CommentField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(message, "message");
@@ -73,7 +74,7 @@ namespace BoxApi.V2
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The discussion's new comment</returns>
-        public Comment CreateComment(Discussion discussion, string message, Field[] fields = null)
+        public Comment CreateComment(Discussion discussion, string message, CommentField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             return CreateDiscussionComment(discussion.Id, message, fields);
@@ -86,7 +87,7 @@ namespace BoxApi.V2
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The discussion's new comment</returns>
-        public Comment CreateDiscussionComment(string discussionId, string message, Field[] fields = null)
+        public Comment CreateDiscussionComment(string discussionId, string message, CommentField[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNull(message, "comment");
@@ -102,7 +103,7 @@ namespace BoxApi.V2
         /// <param name="discussion">The discussion in which to comment</param>
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, Discussion discussion, string message, Field[] fields = null)
+        public void CreateComment(Action<Comment> onSuccess, Action<Error> onFailure, Discussion discussion, string message, CommentField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             CreateDiscussionComment(onSuccess, onFailure, discussion.Id, message, fields);
@@ -116,7 +117,7 @@ namespace BoxApi.V2
         /// <param name="discussionId">The ID of the discussion in which to comment</param>
         /// <param name="message">The message to add</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateDiscussionComment(Action<Comment> onSuccess, Action<Error> onFailure, string discussionId, string message, Field[] fields = null)
+        public void CreateDiscussionComment(Action<Comment> onSuccess, Action<Error> onFailure, string discussionId, string message, CommentField[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNull(message, "message");
@@ -131,7 +132,7 @@ namespace BoxApi.V2
         /// <param name="comment">The comment to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved comment</returns>
-        public Comment GetComment(Comment comment, Field[] fields = null)
+        public Comment GetComment(Comment comment, CommentField[] fields = null)
         {
             GuardFromNull(comment, "comment");
             return GetComment(comment.Id, fields);
@@ -143,7 +144,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the comment to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved comment</returns>
-        public Comment GetComment(string id, Field[] fields = null)
+        public Comment GetComment(string id, CommentField[] fields = null)
         {
             GuardFromNull(id, "id");
             var restRequest = _requestHelper.Get(ResourceType.Comment, id, fields);
@@ -157,7 +158,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="comment">The comment to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, Field[] fields = null)
+        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, CommentField[] fields = null)
         {
             GuardFromNull(comment, "comment");
             GetComment(onSuccess, onFailure, comment.Id, fields);
@@ -170,7 +171,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="id">The ID of the comment to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
+        public void GetComment(Action<Comment> onSuccess, Action<Error> onFailure, string id, CommentField[] fields = null)
         {
             GuardFromNull(id, "commentId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -185,7 +186,7 @@ namespace BoxApi.V2
         /// <param name="file">The file whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The file's comments</returns>
-        public CommentCollection GetComments(File file, Field[] fields = null)
+        public CommentCollection GetComments(File file, CommentField[] fields = null)
         {
             GuardFromNull(file, "file");
             return GetFileComments(file.Id, fields);
@@ -197,7 +198,7 @@ namespace BoxApi.V2
         /// <param name="fileId">The ID of the file whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The file's comments</returns>
-        public CommentCollection GetFileComments(string fileId, Field[] fields = null)
+        public CommentCollection GetFileComments(string fileId, CommentField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             var restRequest = _requestHelper.GetComments(ResourceType.File, fileId, fields);
@@ -211,7 +212,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="file">The file whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
+        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, File file, CommentField[] fields = null)
         {
             GuardFromNull(file, "file");
             GetFileComments(onSuccess, onFailure, file.Id, fields);
@@ -224,7 +225,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="fileId">The ID of the file whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFileComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string fileId, Field[] fields = null)
+        public void GetFileComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string fileId, CommentField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -238,7 +239,7 @@ namespace BoxApi.V2
         /// <param name="discussion">The discussion whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The discussion's comments</returns>
-        public CommentCollection GetComments(Discussion discussion, Field[] fields = null)
+        public CommentCollection GetComments(Discussion discussion, CommentField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             return GetDiscussionComments(discussion.Id, fields);
@@ -250,7 +251,7 @@ namespace BoxApi.V2
         /// <param name="discussionId">The ID of the discussion whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The discussion's comments</returns>
-        public CommentCollection GetDiscussionComments(string discussionId, Field[] fields = null)
+        public CommentCollection GetDiscussionComments(string discussionId, CommentField[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             var restRequest = _requestHelper.GetComments(ResourceType.Discussion, discussionId, fields);
@@ -264,7 +265,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="discussion">The discussion whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, Discussion discussion, Field[] fields = null)
+        public void GetComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, Discussion discussion, CommentField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             GetDiscussionComments(onSuccess, onFailure, discussion.Id, fields);
@@ -277,7 +278,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="discussionId">The ID of the discussion whose comments are to be retrieved</param>
         /// <param name="fields">The properties that should be set on the returned CommentCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussionComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string discussionId, Field[] fields = null)
+        public void GetDiscussionComments(Action<CommentCollection> onSuccess, Action<Error> onFailure, string discussionId, CommentField[] fields = null)
         {
             GuardFromNull(discussionId, "discussionId");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -291,7 +292,7 @@ namespace BoxApi.V2
         /// <param name="comment">The comment to update</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated comment</returns>
-        public Comment Update(Comment comment, Field[] fields = null)
+        public Comment Update(Comment comment, CommentField[] fields = null)
         {
             GuardFromNull(comment, "comment");
             return UpdateComment(comment.Id, comment.Message, fields);
@@ -304,7 +305,7 @@ namespace BoxApi.V2
         /// <param name="message">The comment's new message</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The updated comment</returns>
-        public Comment UpdateComment(string id, string message, Field[] fields = null)
+        public Comment UpdateComment(string id, string message, CommentField[] fields = null)
         {
             var request = _requestHelper.Update(ResourceType.Comment, id, null, fields, message: message);
             return _restClient.ExecuteAndDeserialize<Comment>(request);
@@ -317,7 +318,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed Comment operation</param>
         /// <param name="comment">The comment to update</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Update(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, Field[] fields = null)
+        public void Update(Action<Comment> onSuccess, Action<Error> onFailure, Comment comment, CommentField[] fields = null)
         {
             GuardFromNull(comment, "comment");
             UpdateComment(onSuccess, onFailure, comment.Id, comment.Message, fields);
@@ -331,7 +332,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the comment to update</param>
         /// <param name="message">The comment's new message</param>
         /// <param name="fields">The properties that should be set on the returned Comment.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateComment(Action<Comment> onSuccess, Action<Error> onFailure, string id, string message, Field[] fields = null)
+        public void UpdateComment(Action<Comment> onSuccess, Action<Error> onFailure, string id, string message, CommentField[] fields = null)
         {
             var request = _requestHelper.Update(ResourceType.Comment, id, null, fields, message: message);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);

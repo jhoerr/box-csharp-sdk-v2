@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
@@ -54,7 +55,7 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var items = Client.GetItems(testFolder, new[] {Field.CreatedAt, Field.Name,});
+                var items = Client.GetItems(testFolder, new[] { FolderField.CreatedAt, FolderField.Name, });
                 Assert.That(items, Is.Not.Null);
                 Assert.That(items.TotalCount, Is.EqualTo(2));
                 // expected present
@@ -102,7 +103,7 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var folder = Client.Get(testFolder, new[]{Field.SyncState, });
+                var folder = Client.Get(testFolder, new[]{FolderField.SyncState, });
                 Assert.That(folder.SyncState, Is.EqualTo(SyncState.NotSynced));
             }
             finally
@@ -134,7 +135,7 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var folder = Client.GetFolder(RootId, new[] {Field.Name, Field.Size, Field.Etag,});
+                var folder = Client.GetFolder(RootId, new[] {FolderField.Name, FolderField.Size, FolderField.Etag,});
                 var actual = folder.Files.Single(f => f.Id.Equals(testFile.Id));
                 // expect present
                 Assert.That(actual, Is.Not.Null);
@@ -159,7 +160,7 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var folder = Client.GetFolder(RootId, new[] { Field.Name, Field.Size, Field.Etag, });
+                var folder = Client.GetFolder(RootId, new[] { FolderField.Name, FolderField.Size, FolderField.Etag, });
                 var actual = folder.Folders.Single(f => f.Id.Equals(testFolder.Id));
                 // expect present
                 Assert.That(actual, Is.Not.Null);
@@ -209,7 +210,7 @@ namespace BoxApi.V2.Tests.Client
         public void FieldsWorkOnCreateFolder()
         {
             var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, new[]{Field.Name, Field.Parent, });
+            var folder = Client.CreateFolder(RootId, folderName, new[]{FolderField.Name, FolderField.Parent, });
             AssertFolderConstraints(folder, folderName, RootId);
             Assert.That(folder.CreatedAt, Is.Null);
             Assert.That(folder.CreatedBy, Is.Null);

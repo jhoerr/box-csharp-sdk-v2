@@ -1,6 +1,6 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public interface IContentField
+    public interface IContentField : IField
     {
     }
 }

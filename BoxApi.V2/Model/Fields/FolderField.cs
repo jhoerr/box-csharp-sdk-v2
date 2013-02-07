@@ -1,6 +1,6 @@
 namespace BoxApi.V2.Model.Fields
 {
-    public class FolderField : Field
+    public class FolderField : Field, IContentField
     {
         public static FolderField FolderUploadEmail = new FolderField("folder_upload_email");
         public static FolderField ItemCollection = new FolderField("item_collection");

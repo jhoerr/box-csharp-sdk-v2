@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using RestSharp;
 using File = BoxApi.V2.Model.File;
 
@@ -22,7 +23,7 @@ namespace BoxApi.V2
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(Folder parent, string name, Field[] fields = null)
+        public File CreateFile(Folder parent, string name, FileField[] fields = null)
         {
             return CreateFile(parent, name, new byte[0], fields);
         }
@@ -34,7 +35,7 @@ namespace BoxApi.V2
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(string parentId, string name, Field[] fields = null)
+        public File CreateFile(string parentId, string name, FileField[] fields = null)
         {
             return CreateFile(parentId, name, new byte[0], fields);
         }
@@ -47,7 +48,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(Folder parent, string name, Stream content, Field[] fields = null)
+        public File CreateFile(Folder parent, string name, Stream content, FileField[] fields = null)
         {
             return CreateFile(parent, name, ReadFully(content), fields);
         }
@@ -60,7 +61,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(string parentId, string name, Stream content, Field[] fields = null)
+        public File CreateFile(string parentId, string name, Stream content, FileField[] fields = null)
         {
             return CreateFile(parentId, name, ReadFully(content), fields);
         }
@@ -73,7 +74,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(Folder parent, string name, byte[] content, Field[] fields = null)
+        public File CreateFile(Folder parent, string name, byte[] content, FileField[] fields = null)
         {
             GuardFromNull(parent, "folder");
             return CreateFile(parent.Id, name, content, fields);
@@ -87,7 +88,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created file</returns>
-        public File CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
+        public File CreateFile(string parentId, string name, byte[] content, FileField[] fields = null)
         {
             GuardFromNull(parentId, "parentFolderId");
             GuardFromNull(name, "name");
@@ -103,7 +104,7 @@ namespace BoxApi.V2
         /// <param name="parent">The folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, FileField[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parent, name, new byte[0], fields);
         }
@@ -116,7 +117,7 @@ namespace BoxApi.V2
         /// <param name="parentId">The ID of the folder in which to create the file</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, FileField[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parentId, name, new byte[0], fields);
         }
@@ -130,7 +131,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Stream content, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, Stream content, FileField[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parent, name, ReadFully(content), fields);
         }
@@ -144,7 +145,7 @@ namespace BoxApi.V2
         /// <param name="content">The file's data</param>
         /// <param name="name">The file's name</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Stream content, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, Stream content, FileField[] fields = null)
         {
             CreateFile(onSuccess, onFailure, parentId, name, ReadFully(content), fields);
         }
@@ -158,7 +159,7 @@ namespace BoxApi.V2
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, byte[] content, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, Folder parent, string name, byte[] content, FileField[] fields = null)
         {
             GuardFromNull(parent, "folder");
             CreateFile(onSuccess, onFailure, parent.Id, name, content, fields);
@@ -173,7 +174,7 @@ namespace BoxApi.V2
         /// <param name="name">The file's name</param>
         /// <param name="content">The file's data</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, byte[] content, Field[] fields = null)
+        public void CreateFile(Action<File> onSuccess, Action<Error> onFailure, string parentId, string name, byte[] content, FileField[] fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -197,7 +198,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched file</returns>
-        public File Get(File file, Field[] fields = null, string etag = null)
+        public File Get(File file, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             return GetFile(file.Id, fields, etag);
@@ -210,7 +211,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched file</returns>
-        public File GetFile(string id, Field[] fields = null, string etag = null)
+        public File GetFile(string id, FileField[] fields = null, string etag = null)
         {
             return GetFile(id, restRequest => _restClient.ExecuteAndDeserialize<File>(restRequest), fields, etag);
         }
@@ -223,12 +224,12 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The shared file</returns>
-        public File GetFile(string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
+        public File GetFile(string id, string sharedLinkUrl, FileField[] fields = null, string etag = null)
         {
             return GetFile(id, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<File>, fields, etag);
         }
 
-        private File GetFile(string id, Func<IRestRequest, File> getFileOperation, Field[] fields = null, string etag = null)
+        private File GetFile(string id, Func<IRestRequest, File> getFileOperation, FileField[] fields = null, string etag = null)
         {
             IRestRequest request = _requestHelper.Get(ResourceType.File, id, fields, etag);
             return getFileOperation(request);
@@ -242,7 +243,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to get</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
+        public void Get(Action<File> onSuccess, Action<Error> onFailure, File file, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             GetFile(onSuccess, onFailure, file.Id, fields, etag);
@@ -256,7 +257,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the file to get</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Field[] fields = null, string etag = null)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, FileField[] fields = null, string etag = null)
         {
             GetFile(onSuccess, onFailure, id, _restClient.ExecuteAsync, fields, etag);
         }
@@ -270,12 +271,12 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the file</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, Field[] fields = null, string etag = null)
+        public void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, FileField[] fields = null, string etag = null)
         {
             GetFile(onSuccess, onFailure, id, _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync, fields, etag);
         }
 
-        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, Field[] fields = null, string etag = null)
+        private void GetFile(Action<File> onSuccess, Action<Error> onFailure, string id, Action<IRestRequest, Action<File>, Action<Error>> getFileAsync, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -623,7 +624,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied file</returns>
-        public File Copy(File file, Folder newParent, string newName = null, Field[] fields = null)
+        public File Copy(File file, Folder newParent, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
@@ -638,7 +639,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied file</returns>
-        public File Copy(File file, string newParentId, string newName = null, Field[] fields = null)
+        public File Copy(File file, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             return CopyFile(file.Id, newParentId, newName, fields);
@@ -652,7 +653,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied file</returns>
-        public File CopyFile(string id, string newParentId, string newName = null, Field[] fields = null)
+        public File CopyFile(string id, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -669,7 +670,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied file</returns>
-        public File CopyFile(string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        public File CopyFile(string id, string sharedLinkUrl, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -686,7 +687,7 @@ namespace BoxApi.V2
         /// <param name="newParent">The destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName = null, Field[] fields = null)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             GuardFromNull(newParent, "folder");
@@ -702,7 +703,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName = null, Field[] fields = null)
+        public void Copy(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             CopyFile(onSuccess, onFailure, file.Id, newParentId, newName, fields);
@@ -717,7 +718,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, Field[] fields = null)
+        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -736,7 +737,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied file</param>
         /// <param name="newName">The optional new name for the copied file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, Field[] fields = null)
+        public void CopyFile(Action<File> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, FileField[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -754,7 +755,7 @@ namespace BoxApi.V2
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public File ShareLink(File file, SharedLink sharedLink, Field[] fields = null, string etag = null)
+        public File ShareLink(File file, SharedLink sharedLink, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             return ShareFileLink(file.Id, sharedLink, fields, etag);
@@ -769,7 +770,7 @@ namespace BoxApi.V2
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>A file object populated with the shared link</returns>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public File ShareFileLink(string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
+        public File ShareFileLink(string id, SharedLink sharedLink, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -787,7 +788,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, Field[] fields = null, string etag = null)
+        public void ShareLink(Action<File> onSuccess, Action<Error> onFailure, File file, SharedLink sharedLink, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             ShareFileLink(onSuccess, onFailure, file.Id, sharedLink, fields, etag);
@@ -803,7 +804,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for File.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, Field[] fields = null, string etag = null)
+        public void ShareFileLink(Action<File> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -820,7 +821,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
-        public File Move(File file, Folder newParent, Field[] fields = null, string etag = null)
+        public File Move(File file, Folder newParent, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
             return Move(file, newParent.Id, fields, etag);
@@ -834,7 +835,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
-        public File Move(File file, string newParentId, Field[] fields = null, string etag = null)
+        public File Move(File file, string newParentId, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             return MoveFile(file.Id, newParentId, fields, etag);
@@ -848,7 +849,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved file</returns>
-        public File MoveFile(string id, string newParentId, Field[] fields = null, string etag = null)
+        public File MoveFile(string id, string newParentId, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -865,7 +866,7 @@ namespace BoxApi.V2
         /// <param name="newParent">The destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, Field[] fields = null, string etag = null)
+        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, Folder newParent, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
             Move(onSuccess, onFailure, file, newParent.Id, fields, etag);
@@ -880,7 +881,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, Field[] fields = null, string etag = null)
+        public void Move(Action<File> onSuccess, Action<Error> onFailure, File file, string newParentId, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             MoveFile(onSuccess, onFailure, file.Id, newParentId, fields, etag);
@@ -895,7 +896,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, Field[] fields = null, string etag = null)
+        public void MoveFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newParentId, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -912,7 +913,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed file</returns>
-        public File Rename(File file, string newName, Field[] fields = null, string etag = null)
+        public File Rename(File file, string newName, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             return RenameFile(file.Id, newName, fields, etag);
@@ -926,7 +927,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed file</returns>
-        public File RenameFile(string id, string newName, Field[] fields = null, string etag = null)
+        public File RenameFile(string id, string newName, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -943,7 +944,7 @@ namespace BoxApi.V2
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, Field[] fields = null, string etag = null)
+        public void Rename(Action<File> onSuccess, Action<Error> onFailure, File file, string newName, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             RenameFile(onSuccess, onFailure, file.Id, newName, fields, etag);
@@ -958,7 +959,7 @@ namespace BoxApi.V2
         /// <param name="newName">The new name for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, Field[] fields = null, string etag = null)
+        public void RenameFile(Action<File> onSuccess, Action<Error> onFailure, string id, string newName, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -975,7 +976,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
-        public File UpdateDescription(File file, string description, Field[] fields = null, string etag = null)
+        public File UpdateDescription(File file, string description, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             return UpdateFileDescription(file.Id, description, fields, etag);
@@ -989,7 +990,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
-        public File UpdateFileDescription(string id, string description, Field[] fields = null, string etag = null)
+        public File UpdateFileDescription(string id, string description, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -1006,7 +1007,7 @@ namespace BoxApi.V2
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, Field[] fields = null, string etag = null)
+        public void UpdateDescription(Action<File> onSuccess, Action<Error> onFailure, File file, string description, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             UpdateFileDescription(onSuccess, onFailure, file.Id, description, fields, etag);
@@ -1021,7 +1022,7 @@ namespace BoxApi.V2
         /// <param name="description">The new description for the file</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, Field[] fields = null, string etag = null)
+        public void UpdateFileDescription(Action<File> onSuccess, Action<Error> onFailure, string id, string description, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -1036,7 +1037,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated file</returns>
-        public File Update(File file, Field[] fields = null, string etag = null)
+        public File Update(File file, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             IRestRequest request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
@@ -1051,7 +1052,7 @@ namespace BoxApi.V2
         /// <param name="file">The file to update</param>
         /// <param name="fields">The properties that should be set on the returned File object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, Field[] fields = null, string etag = null)
+        public void Update(Action<File> onSuccess, Action<Error> onFailure, File file, FileField[] fields = null, string etag = null)
         {
             GuardFromNull(file, "file");
             IRestRequest request = _requestHelper.Update(ResourceType.File, file.Id, etag, fields, file.Parent.Id, file.Name, file.Description, file.SharedLink);
@@ -1115,7 +1116,7 @@ namespace BoxApi.V2
         /// <param name="file">The file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of metadata objects</returns>
-        public VersionCollection GetVersions(File file, Field[] fields = null)
+        public VersionCollection GetVersions(File file, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             return GetVersions(file.Id);
@@ -1127,7 +1128,7 @@ namespace BoxApi.V2
         /// <param name="fileId">The ID of the file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of metadata objects</returns>
-        public VersionCollection GetVersions(string fileId, Field[] fields = null)
+        public VersionCollection GetVersions(string fileId, FileField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             IRestRequest request = _requestHelper.GetVersions(fileId, fields);
@@ -1141,7 +1142,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="file">The file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, File file, Field[] fields = null)
+        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, File file, FileField[] fields = null)
         {
             GuardFromNull(file, "file");
             GetVersions(onSuccess, onFailure, file.Id);
@@ -1154,7 +1155,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed File operation</param>
         /// <param name="fileId">The ID of the file for which to retrieve metadata</param>
         /// <param name="fields">The properties that should be set on the returned VersionCollection.Entries.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, string fileId, Field[] fields = null)
+        public void GetVersions(Action<VersionCollection> onSuccess, Action<Error> onFailure, string fileId, FileField[] fields = null)
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNullCallbacks(onSuccess, onFailure);

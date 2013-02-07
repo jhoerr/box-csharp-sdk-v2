@@ -1,6 +1,6 @@
 ﻿using System;
 using BoxApi.V2.Model;
-using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using RestSharp;
 
 namespace BoxApi.V2
@@ -12,7 +12,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>Returns a single complete user object. An error is returned if a valid auth token is not included in the API request.</returns>
-        public User Me(Field[] fields = null)
+        public User Me(UserField[] fields = null)
         {
             var request = _requestHelper.Me(fields);
             return _restClient.ExecuteAndDeserialize<User>(request);
@@ -24,7 +24,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the current user</param>
         /// <param name="onFailure">Action to perform following a failed User operation</param>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Me(Action<User> onSuccess, Action<Error> onFailure, Field[] fields = null)
+        public void Me(Action<User> onSuccess, Action<Error> onFailure, UserField[] fields = null)
         {
             var request = _requestHelper.Me(fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
@@ -127,7 +127,7 @@ namespace BoxApi.V2
         /// <param name="user">The properties to set for the new user.  Name and Login are required.  Warning -- Box tracks a user's space amount in GB, so if you choose to specify the SpaceAmount, it must be at least 1 GB (2^30).</param>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new user</returns>
-        public void CreateUser(Action<EnterpriseUser> onSuccess, Action<Error> onFailure, EnterpriseUser user, Field[] fields = null)
+        public void CreateUser(Action<EnterpriseUser> onSuccess, Action<Error> onFailure, EnterpriseUser user, EnterpriseUserField[] fields = null)
         {
             GuardFromNull(user, "user");
             GuardFromNull(user.Name, "user.Name");
@@ -498,8 +498,7 @@ namespace BoxApi.V2
         /// <returns>The standalone user</returns>
         public User ConvertToStandaloneUser(EnterpriseUser user)
         {
-            user.Enterprise = null;
-            var restRequest = _requestHelper.UpdateUser(user);
+            var restRequest = _requestHelper.RemoveUserFromEnterprise(user.Id);
             return _restClient.ExecuteAndDeserialize<User>(restRequest);
         }
 
@@ -511,8 +510,7 @@ namespace BoxApi.V2
         /// <param name="user">The enterprise user to convert</param>
         public void ConvertToStandaloneUser(Action<User> onSuccess, Action<Error> onFailure, EnterpriseUser user)
         {
-            user.Enterprise = null;
-            var restRequest = _requestHelper.UpdateUser(user);
+            var restRequest = _requestHelper.RemoveUserFromEnterprise(user.Id);
             _restClient.ExecuteAsync(restRequest, onSuccess, onFailure);
         }
     }

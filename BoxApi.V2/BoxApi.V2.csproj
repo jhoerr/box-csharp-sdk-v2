@@ -102,7 +102,6 @@
     <Compile Include="Model\Enum\CollaborationRole.cs" />
     <Compile Include="Model\Enum\EnterpriseEventType.cs" />
     <Compile Include="Model\Enum\EnumExtensions.cs" />
-    <Compile Include="Model\Enum\Field.cs" />
     <Compile Include="Model\Enum\ResourceType.cs" />
     <Compile Include="Model\Enum\StandardEventType.cs" />
     <Compile Include="Model\Enum\Status.cs" />

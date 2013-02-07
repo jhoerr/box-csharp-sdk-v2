@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
@@ -12,16 +13,14 @@ namespace BoxApi.V2.Model
         /// <summary>
         /// The collection of fields that define all available properties for an Enterprise user.
         /// </summary>
-        public static readonly Field[] Fields = new[]
+        public static readonly IField[] Fields = new IField[]
             {
-                Field.Name, Field.Login, Field.CreatedAt, Field.ModifiedAt, Field.Role, 
-                Field.Language, Field.SpaceAmount, Field.SpaceUsed, Field.MaxUploadSize, 
-                Field.TrackingCodes, Field.CanSeeManagedUsers, Field.IsSyncEnabled,
-                Field.Status, Field.JobTitle, Field.Phone, Field.Address, Field.AvatarUrl, 
-                Field.IsExemptFromDeviceLimits, Field.IsExemptFromLoginVerification,
-                Field.Enterprise, 
+                UserField.Name,UserField.Login,UserField.CreatedAt,UserField.ModifiedAt,EnterpriseUserField.Role, 
+               UserField.Language,UserField.SpaceAmount,UserField.SpaceUsed,UserField.MaxUploadSize, 
+               EnterpriseUserField.TrackingCodes,EnterpriseUserField.CanSeeManagedUsers,EnterpriseUserField.IsSyncEnabled,
+               UserField.Status,UserField.JobTitle,UserField.Phone,UserField.Address,UserField.AvatarUrl, 
+               EnterpriseUserField.IsExemptFromDeviceLimits,EnterpriseUserField.IsExemptFromLoginVerification
             };
-
 
         /// <summary>
         ///     If the user is part of an enterprise, then this will reflect whether they are a regular user or an admin.
@@ -57,10 +56,5 @@ namespace BoxApi.V2.Model
         /// </summary>
         [JsonProperty(PropertyName = "is_exempt_from_login_verification")]
         public bool IsExemptFromLoginVerification { get; set; }
-
-        /// <summary>
-        /// Mini representation of this user’s enterprise, including the ID of its enterprise.
-        /// </summary>
-        public Entity Enterprise { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
@@ -262,7 +263,7 @@ namespace BoxApi.V2.Tests.Client
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
                     Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
                     Client.DeleteFolder(testFolder.Id, true);
-                }, AbortOnFailure, testFolder.Id, new[] {Field.Name,});
+                }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name,});
 
             do
             {

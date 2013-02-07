@@ -1,6 +1,6 @@
 using System.Threading;
 using BoxApi.V2.Model;
-using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
@@ -20,11 +20,11 @@ namespace BoxApi.V2.Tests.Client
         [Test]
         public void SpaceUsedIsUpdated()
         {
-            User user = Client.Me(new[] { Field.SpaceUsed, });
+            User user = Client.Me(new[] { UserField.SpaceUsed, });
             var initialSpaceUsed = user.SpaceUsed;
             File file = Client.CreateFile(Folder.Root, TestItemName(), new byte[] { 0x0, 0x1, 0x2, 0x3, 0x4 });
             Thread.Sleep(3*1000);
-            user = Client.Me(new[] { Field.SpaceUsed, });
+            user = Client.Me(new[] { UserField.SpaceUsed, });
             var spaceUsed = user.SpaceUsed - initialSpaceUsed;
             Assert.That(spaceUsed, Is.EqualTo(file.Size));
             Client.Delete(file);

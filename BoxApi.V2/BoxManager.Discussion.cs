@@ -3,7 +3,6 @@ using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Model.Fields;
 using RestSharp;
-using Field = BoxApi.V2.Model.Enum.Field;
 
 namespace BoxApi.V2
 {
@@ -78,7 +77,7 @@ namespace BoxApi.V2
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
-        public Discussion GetDiscussion(Discussion discussion, Field[] fields = null)
+        public Discussion GetDiscussion(Discussion discussion, DiscussionField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             var request = _requestHelper.Get(ResourceType.Discussion, discussion.Id, fields);
@@ -91,7 +90,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
-        public Discussion GetDiscussion(string id, Field[] fields = null)
+        public Discussion GetDiscussion(string id, DiscussionField[] fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(ResourceType.Discussion, id, fields);
@@ -105,7 +104,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, Field[] fields = null)
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, DiscussionField[] fields = null)
         {
             GuardFromNull(discussion, "discussion");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -120,7 +119,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, Field[] fields = null)
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, DiscussionField[] fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);

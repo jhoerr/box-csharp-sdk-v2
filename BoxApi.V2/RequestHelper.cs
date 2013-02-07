@@ -7,20 +7,19 @@ using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Serialization;
 using Newtonsoft.Json;
 using RestSharp;
-using Field = BoxApi.V2.Model.Enum.Field;
 
 namespace BoxApi.V2
 {
     internal class RequestHelper
     {
-        public IRestRequest Get(ResourceType resourceResourceType, Field[] fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, IField[] fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, null, Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
             return request;
         }
 
-        public IRestRequest Get(ResourceType resourceResourceType, string id, Field[] fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, IField[] fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
@@ -28,7 +27,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetItems(string id, Field[] fields = null)
+        public IRestRequest GetItems(string id, FolderField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -43,14 +42,14 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest CreateFolder(string parentId, string name, Field[] fields = null)
+        public IRestRequest CreateFolder(string parentId, string name, FolderField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, null, Method.POST, fields);
             request.AddBody(new {name, parent = new {id = parentId.Trim()}});
             return request;
         }
 
-        public IRestRequest CreateFile(string parentId, string name, byte[] content, Field[] fields = null)
+        public IRestRequest CreateFile(string parentId, string name, byte[] content, FileField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "content", Method.POST, fields);
             request.AddFile("filename1", content, name.Trim());
@@ -97,7 +96,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, Field[] fields = null)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, IField[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -112,7 +111,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update(ResourceType resourceResourceType, string id, string etag, Field[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null)
+        public IRestRequest Update<TField>(ResourceType resourceResourceType, string id, string etag, TField[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null) where TField:IField
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -176,14 +175,14 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetVersions(string fileId, Field[] fields)
+        public IRestRequest GetVersions(string fileId, FileField[] fields)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/versions", Method.GET, fields);
             request.AddUrlSegment("id", fileId.Trim());
             return request;
         }
 
-        public IRestRequest CreateComment(ResourceType resourceType, string id, string message, Field[] fields = null)
+        public IRestRequest CreateComment(ResourceType resourceType, string id, string message, CommentField[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceType, "{id}/comments", Method.POST, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -191,7 +190,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetComments(ResourceType resourceResourceType, string id, Field[] fields = null)
+        public IRestRequest GetComments(ResourceType resourceResourceType, string id, CommentField[] fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -230,7 +229,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, CollaborationField[] status, Field[] fields = null)
+        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, CollaborationField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId.Trim());
@@ -290,7 +289,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Me(Field[] fields = null)
+        public IRestRequest Me(UserField[] fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "me", Method.GET, fields);
             return request;
@@ -334,6 +333,19 @@ namespace BoxApi.V2
             request.AddUrlSegment("id", user.Id.Trim());
             request.AddBody(new UpdateableEnterpriseUser(user));
             return request;
+        }
+
+        public IRestRequest RemoveUserFromEnterprise(string id)
+        {
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUser.Fields);
+            request.AddUrlSegment("id", id.Trim());
+            request.AddBody(new Rollout());
+            return request;
+        }
+
+        private class Rollout
+        {
+            public string Enterprise { get; set; }
         }
 
         public IRestRequest DeleteUser(string id, bool notify, bool force)
@@ -426,48 +438,39 @@ namespace BoxApi.V2
             return request;
         }
 
-        private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET, string fieldList = null)
+        private IRestRequest RawRequest(ResourceType resourceResourceType, string resource, Method method = Method.GET)
         {
             string path = "{version}/{type}" + (string.IsNullOrEmpty(resource) ? string.Empty : string.Format("/{0}", resource));
-            if (!string.IsNullOrWhiteSpace(fieldList) && method != Method.GET)
-            {
-                path += string.Format("?fields={0}", fieldList);
-            }
             var request = new RestRequest(path, method);
             request.AddUrlSegment("version", "2.0");
             request.AddUrlSegment("type", resourceResourceType.Description());
-            if (!string.IsNullOrWhiteSpace(fieldList) && method == Method.GET)
-            {
-                request.AddParameter("fields", fieldList);
-            }
             return request;
         }
 
-        private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource, Method method, Field[] fields = null)
+        private IRestRequest JsonRequest(ResourceType resourceResourceType, string resource, Method method)
         {
-            string fieldList = null;
-            if (fields != null && fields.Any())
-            {
-                fieldList = string.Join(",", fields.Select(f => f.Description()));
-            }
-
-            IRestRequest request = RawRequest(resourceResourceType, resource, method, fieldList);
+            IRestRequest request = RawRequest(resourceResourceType, resource, method);
             request.RequestFormat = DataFormat.Json;
             request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
 
-        private IRestRequest JsonRequest<TField>(ResourceType resourceResourceType, string resource, Method method, TField[] fields = null) where TField : IField 
+        private IRestRequest JsonRequest<TField>(ResourceType resourceResourceType, string resource, Method method, TField[] fields = null) where TField : IField
         {
-            string fieldList = null;
+            var request = JsonRequest(resourceResourceType, resource, method);
             if (fields != null && fields.Any())
             {
-                fieldList = string.Join(",", fields.Select(f => f.Value));
+                string fieldList = string.Join(",", fields.Select(f => f.Value));
+                if (method == Method.GET)
+                {
+                    request.AddParameter("fields", fieldList);
+                }
+                else
+                {
+                    request.Resource += string.Format("?fields={0}", fieldList);
+                }
             }
 
-            IRestRequest request = RawRequest(resourceResourceType, resource, method, fieldList);
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new AttributableJsonSerializer();
             return request;
         }
 

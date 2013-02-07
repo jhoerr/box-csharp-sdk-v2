@@ -1,6 +1,6 @@
 namespace BoxApi.V2.Model.Fields
 {
-    public class FileField : Field
+    public class FileField : Field, IContentField
     {
         public static FileField Sha1 = new FileField("sha1");
         public static FileField SequenceId = new FileField("sequence_id");

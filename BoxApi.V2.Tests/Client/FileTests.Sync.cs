@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
@@ -219,7 +220,7 @@ namespace BoxApi.V2.Tests.Client
             Folder folder = Client.CreateFolder(RootId, TestItemName());
             Folder subFolder = Client.CreateFolder(folder.Id, TestItemName());
             Folder subsubFolder = Client.CreateFolder(subFolder.Id, TestItemName());
-            File file = Client.CreateFile(subsubFolder.Id, TestItemName(), new[] {Field.PathCollection,});
+            File file = Client.CreateFile(subsubFolder.Id, TestItemName(), new[] {FileField.PathCollection,});
 
             try
             {

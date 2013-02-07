@@ -3,7 +3,6 @@ using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Model.Fields;
 using RestSharp;
-using Field = BoxApi.V2.Model.Enum.Field;
 
 namespace BoxApi.V2
 {

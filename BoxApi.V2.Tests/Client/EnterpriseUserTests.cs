@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace BoxApi.V2.Tests.Client
 {
-    [Ignore("These tests are by necessity geared towards an enterprise account.  You'll need to change things about them to run them for yourself.")]
+//    [Ignore("These tests are by necessity geared towards an enterprise account.  You'll need to change things about them to run them for yourself.")]
     [TestFixture]
     public class EnterpriseUserTests : BoxApiTestHarness
     {
@@ -217,35 +217,6 @@ namespace BoxApi.V2.Tests.Client
 
             Client.CreateUser(enterpriseUser);
         }
-
-        [Test]
-        public void EnterpriseUserHasEnterpriseProperty()
-        {
-            var enterpriseUser = new EnterpriseUser
-            {
-                Role = UserRole.User,
-                Login = "box.csharp.sdk2@gmail.com",
-                Name = "No Body",
-            };
-
-            EnterpriseUser entUser = null;
-            try
-            {
-                entUser = Client.CreateUser(enterpriseUser);
-                Assert.That(entUser.Enterprise, Is.Not.Null);
-                Assert.That(entUser.Enterprise.Type, Is.EqualTo(ResourceType.Enterprise));
-                Assert.That(entUser.Enterprise.Id, Is.Not.Null);
-                Assert.That(entUser.Enterprise.Name, Is.Not.Null);
-            }
-            finally
-            {
-                if (entUser != null)
-                {
-                    Client.Delete(entUser);   
-                }
-            }
-        }
-
 
         [Test, Ignore("Request returns a 403 -- it requires higher privileges than I have!")]
         public void ConvertToStandaloneUser()
