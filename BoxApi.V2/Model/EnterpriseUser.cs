@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using BoxApi.V2.Model.Enum;
-using BoxApi.V2.Model.Fields;
 using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
@@ -10,18 +9,6 @@ namespace BoxApi.V2.Model
     /// </summary>
     public class EnterpriseUser : User
     {
-        /// <summary>
-        /// The collection of fields that define all available properties for an Enterprise user.
-        /// </summary>
-        public static readonly IField[] Fields = new IField[]
-            {
-                UserField.Name,UserField.Login,UserField.CreatedAt,UserField.ModifiedAt,EnterpriseUserField.Role, 
-               UserField.Language,UserField.SpaceAmount,UserField.SpaceUsed,UserField.MaxUploadSize, 
-               EnterpriseUserField.TrackingCodes,EnterpriseUserField.CanSeeManagedUsers,EnterpriseUserField.IsSyncEnabled,
-               UserField.Status,UserField.JobTitle,UserField.Phone,UserField.Address,UserField.AvatarUrl, 
-               EnterpriseUserField.IsExemptFromDeviceLimits,EnterpriseUserField.IsExemptFromLoginVerification
-            };
-
         /// <summary>
         ///     If the user is part of an enterprise, then this will reflect whether they are a regular user or an admin.
         /// </summary>

@@ -1,6 +1,6 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class CollaborationField : Field
+    public sealed class CollaborationField : Field
     {
         public static CollaborationField Status = new CollaborationField("status");
         public static CollaborationField AccessibleBy = new CollaborationField("accessible_by");
@@ -12,7 +12,7 @@
         public static CollaborationField CreatedBy = new CollaborationField("created_by");
         public static CollaborationField ExpiresAt = new CollaborationField("expires_at");
 
-        public CollaborationField(string value) : base(value)
+        private CollaborationField(string value) : base(value)
         {
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class CommentField : Field
+    public sealed class CommentField : Field
     {
         public static CommentField IsReplyComment = new CommentField("is_reply_comment");
         public static CommentField Message = new CommentField("message");
@@ -9,7 +9,7 @@
         public static CommentField ModifiedAt = new CommentField("modified_at");
         public static CommentField CreatedBy = new CommentField("created_by");
 
-        public CommentField(string value) : base(value)
+        private CommentField(string value) : base(value)
         {
         }
     }

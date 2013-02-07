@@ -1,6 +1,6 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class EnterpriseUserField : Field
+    public sealed class EnterpriseUserField : Field
     {
         public static EnterpriseUserField Address = new EnterpriseUserField("address");
         public static EnterpriseUserField AvatarUrl = new EnterpriseUserField("avatar_url");
@@ -21,15 +21,31 @@
         public static EnterpriseUserField IsSyncEnabled = new EnterpriseUserField("is_sync_enabled");
         public static EnterpriseUserField IsExemptFromDeviceLimits = new EnterpriseUserField("is_exempt_from_device_limits");
         public static EnterpriseUserField IsExemptFromLoginVerification = new EnterpriseUserField("is_exempt_from_login_verification");
-        public static EnterpriseUserField Enterprise = new EnterpriseUserField("enterprise");
 
-        public static EnterpriseUserField[] All = new EnterpriseUserField[]
+        public static EnterpriseUserField[] All = new[]
             {
-                Address, AvatarUrl, CreatedAt, JobTitle, Language, Login, MaxUploadSize, ModifiedAt, Name, Phone, SpaceAmount, SpaceUsed, Status,
-                Role, TrackingCodes, CanSeeManagedUsers, IsSyncEnabled, IsExemptFromDeviceLimits, IsExemptFromLoginVerification, Enterprise
+                Address, 
+                AvatarUrl, 
+                CreatedAt, 
+                JobTitle, 
+                Language, 
+                Login, 
+                MaxUploadSize, 
+                ModifiedAt, 
+                Name, 
+                Phone, 
+                SpaceAmount, 
+                SpaceUsed, 
+                Status,
+                Role, 
+                TrackingCodes, 
+                CanSeeManagedUsers, 
+                IsSyncEnabled, 
+                IsExemptFromDeviceLimits, 
+                IsExemptFromLoginVerification, 
             };
 
-        public EnterpriseUserField(string value) : base(value)
+        private EnterpriseUserField(string value) : base(value)
         {
         }
     }

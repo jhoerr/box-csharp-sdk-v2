@@ -1,6 +1,6 @@
 ﻿namespace BoxApi.V2.Model.Fields
 {
-    public class UserField : Field
+    public sealed class UserField : Field
     {
         public static UserField Address = new UserField("address");
         public static UserField AvatarUrl = new UserField("avatar_url");
@@ -16,7 +16,7 @@
         public static UserField SpaceUsed = new UserField("space_used");
         public static UserField Status = new UserField("status");
 
-        public UserField(string value) : base(value)
+        private UserField(string value) : base(value)
         {
         }
     }

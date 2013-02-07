@@ -7,7 +7,7 @@ namespace BoxApi.V2.Model.Fields
 
     public class Field : IField
     {
-        public Field(string value)
+        protected Field(string value)
         {
             Value = value;
         }

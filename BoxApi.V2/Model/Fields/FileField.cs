@@ -1,6 +1,6 @@
 namespace BoxApi.V2.Model.Fields
 {
-    public class FileField : Field, IContentField
+    public sealed class FileField : Field, IContentField
     {
         public static FileField Sha1 = new FileField("sha1");
         public static FileField SequenceId = new FileField("sequence_id");
@@ -18,7 +18,7 @@ namespace BoxApi.V2.Model.Fields
         public static FileField ModifiedAt = new FileField("modified_at");
         public static FileField CreatedBy = new FileField("created_by");
 
-        public FileField(string value) : base(value)
+        private FileField(string value) : base(value)
         {
         }
     }

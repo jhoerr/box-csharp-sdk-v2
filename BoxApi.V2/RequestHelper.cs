@@ -297,7 +297,7 @@ namespace BoxApi.V2
 
         public IRestRequest GetUsers(string filterTerm, int? limit, int? offset)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, null, Method.GET, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, null, Method.GET, EnterpriseUserField.All);
             if (!string.IsNullOrWhiteSpace(filterTerm))
             {
                 request.AddParameter("filter_term", filterTerm.Trim());
@@ -315,21 +315,21 @@ namespace BoxApi.V2
 
         public IRestRequest GetUser(string id)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.GET, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.GET, EnterpriseUserField.All);
             request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
         public IRestRequest CreateUser(EnterpriseUser user)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, null, Method.POST, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, null, Method.POST, EnterpriseUserField.All);
             request.AddBody(user);
             return request;
         }
 
         public IRestRequest UpdateUser(EnterpriseUser user)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUserField.All);
             request.AddUrlSegment("id", user.Id.Trim());
             request.AddBody(new UpdateableEnterpriseUser(user));
             return request;
@@ -337,7 +337,7 @@ namespace BoxApi.V2
 
         public IRestRequest RemoveUserFromEnterprise(string id)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{id}", Method.PUT);
             request.AddUrlSegment("id", id.Trim());
             request.AddBody(new Rollout());
             return request;
@@ -359,7 +359,7 @@ namespace BoxApi.V2
 
         public IRestRequest MoveFolderToAnotherUser(string currentOwnerId, string folderId, string newOwnerId, bool notify)
         {
-            IRestRequest request = JsonRequest(ResourceType.User, "{userId.Trim()}/{folderType}/{folderId.Trim()}", Method.PUT, EnterpriseUser.Fields);
+            IRestRequest request = JsonRequest(ResourceType.User, "{userId}/{folderType}/{folderId}", Method.PUT);
             request.AddUrlSegment("userId", currentOwnerId.Trim());
             request.AddUrlSegment("folderType", ResourceType.Folder.Description());
             request.AddUrlSegment("folderId", folderId.Trim());
