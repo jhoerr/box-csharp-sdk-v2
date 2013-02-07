@@ -51,6 +51,20 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test, Ignore("This breaks.  The search API seems to be working improperly at the moment.")]
+        public void SearchForFilepart()
+        {
+            uint fetched = 0;
+            var results = new List<Entity>();
+            SearchResultCollection searchResults;
+            do
+            {
+                searchResults = Client.Search("basics", 5, fetched);
+                results.AddRange(searchResults.Entries);
+                fetched += (uint)searchResults.Entries.Count;
+            } while (fetched < searchResults.TotalCount);
+        }
+
+        [Test, Ignore("This breaks.  The search API seems to be working improperly at the moment.")]
         public void SearchForExtension()
         {
             uint fetched = 0;
@@ -58,7 +72,7 @@ namespace BoxApi.V2.Tests.Client
             SearchResultCollection searchResults;
             do
             {
-                searchResults = Client.Search(".xlsx", offset:fetched);
+                searchResults = Client.Search("xlsx", 5, fetched);
                 results.AddRange(searchResults.Entries);
                 fetched += (uint)searchResults.Entries.Count;
             } while (fetched < searchResults.TotalCount);
