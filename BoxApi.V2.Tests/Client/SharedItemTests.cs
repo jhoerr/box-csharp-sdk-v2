@@ -1,5 +1,6 @@
 using System.Linq;
 using BoxApi.V2.Model;
+using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
 
@@ -30,6 +31,16 @@ namespace BoxApi.V2.Tests.Client
             AssertFileConstraints(file, "shared file.txt", null, SharedFileId);
         }
 
+        [Test]
+        public void GetSharedFileWithFields()
+        {
+            var file = Client.GetSharedItem<File>(SharedFileLink, new[]{FileField.Name});
+            Assert.That(file.CreatedAt, Is.Null);
+            // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
+            AssertFileConstraints(file, "shared file.txt", null, SharedFileId);
+        }
+
+
         [Test, ExpectedException(typeof(BoxItemNotModifiedException))]
         public void GetSharedFileThrowsNotModifiedOnSubsequentRequest()
         {
@@ -51,6 +62,17 @@ namespace BoxApi.V2.Tests.Client
         public void GetSharedFolder()
         {
             var folder = Client.GetSharedItem<Folder>(SharedFolderLink);
+            // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
+            AssertFolderConstraints(folder, "shared folder", null, SharedFolderId);
+            // An ItemCollection is not returned with GetSharedItem() -- you have to do a GetFolder() for that.
+            Assert.That(folder.ItemCollection, Is.Null);
+        }
+
+        [Test]
+        public void GetSharedFolderWithField()
+        {
+            var folder = Client.GetSharedItem<Folder>(SharedFolderLink, new[]{FolderField.Name});
+            Assert.That(folder.CreatedAt, Is.Null);
             // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
             AssertFolderConstraints(folder, "shared folder", null, SharedFolderId);
             // An ItemCollection is not returned with GetSharedItem() -- you have to do a GetFolder() for that.

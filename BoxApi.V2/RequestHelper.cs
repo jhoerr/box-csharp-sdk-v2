@@ -12,14 +12,14 @@ namespace BoxApi.V2
 {
     internal class RequestHelper
     {
-        public IRestRequest Get(ResourceType resourceResourceType, IField[] fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, IEnumerable<IField> fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, null, Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
             return request;
         }
 
-        public IRestRequest Get(ResourceType resourceResourceType, string id, IField[] fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, IEnumerable<IField> fields = null, string etag = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
@@ -27,7 +27,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetItems(string id, FolderField[] fields = null)
+        public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -35,21 +35,21 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetDiscussions(string folderId, DiscussionField[] fields = null)
+        public IRestRequest GetDiscussions(string folderId, IEnumerable<DiscussionField> fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/discussions", Method.GET, fields);
             request.AddUrlSegment("id", folderId.Trim());
             return request;
         }
 
-        public IRestRequest CreateFolder(string parentId, string name, FolderField[] fields = null)
+        public IRestRequest CreateFolder(string parentId, string name, IEnumerable<FolderField> fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, null, Method.POST, fields);
             request.AddBody(new {name, parent = new {id = parentId.Trim()}});
             return request;
         }
 
-        public IRestRequest CreateFile(string parentId, string name, byte[] content, FileField[] fields = null)
+        public IRestRequest CreateFile(string parentId, string name, byte[] content, IEnumerable<FileField> fields = null)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "content", Method.POST, fields);
             request.AddFile("filename1", content, name.Trim());
@@ -96,7 +96,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, IField[] fields = null)
+        public IRestRequest Copy(ResourceType resourceResourceType, string id, string newParentId, string name = null, IEnumerable<IField> fields = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/copy", Method.POST, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -111,7 +111,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Update<TField>(ResourceType resourceResourceType, string id, string etag, TField[] fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null) where TField:IField
+        public IRestRequest Update<TField>(ResourceType resourceResourceType, string id, string etag, IEnumerable<TField> fields, string parentId = null, string name = null, string description = null, SharedLink sharedLink = null, string message = null) where TField:IField
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -175,14 +175,14 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetVersions(string fileId, FileField[] fields)
+        public IRestRequest GetVersions(string fileId, IEnumerable<FileField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.File, "{id}/versions", Method.GET, fields);
             request.AddUrlSegment("id", fileId.Trim());
             return request;
         }
 
-        public IRestRequest CreateComment(ResourceType resourceType, string id, string message, CommentField[] fields = null)
+        public IRestRequest CreateComment(ResourceType resourceType, string id, string message, IEnumerable<CommentField> fields)
         {
             IRestRequest request = JsonRequest(resourceType, "{id}/comments", Method.POST, fields);
             request.AddUrlSegment("id", id.Trim());
@@ -190,35 +190,35 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest GetComments(ResourceType resourceResourceType, string id, CommentField[] fields = null)
+        public IRestRequest GetComments(ResourceType resourceResourceType, string id, IEnumerable<CommentField> fields)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}/comments", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
             return request;
         }
 
-        public IRestRequest CreateDiscussion(string parentId, string name, string description, DiscussionField[] fields = null)
+        public IRestRequest CreateDiscussion(string parentId, string name, string description, IEnumerable<DiscussionField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Discussion, null, Method.POST, fields);
             request.AddBody(new {parent = new {id = parentId.Trim()}, name, description});
             return request;
         }
 
-        public IRestRequest CreateCollaboration(string folderId, string userId, string role, CollaborationField[] fields = null)
+        public IRestRequest CreateCollaboration(string folderId, string userId, string role, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
             request.AddBody(new {item = new {type = "folder", id = folderId.Trim()}, accessible_by = new {id = userId.Trim()}, role});
             return request;
         }
 
-        public IRestRequest GetCollaboration(string collaborationId, CollaborationField[] fields = null)
+        public IRestRequest GetCollaboration(string collaborationId, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET, fields);
             request.AddUrlSegment("id", collaborationId.Trim());
             return request;
         }
 
-        public IRestRequest GetCollaborations(string folderId, bool onlyPending, CollaborationField[] fields = null)
+        public IRestRequest GetCollaborations(string folderId, bool onlyPending, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/collaborations", Method.GET, fields);
             request.AddUrlSegment("id", folderId.Trim());
@@ -229,7 +229,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, CollaborationField[] fields = null)
+        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId.Trim());
@@ -237,7 +237,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, CollaborationField[] fields = null)
+        public IRestRequest UpdateCollaboration(string collaborationId, CollaborationRole role, Status status, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.PUT, fields);
             request.AddUrlSegment("id", collaborationId.Trim());
@@ -289,7 +289,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Me(UserField[] fields = null)
+        public IRestRequest Me(IEnumerable<UserField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.User, "me", Method.GET, fields);
             return request;
@@ -455,7 +455,7 @@ namespace BoxApi.V2
             return request;
         }
 
-        private IRestRequest JsonRequest<TField>(ResourceType resourceResourceType, string resource, Method method, TField[] fields = null) where TField : IField
+        private IRestRequest JsonRequest<TField>(ResourceType resourceResourceType, string resource, Method method, IEnumerable<TField> fields = null) where TField : IField
         {
             var request = JsonRequest(resourceResourceType, resource, method);
             if (fields != null && fields.Any())

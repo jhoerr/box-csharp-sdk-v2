@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Model.Fields;
@@ -15,7 +16,7 @@ namespace BoxApi.V2
         /// <param name="name">The folder's name</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created folder.</returns>
-        public Folder CreateFolder(Folder parent, string name, FolderField[] fields = null)
+        public Folder CreateFolder(Folder parent, string name, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(parent, "parent");
             return CreateFolder(parent.Id, name, fields);
@@ -28,7 +29,7 @@ namespace BoxApi.V2
         /// <param name="name">The folder's name</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The created folder.</returns>
-        public Folder CreateFolder(string parentId, string name, FolderField[] fields = null)
+        public Folder CreateFolder(string parentId, string name, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -44,7 +45,7 @@ namespace BoxApi.V2
         /// <param name="parent">The folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, Folder parent, string name, FolderField[] fields = null)
+        public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, Folder parent, string name, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(parent, "parent");
             CreateFolder(onSuccess, onFailure, parent.Id, name, fields);
@@ -58,7 +59,7 @@ namespace BoxApi.V2
         /// <param name="parentId">The ID of he folder in which to create the folder</param>
         /// <param name="name">The folder's name</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, string parentId, string name, FolderField[] fields = null)
+        public void CreateFolder(Action<Folder> onSuccess, Action<Error> onFailure, string parentId, string name, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(parentId, "parentId");
             GuardFromNull(name, "name");
@@ -74,7 +75,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder Get(Folder folder, FolderField[] fields = null, string etag = null)
+        public Folder Get(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             return GetFolder(folder.Id, fields, etag);
@@ -88,7 +89,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, FolderField[] fields = null, string etag = null)
+        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             GetFolder(onSuccess, onFailure, folder.Id, fields, etag);
@@ -101,7 +102,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, FolderField[] fields = null, string etag = null)
+        public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
@@ -116,7 +117,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, string sharedLinkUrl, FolderField[] fields = null, string etag = null)
+        public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
@@ -131,7 +132,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, FolderField[] fields = null, string etag = null)
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -148,7 +149,7 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, FolderField[] fields = null, string etag = null)
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -162,7 +163,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(Folder folder, FolderField[] fields = null)
+        public ItemCollection GetItems(Folder folder, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetItems(folder.Id, fields);
@@ -174,7 +175,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, FolderField[] fields = null)
+        public ItemCollection GetItems(string id, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id, fields);
@@ -189,7 +190,7 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, string sharedLinkUrl, FolderField[] fields = null)
+        public ItemCollection GetItems(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.GetItems(id, fields);
@@ -203,7 +204,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, FolderField[] fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(folder, "folder");
             GetItems(onSuccess, onFailure, folder.Id, fields);
@@ -216,7 +217,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, FolderField[] fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(fields, "fields");
@@ -233,7 +234,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, FolderField[] fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(fields, "fields");
@@ -309,7 +310,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
-        public Folder Copy(Folder folder, Folder newParent, string newName = null, FolderField[] fields = null)
+        public Folder Copy(Folder folder, Folder newParent, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(folder, "folder");
             return CopyFolder(folder.Id, newParent.Id, newName, fields);
@@ -323,7 +324,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
-        public Folder Copy(Folder folder, string newParentId, string newName = null, FolderField[] fields = null)
+        public Folder Copy(Folder folder, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(folder, "folder");
             return CopyFolder(folder.Id, newParentId, newName, fields);
@@ -337,7 +338,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
-        public Folder CopyFolder(string id, string newParentId, string newName = null, FolderField[] fields = null)
+        public Folder CopyFolder(string id, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -354,7 +355,7 @@ namespace BoxApi.V2
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The copied folder</returns>
-        public Folder CopyFolder(string id, string sharedLinkUrl, string newParentId, string newName = null, FolderField[] fields = null)
+        public Folder CopyFolder(string id, string sharedLinkUrl, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -371,7 +372,7 @@ namespace BoxApi.V2
         /// <param name="newParent">The destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, string newName = null, FolderField[] fields = null)
+        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(newParent, "newParent");
             Copy(onSuccess, onFailure, folder, newParent.Id, newName, fields);
@@ -386,7 +387,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, string newName = null, FolderField[] fields = null)
+        public void Copy(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(folder, "folder");
             CopyFolder(onSuccess, onFailure, folder.Id, newParentId, newName, fields);
@@ -401,7 +402,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, FolderField[] fields = null)
+        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -420,7 +421,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder for the copied folder</param>
         /// <param name="newName">The optional new name for the copied folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, FolderField[] fields = null)
+        public void CopyFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, string newParentId, string newName = null, IEnumerable<FolderField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -438,7 +439,7 @@ namespace BoxApi.V2
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public Folder ShareLink(Folder folder, SharedLink sharedLink, FolderField[] fields = null, string etag = null)
+        public Folder ShareLink(Folder folder, SharedLink sharedLink, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             return ShareFolderLink(folder.Id, sharedLink, fields, etag);
@@ -453,7 +454,7 @@ namespace BoxApi.V2
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>An object populated with the shared link</returns>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public Folder ShareFolderLink(string id, SharedLink sharedLink, FolderField[] fields = null, string etag = null)
+        public Folder ShareFolderLink(string id, SharedLink sharedLink, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -471,7 +472,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, FolderField[] fields = null, string etag = null)
+        public void ShareLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, SharedLink sharedLink, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             ShareFolderLink(onSuccess, onFailure, folder.Id, sharedLink, fields, etag);
@@ -487,7 +488,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <remarks>In order for Folder.SharedLink to be populated, you must either include Field.SharedLink in the fields list, or leave the list null</remarks>
-        public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, FolderField[] fields = null, string etag = null)
+        public void ShareFolderLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, SharedLink sharedLink, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(sharedLink, "sharedLink");
@@ -504,7 +505,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder Move(Folder folder, Folder newParent, FolderField[] fields = null, string etag = null)
+        public Folder Move(Folder folder, Folder newParent, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
             return Move(folder, newParent.Id, fields, etag);
@@ -518,7 +519,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder Move(Folder folder, string newParentId, FolderField[] fields = null, string etag = null)
+        public Folder Move(Folder folder, string newParentId, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             return MoveFolder(folder.Id, newParentId, fields, etag);
@@ -532,7 +533,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The moved folder</returns>
-        public Folder MoveFolder(string id, string newParentId, FolderField[] fields = null, string etag = null)
+        public Folder MoveFolder(string id, string newParentId, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -549,7 +550,7 @@ namespace BoxApi.V2
         /// <param name="newParent">The destination folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, FolderField[] fields = null, string etag = null)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, Folder newParent, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(newParent, "newParent");
             Move(onSuccess, onFailure, folder, newParent.Id, fields, etag);
@@ -564,7 +565,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, FolderField[] fields = null, string etag = null)
+        public void Move(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newParentId, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             MoveFolder(onSuccess, onFailure, folder.Id, newParentId, fields, etag);
@@ -579,7 +580,7 @@ namespace BoxApi.V2
         /// <param name="newParentId">The ID of the destination folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, FolderField[] fields = null, string etag = null)
+        public void MoveFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newParentId, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newParentId, "newParentId");
@@ -596,7 +597,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed folder</returns>
-        public Folder Rename(Folder folder, string newName, FolderField[] fields = null, string etag = null)
+        public Folder Rename(Folder folder, string newName, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             return RenameFolder(folder.Id, newName, fields, etag);
@@ -610,7 +611,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The renamed folder</returns>
-        public Folder RenameFolder(string id, string newName, FolderField[] fields = null, string etag = null)
+        public Folder RenameFolder(string id, string newName, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -627,7 +628,7 @@ namespace BoxApi.V2
         /// <param name="newName">The new name for the folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, FolderField[] fields = null, string etag = null)
+        public void Rename(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string newName, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             RenameFolder(onSuccess, onFailure, folder.Id, newName, fields, etag);
@@ -642,7 +643,7 @@ namespace BoxApi.V2
         /// <param name="newName">The new name for the folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, FolderField[] fields = null, string etag = null)
+        public void RenameFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string newName, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(newName, "newName");
@@ -659,7 +660,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder UpdateDescription(Folder folder, string description, FolderField[] fields = null, string etag = null)
+        public Folder UpdateDescription(Folder folder, string description, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             return UpdateFolderDescription(folder.Id, description, fields, etag);
@@ -673,7 +674,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder UpdateFolderDescription(string id, string description, FolderField[] fields = null, string etag = null)
+        public Folder UpdateFolderDescription(string id, string description, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -690,7 +691,7 @@ namespace BoxApi.V2
         /// <param name="description">The new description for the folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, FolderField[] fields = null, string etag = null)
+        public void UpdateDescription(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, string description, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             UpdateFolderDescription(onSuccess, onFailure, folder.Id, description, fields, etag);
@@ -705,7 +706,7 @@ namespace BoxApi.V2
         /// <param name="description">The new description for the folder</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, FolderField[] fields = null, string etag = null)
+        private void UpdateFolderDescription(Action<Folder> onSuccess, Action<Error> onFailure, string id, string description, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(description, "description");
@@ -720,7 +721,7 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
         /// <returns>The updated folder</returns>
-        public Folder Update(Folder folder, FolderField[] fields = null, string etag = null)
+        public Folder Update(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;
@@ -736,7 +737,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to update</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
-        public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, FolderField[] fields = null, string etag = null)
+        public void Update(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
         {
             GuardFromNull(folder, "folder");
             var parentId = folder.Parent == null ? null : folder.Parent.Id;

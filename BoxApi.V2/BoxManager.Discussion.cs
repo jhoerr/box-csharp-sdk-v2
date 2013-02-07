@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Model.Fields;
@@ -16,7 +17,7 @@ namespace BoxApi.V2
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new discussion</returns>
-        public Discussion CreateDiscussion(Folder folder, string name, string description = null, DiscussionField[] fields = null)
+        public Discussion CreateDiscussion(Folder folder, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
             return CreateDiscussion(folder.Id, name, description, fields);
@@ -30,7 +31,7 @@ namespace BoxApi.V2
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new discussion</returns>
-        public Discussion CreateDiscussion(string folderId, string name, string description = null, DiscussionField[] fields = null)
+        public Discussion CreateDiscussion(string folderId, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(name, "name");
@@ -47,7 +48,7 @@ namespace BoxApi.V2
         /// <param name="name">The name of the discussion</param>
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder folder, string name, string description = null, DiscussionField[] fields = null)
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder folder, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
             CreateDiscussion(onSuccess, onFailure, folder.Id, name, description, fields);
@@ -62,7 +63,7 @@ namespace BoxApi.V2
         /// <param name="name">The name of the discussion</param>
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string folderId, string name, string description = null, DiscussionField[] fields = null)
+        public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string folderId, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNull(name, "name");
@@ -77,7 +78,7 @@ namespace BoxApi.V2
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
-        public Discussion GetDiscussion(Discussion discussion, DiscussionField[] fields = null)
+        public Discussion GetDiscussion(Discussion discussion, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(discussion, "discussion");
             var request = _requestHelper.Get(ResourceType.Discussion, discussion.Id, fields);
@@ -90,7 +91,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
-        public Discussion GetDiscussion(string id, DiscussionField[] fields = null)
+        public Discussion GetDiscussion(string id, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(id, "id");
             var request = _requestHelper.Get(ResourceType.Discussion, id, fields);
@@ -104,7 +105,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, DiscussionField[] fields = null)
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(discussion, "discussion");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -119,7 +120,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, DiscussionField[] fields = null)
+        public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
@@ -133,7 +134,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's dicussions</returns>
-        public DiscussionCollection GetDiscussions(Folder folder, DiscussionField[] fields = null)
+        public DiscussionCollection GetDiscussions(Folder folder, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
             return GetDiscussions(folder.Id, fields);
@@ -145,7 +146,7 @@ namespace BoxApi.V2
         /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's dicussions</returns>
-        public DiscussionCollection GetDiscussions(string folderId, DiscussionField[] fields = null)
+        public DiscussionCollection GetDiscussions(string folderId, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
             var request = _requestHelper.GetDiscussions(folderId, fields);
@@ -159,7 +160,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="folder">The folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, Folder folder, DiscussionField[] fields = null)
+        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
             GetDiscussions(onSuccess, onFailure, folder.Id, fields);
@@ -172,7 +173,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, string folderId, DiscussionField[] fields = null)
+        public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, string folderId, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
             GuardFromNullCallbacks(onSuccess, onFailure);

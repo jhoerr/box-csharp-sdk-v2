@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Fields;
 using RestSharp;
@@ -12,7 +13,7 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>Returns a single complete user object. An error is returned if a valid auth token is not included in the API request.</returns>
-        public User Me(UserField[] fields = null)
+        public User Me(IEnumerable<UserField> fields = null)
         {
             var request = _requestHelper.Me(fields);
             return _restClient.ExecuteAndDeserialize<User>(request);
@@ -24,7 +25,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the current user</param>
         /// <param name="onFailure">Action to perform following a failed User operation</param>
         /// <param name="fields">The properties that should be set on the returned User.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void Me(Action<User> onSuccess, Action<Error> onFailure, UserField[] fields = null)
+        public void Me(Action<User> onSuccess, Action<Error> onFailure, IEnumerable<UserField> fields = null)
         {
             var request = _requestHelper.Me(fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
