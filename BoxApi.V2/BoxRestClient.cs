@@ -167,14 +167,22 @@ namespace BoxApi.V2
             {
                 error = new Error {Code = "Internal Server Error", Status = 500};
             }
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.BadGateway))
+            {
+                error = new Error { Code = "Bad Gateway", Status = 502 };
+            }
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.Unauthorized))
+            {
+                error = new Error { Code = "Unauthorized", Status = 401 };
+            }
+            else if (restResponse.StatusCode.Equals(HttpStatusCode.Forbidden))
+            {
+                error = new Error { Code = "Forbidden", Status = 403};
+            }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
                 error = new Error {Code = "Not Modified", Status = 304, HelpUrl = "http://developers.box.com/docs/#if-match"};
             }
-//            else if (restResponse.StatusCode.Equals(HttpStatusCode.Forbidden))
-//            {
-//                error = new Error { Code = "Forbidden", Status = 403, Message = restResponse.};
-//            }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Accepted))
             {
                 Parameter retryAfter = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Retry-After", StringComparison.InvariantCultureIgnoreCase));

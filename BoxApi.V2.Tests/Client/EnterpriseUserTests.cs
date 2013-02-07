@@ -218,7 +218,7 @@ namespace BoxApi.V2.Tests.Client
             Client.CreateUser(enterpriseUser);
         }
 
-        [Test, Ignore("Request returns a 403 -- it requires higher privileges than I have!")]
+        [Test, ExpectedException(typeof(BoxException)),]
         public void ConvertToStandaloneUser()
         {
             var enterpriseUser = new EnterpriseUser
@@ -228,12 +228,22 @@ namespace BoxApi.V2.Tests.Client
                 Name = "No Body",
             };
 
-            var entUser = Client.CreateUser(enterpriseUser);
-
-            var standaloneUser = Client.ConvertToStandaloneUser(entUser);
-            Assert.That(standaloneUser, Is.Not.Null);
-            Assert.That(standaloneUser.Name, Is.EqualTo(entUser.Name));
-            Assert.That(standaloneUser.Login, Is.EqualTo(entUser.Login));
+            EnterpriseUser entUser = null;
+            try
+            {
+                entUser = Client.CreateUser(enterpriseUser);
+                var standaloneUser = Client.ConvertToStandaloneUser(entUser);
+                Assert.That(standaloneUser, Is.Not.Null);
+                Assert.That(standaloneUser.Name, Is.EqualTo(entUser.Name));
+                Assert.That(standaloneUser.Login, Is.EqualTo(entUser.Login));
+            }
+            finally
+            {
+                if (entUser != null)
+                {
+                    Client.Delete(entUser);
+                }
+            }
         }
     }
 }
