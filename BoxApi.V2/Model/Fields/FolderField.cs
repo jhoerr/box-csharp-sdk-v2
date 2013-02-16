@@ -19,6 +19,8 @@ namespace BoxApi.V2.Model.Fields
         public static FolderField CreatedAt = new FolderField("created_at");
         public static FolderField ModifiedAt = new FolderField("modified_at");
         public static FolderField CreatedBy = new FolderField("created_by");
+        public static FolderField ContentCreatedAt = new FolderField("content_created_at");
+        public static FolderField ContentModifiedAt = new FolderField("content_modified_at");
 
         private FolderField(string value) : base(value)
         {
