@@ -36,5 +36,11 @@ namespace BoxApi.V2.Authentication.OAuth2
             IRestRequest request = _requestHelper.RefreshAccessToken(_clientId, _clientSecret, refreshToken);
             return _restClient.ExecuteAndDeserialize<OAuthToken>(request);
         }
+
+        public void DestroyTokens(string token)
+        {
+            IRestRequest request = _requestHelper.DestroyTokens(_clientId, _clientSecret, token);
+            _restClient.Execute(request);
+        }
     }
 }
