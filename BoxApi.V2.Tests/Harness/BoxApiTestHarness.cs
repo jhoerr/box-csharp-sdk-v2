@@ -73,6 +73,11 @@ namespace BoxApi.V2.Tests.Harness
 
         protected static void AssertSharedLink(SharedLink actual, SharedLink sharedLink)
         {
+            if (sharedLink == null)
+            {
+                Assert.That(actual, Is.Null);
+                return;
+            }
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Access, Is.EqualTo(sharedLink.Access));
             Assert.That(actual.UnsharedAt, Is.GreaterThan(DateTime.MinValue));

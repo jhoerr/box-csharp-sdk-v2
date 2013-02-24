@@ -498,6 +498,62 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="folder">The folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        /// <returns>The folder with the disabled shared link</returns>
+        public Folder DisableSharedLink(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(folder, "folder");
+            return DisableSharedLink(folder.Id, fields, etag);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="id">The id of the folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        /// <returns>The folder with the disabled shared link</returns>
+        public Folder DisableSharedLink(string id, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DisableSharedLink(ResourceType.Folder, id, etag, fields);
+            return _restClient.ExecuteAndDeserialize<Folder>(request);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to take with the returned folder</param>
+        /// <param name="onFailure">Actino to take following a failed folder operation</param>
+        /// <param name="folder">The folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        public void DisableSharedLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(folder, "folder");
+            DisableSharedLink(onSuccess, onFailure, folder.Id, fields, etag);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to take with the returned folder</param>
+        /// <param name="onFailure">Actino to take following a failed folder operation</param>
+        /// <param name="id">The id of the folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        public void DisableSharedLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DisableSharedLink(ResourceType.Folder, id, etag, fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
         ///     Moves a folder to the specified destination
         /// </summary>
         /// <param name="folder">The folder to move</param>

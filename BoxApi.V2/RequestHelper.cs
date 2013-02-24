@@ -129,6 +129,17 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest DisableSharedLink(ResourceType resourceType, string id, string etag, IEnumerable<FolderField> fields)
+        {
+            IRestRequest request = JsonRequest(resourceType, "{id}", Method.PUT, fields);
+            request.AddUrlSegment("id", id.Trim());
+
+            TryAddIfMatchHeader(request, etag);
+
+            request.AddBody(new {shared_link = (object) null});
+            return request;
+        }
+
         private static string Massage(string name)
         {
             return name == null ? null : name.Trim();

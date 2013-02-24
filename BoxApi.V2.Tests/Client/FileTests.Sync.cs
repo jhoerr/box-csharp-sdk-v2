@@ -444,5 +444,11 @@ namespace BoxApi.V2.Tests.Client
             file = Client.GetFile(file.Id);
             Client.Delete(file);
         }
+
+        [Test]
+        public void ContentCreatedAtModifiedAt()
+        {
+            
+        }
     }
 }
