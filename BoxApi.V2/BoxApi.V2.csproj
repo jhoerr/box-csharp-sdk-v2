@@ -89,6 +89,7 @@
     <Compile Include="BoxManager.Token.cs" />
     <Compile Include="BoxManager.User.cs" />
     <Compile Include="BoxRestClient.cs" />
+    <Compile Include="Extensions\BoxManager.Folder.Extensions.cs" />
     <Compile Include="Model\Collaboration.cs" />
     <Compile Include="Model\CollaborationCollection.cs" />
     <Compile Include="Model\Collection.cs" />
