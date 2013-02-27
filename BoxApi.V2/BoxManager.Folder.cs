@@ -9,7 +9,7 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
-        private const int MaxItems = 1000;
+        private const int MaxItems = 1;
 
         /// <summary>
         ///     Creates a new folder in the specified folder
@@ -128,19 +128,19 @@ namespace BoxApi.V2
             return DoGetFolderSync(id, fields, etag, limit, offset, client => client.WithSharedLink(sharedLinkUrl));
         }
 
-        private Folder DoGetFolderSync(string id, IEnumerable<FolderField> fields, string etag, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> withClient)
+        private Folder DoGetFolderSync(string id, IEnumerable<FolderField> fields, string etag, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> prepareClient)
         {
             GuardFromNull(id, "id");
             var paginate = limit.HasValue || offset.HasValue;
             var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, paginate ? limit : MaxItems, paginate ? offset : 0);
-            var folder = withClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+            var folder = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
 
             if (!paginate && folder.ItemCollection != null)
             {
                 while (folder.ItemCollection.Entries.Count < folder.ItemCollection.TotalCount)
                 {
                     request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, MaxItems, folder.ItemCollection.Entries.Count);
-                    var next = withClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+                    var next = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
                     folder.ItemCollection.Entries.AddRange(next.ItemCollection.Entries);
                 }
             }
@@ -185,11 +185,13 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(Folder folder, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(Folder folder, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            return GetItems(folder.Id, fields);
+            return GetItems(folder.Id, fields, limit, offset);
         }
 
         /// <summary>
@@ -197,12 +199,12 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(string id, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
-            GuardFromNull(id, "id");
-            var request = _requestHelper.GetItems(id, fields);
-            return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
+            return DoGetItemsSync(id, fields, limit, offset, client => client);
         }
 
         /// <summary>
@@ -211,12 +213,32 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
+        {
+            return DoGetItemsSync(id, fields, limit, offset, client => client.WithSharedLink(sharedLinkUrl));
+        }
+
+
+        private ItemCollection DoGetItemsSync(string id, IEnumerable<FolderField> fields, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> prepareClient)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.GetItems(id, fields);
-            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<ItemCollection>(request);
+            var paginate = limit.HasValue || offset.HasValue;
+            var request = _requestHelper.GetItems(id, fields, paginate ? limit : MaxItems, paginate ? offset : 0);
+            var items = prepareClient(_restClient).ExecuteAndDeserialize<ItemCollection>(request);
+
+            if (!paginate)
+            {
+                while (items.Entries.Count < items.TotalCount)
+                {
+                    request = _requestHelper.GetItems(id, fields, MaxItems, items.Entries.Count);
+                    var next = prepareClient(_restClient).ExecuteAndDeserialize<ItemCollection>(request);
+                    items.Entries.AddRange(next.Entries);
+                }
+            }
+            return items;
         }
 
         /// <summary>

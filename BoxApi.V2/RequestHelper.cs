@@ -37,11 +37,12 @@ namespace BoxApi.V2
             }
         }
 
-        public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null)
+        public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
-
+            TryAddParameter(request, "limit", limit);
+            TryAddParameter(request, "offset", offset);
             return request;
         }
 
