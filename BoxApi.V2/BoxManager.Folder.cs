@@ -9,7 +9,7 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
-        private const int MaxItems = 1;
+        private const int MaxItems = 1000;
 
         /// <summary>
         ///     Creates a new folder in the specified folder
