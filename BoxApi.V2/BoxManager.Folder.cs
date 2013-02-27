@@ -9,6 +9,8 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
+        private const int MaxItems = 1000;
+
         /// <summary>
         ///     Creates a new folder in the specified folder
         /// </summary>
@@ -102,11 +104,9 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
-            GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
-            return _restClient.ExecuteAndDeserialize<Folder>(request);
+            return DoGetFolderSync(id, fields, etag, limit, offset, client => client);
         }
 
         /// <summary>
@@ -117,11 +117,28 @@ namespace BoxApi.V2
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
+        {
+            return DoGetFolderSync(id, fields, etag, limit, offset, client => client.WithSharedLink(sharedLinkUrl));
+        }
+
+        private Folder DoGetFolderSync(string id, IEnumerable<FolderField> fields, string etag, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> withClient)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
-            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<Folder>(request);
+            var paginate = limit.HasValue || offset.HasValue;
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, paginate ? limit : MaxItems, paginate ? offset : 0);
+            var folder = withClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+
+            if (!paginate && folder.ItemCollection != null)
+            {
+                while (folder.ItemCollection.Entries.Count < folder.ItemCollection.TotalCount)
+                {
+                    request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, MaxItems, folder.ItemCollection.Entries.Count);
+                    var next = withClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+                    folder.ItemCollection.Entries.AddRange(next.ItemCollection.Entries);
+                }
+            }
+            return folder;
         }
 
         /// <summary>
@@ -181,7 +198,6 @@ namespace BoxApi.V2
             var request = _requestHelper.GetItems(id, fields);
             return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
         }
-
 
         /// <summary>
         ///     Retrieve a shared folder's items

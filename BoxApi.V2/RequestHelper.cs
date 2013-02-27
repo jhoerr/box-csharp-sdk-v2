@@ -19,12 +19,22 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Get(ResourceType resourceResourceType, string id, IEnumerable<IField> fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, IEnumerable<IField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
             request.AddUrlSegment("id", id.Trim());
+            TryAddParameter(request, "limit", limit);
+            TryAddParameter(request, "offset", offset);
             return request;
+        }
+
+        private void TryAddParameter(IRestRequest request, string name, int? value)
+        {
+            if (value.HasValue)
+            {
+                request.AddParameter(name, value.Value);
+            }
         }
 
         public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null)

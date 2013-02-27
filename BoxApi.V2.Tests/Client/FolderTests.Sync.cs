@@ -121,8 +121,33 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
+        [Test]
+        public void GetFolderWithItemCollectionPagination()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subfolder = Client.CreateFolder(testFolder.Id, TestItemName());
+            var file = Client.CreateFile(testFolder.Id, TestItemName());
 
+            try
+            {
+                var folder = Client.GetFolder(testFolder.Id, limit:1, offset:0);
+                AssertPaginatedItemIs(folder, subfolder.Id);
+                folder = Client.GetFolder(testFolder.Id, limit: 1, offset: 1);
+                AssertPaginatedItemIs(folder, file.Id);
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
 
+        private static void AssertPaginatedItemIs(Folder folder, string expected)
+        {
+            Assert.That(folder.ItemCollection, Is.Not.Null);
+            Assert.That(folder.ItemCollection.TotalCount, Is.EqualTo(2));
+            Assert.That(folder.ItemCollection.Entries.Count, Is.EqualTo(1));
+            Assert.That(folder.ItemCollection.Entries.Single().Id, Is.EqualTo(expected));
+        }
 
         [Test]
         public void GetItems()
