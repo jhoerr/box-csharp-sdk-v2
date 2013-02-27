@@ -130,9 +130,9 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var folder = Client.GetFolder(testFolder.Id, limit:1, offset:0);
+                var folder = Client.Get(testFolder, limit:1, offset:0);
                 AssertPaginatedItemIs(folder, subfolder.Id);
-                folder = Client.GetFolder(testFolder.Id, limit: 1, offset: 1);
+                folder = Client.Get(testFolder, limit: 1, offset: 1);
                 AssertPaginatedItemIs(folder, file.Id);
             }
             finally

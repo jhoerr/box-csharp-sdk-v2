@@ -76,11 +76,13 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder Get(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder Get(Folder folder, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            return GetFolder(folder.Id, fields, etag);
+            return GetFolder(folder.Id, fields, etag, limit, offset);
         }
 
         /// <summary>
@@ -103,6 +105,8 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
         public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
@@ -116,6 +120,8 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
         public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
