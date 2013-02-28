@@ -17,5 +17,18 @@ namespace BoxApi.V2.Extensions
             Folder folder = boxManager.GetFolder(folderId, new[] {FolderField.ItemCollection});
             return folder.ItemCollection.TotalCount + folder.Folders.Sum(f => TotalItemsInFolder(boxManager, f.Id));
         }
+
+        /// <summary>
+        /// Returns the total number of files in this folder and all folders contained therein..
+        /// </summary>
+        /// <param name="boxManager">The BoxManager with which to perform the count.</param>
+        /// <param name="folderId">The ID of the folder to count.</param>
+        /// <returns>The total number of files in this folder and all folders contained therein</returns>
+        public static long TotalFilesInFolder(this BoxManager boxManager, string folderId)
+        {
+            Folder folder = boxManager.GetFolder(folderId, new[] { FolderField.ItemCollection });
+            return folder.Files.Count() + folder.Folders.Sum(f => TotalFilesInFolder(boxManager, f.Id));
+        }
+
     }
 }
