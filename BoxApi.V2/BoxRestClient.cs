@@ -20,7 +20,7 @@ namespace BoxApi.V2
 
         public BoxRestClient WithSharedLink(string sharedLink)
         {
-            ((IRequestAuthenticator)Authenticator).SetSharedLink(sharedLink);
+            ((IRequestAuthenticator) Authenticator).SetSharedLink(sharedLink);
             return this;
         }
     }
@@ -40,12 +40,11 @@ namespace BoxApi.V2
         public const string JsonMimeType = "application/json";
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
-        private readonly BoxManagerOptions _options;
 
         public BoxRestClientBase(string serviceUrlBase, IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
             base(serviceUrlBase)
         {
-            _options = options;
+            Options = options;
             Authenticator = authenticator;
             Proxy = proxy;
             ClearHandlers();
@@ -55,6 +54,8 @@ namespace BoxApi.V2
             AddHandler(XmlAltMimeType, xmlDeserializer);
             AddHandler(JsonMimeType, jsonDeserializer);
         }
+
+        public BoxManagerOptions Options { get; private set; }
 
         public override IRestResponse Execute(IRestRequest request)
         {
@@ -76,7 +77,7 @@ namespace BoxApi.V2
                     case 412: // precondition (If-Match) failed
                         throw new BoxItemModifiedException(error);
                     case 500: // internal server error
-                        if (lastResponse.Equals(HttpStatusCode.OK) && _options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
+                        if (lastResponse.Equals(HttpStatusCode.OK) && Options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
                         {
                             Thread.Sleep(1000); // wait a second before retrying.
                             return Try(request, HttpStatusCode.InternalServerError);
@@ -257,6 +258,5 @@ namespace BoxApi.V2
                 ((IRequestAuthenticator) Authenticator).ClearSharedLink();
             }
         }
-
     }
 }

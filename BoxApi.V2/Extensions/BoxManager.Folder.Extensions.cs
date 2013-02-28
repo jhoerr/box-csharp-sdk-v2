@@ -15,7 +15,7 @@ namespace BoxApi.V2.Extensions
         public static long TotalItemsInFolder(this BoxManager boxManager, string folderId)
         {
             Folder folder = boxManager.GetFolder(folderId, new[] {FolderField.ItemCollection});
-            return folder.ItemCollection.TotalCount + folder.Folders.Sum(f => TotalItemsInFolder(boxManager, f.Id));
+            return folder.ItemCollection.TotalCount + folder.Folders.AsParallel().Sum(f => TotalItemsInFolder(boxManager.Clone(), f.Id));
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace BoxApi.V2.Extensions
         public static long TotalFilesInFolder(this BoxManager boxManager, string folderId)
         {
             Folder folder = boxManager.GetFolder(folderId, new[] { FolderField.ItemCollection });
-            return folder.Files.Count() + folder.Folders.Sum(f => TotalFilesInFolder(boxManager, f.Id));
+            return folder.Files.Count() + folder.Folders.AsParallel().Sum(f => TotalFilesInFolder(boxManager.Clone(), f.Id));
         }
 
     }

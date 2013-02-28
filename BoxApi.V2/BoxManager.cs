@@ -25,9 +25,8 @@ namespace BoxApi.V2
         /// <param name="proxy">HTTP proxy configuration information</param>
         /// <param name="options">Options to customize the behavior of the BoxManager</param>
         public BoxManager(string oauth2AccessToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
-            : this()
+            : this(new OAuth2RequestAuthenticator(oauth2AccessToken), proxy, options)
         {
-            SetClient(new OAuth2RequestAuthenticator(oauth2AccessToken), proxy, options);
         }
 
         /// <summary>
@@ -38,12 +37,12 @@ namespace BoxApi.V2
         /// <param name="proxy">HTTP proxy configuration information</param>
         /// <param name="options">Options to customize the behavior of the BoxManager</param>
         [Obsolete("Please transition to the v2 authentication scheme and use BoxManager(oauth2AccessToken)")]
-        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None) : this()
+        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
+            : this(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options)
         {
-            SetClient(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options);
         }
 
-        private void SetClient(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options)
+        private BoxManager(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options) : this()
         {
             _restClient = new BoxRestClient(requestAuthenticator, proxy, options);
             _uploadClient = new BoxUploadClient(requestAuthenticator, proxy, options);
@@ -68,5 +67,12 @@ namespace BoxApi.V2
             GuardFromNull(onFailure, "onFailure");
         }
 
+        /// <summary>
+        /// Creates a new BoxManager from the existing one.
+        /// </summary>
+        public BoxManager Clone()
+        {
+            return new BoxManager((IRequestAuthenticator)_restClient.Authenticator, _restClient.Proxy, _restClient.Options);
+        }
     }
 }
