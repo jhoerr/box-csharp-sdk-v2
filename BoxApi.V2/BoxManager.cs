@@ -16,6 +16,7 @@ namespace BoxApi.V2
     {
         private readonly RequestHelper _requestHelper;
         private BoxRestClient _restClient;
+        private BoxUploadClient _uploadClient;
 
         /// <summary>
         ///     Creates a BoxManager client using the v2 authentication scheme
@@ -45,6 +46,7 @@ namespace BoxApi.V2
         private void SetClient(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options)
         {
             _restClient = new BoxRestClient(requestAuthenticator, proxy, options);
+            _uploadClient = new BoxUploadClient(requestAuthenticator, proxy, options);
         }
 
         private BoxManager()

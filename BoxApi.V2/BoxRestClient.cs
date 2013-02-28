@@ -10,16 +10,40 @@ using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
-    internal class BoxRestClient : RestClient
+    internal class BoxRestClient : BoxRestClientBase
     {
         private const string ServiceUrl = "https://api.box.com/";
+
+        public BoxRestClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) : base(ServiceUrl, authenticator, proxy, options)
+        {
+        }
+
+        public BoxRestClient WithSharedLink(string sharedLink)
+        {
+            ((IRequestAuthenticator)Authenticator).SetSharedLink(sharedLink);
+            return this;
+        }
+    }
+
+    internal class BoxUploadClient : BoxRestClientBase
+    {
+        private const string ServiceUrl = "https://upload.box.com/api";
+
+        public BoxUploadClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options)
+            : base(ServiceUrl, authenticator, proxy, options)
+        {
+        }
+    }
+
+    internal class BoxRestClientBase : RestClient
+    {
         public const string JsonMimeType = "application/json";
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
         private readonly BoxManagerOptions _options;
 
-        public BoxRestClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
-            base(ServiceUrl)
+        public BoxRestClientBase(string serviceUrlBase, IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
+            base(serviceUrlBase)
         {
             _options = options;
             Authenticator = authenticator;
@@ -169,15 +193,15 @@ namespace BoxApi.V2
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.BadGateway))
             {
-                error = new Error { Code = "Bad Gateway", Status = 502 };
+                error = new Error {Code = "Bad Gateway", Status = 502};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                error = new Error { Code = "Unauthorized", Status = 401 };
+                error = new Error {Code = "Unauthorized", Status = 401};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
-                error = new Error { Code = "Forbidden", Status = 403};
+                error = new Error {Code = "Forbidden", Status = 403};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
@@ -234,10 +258,5 @@ namespace BoxApi.V2
             }
         }
 
-        public BoxRestClient WithSharedLink(string sharedLink)
-        {
-            ((IRequestAuthenticator) Authenticator).SetSharedLink(sharedLink);
-            return this;
-        }
     }
 }

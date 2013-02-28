@@ -552,7 +552,7 @@ namespace BoxApi.V2
 
         private File WriteFile(IRestRequest request)
         {
-            var itemCollection = _restClient.ExecuteAndDeserialize<ItemCollection>(request);
+            var itemCollection = _uploadClient.ExecuteAndDeserialize<ItemCollection>(request);
             return itemCollection.Entries.Single();
         }
 
@@ -614,7 +614,7 @@ namespace BoxApi.V2
             GuardFromNull(content, "content");
             GuardFromNullCallbacks(onSuccess, onFailure);
             IRestRequest request = _requestHelper.Write(id, name, etag, content);
-            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+            _uploadClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
         /// <summary>
