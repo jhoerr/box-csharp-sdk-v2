@@ -37,7 +37,7 @@ namespace BoxApi.V2
         /// <summary>
         ///     A full description of the error
         /// </summary>
-        public new string Message
+        public override string Message
         {
             get { return Error.Message; }
         }
