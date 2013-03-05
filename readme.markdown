@@ -12,7 +12,7 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Release Notes
 
-###1.3
+###1.3 (30 Jan 2013)
  + Feature: Search
  + Feature: File thumbnails
  + Feature: File/Folder path collections now provided
@@ -22,16 +22,16 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
  + Breaking Change: File/Folder Path and PathId have been removed from the API
  + Breaking Change: File/Folder Size is now a double (was an int)
  
-###1.2
+###1.2 (15 Jan 2013)
  + Improvement: Now honoring the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
  + Improvement: Faster performance when uploading files.
 
-###1.1
+###1.1 (11 Jan 2013)
  + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
  + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
  + Bug: BoxException information is now properly saved.
 
-###1.0
+###1.0 (25 Dec 2012)
  + Initial release 
 
 ## Known Issues
