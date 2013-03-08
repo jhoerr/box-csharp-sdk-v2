@@ -23,10 +23,16 @@ namespace BoxApi.V2.Tests.Client
             ---------------------------
          */
 
+        [Test, ExpectedException(typeof(BoxException))]
+        public void CanNotGetSharedFileWithIdAlone()
+        {
+            Client.GetFile(SharedFileId);
+        }
+
         [Test]
         public void GetSharedFile()
         {
-            var file = Client.GetSharedItem<File>(SharedFileLink);
+            var file = Client.GetSharedItem<File>(SharedFileLink, new[]{FileField.Name, FileField.OwnedBy});
             // File.Parent is 'null' on a shared file so that information about the sharing user's Box is not exposed.
             AssertFileConstraints(file, "shared file.txt", null, SharedFileId);
         }

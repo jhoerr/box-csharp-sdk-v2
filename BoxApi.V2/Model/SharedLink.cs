@@ -22,11 +22,14 @@ namespace BoxApi.V2.Model
         /// <param name="access">With whom the item should be shared</param>
         /// <param name="unsharedAt">Automatically stop sharing at this time</param>
         /// <param name="permissions">The </param>
-        public SharedLink(Access access, DateTime unsharedAt, Permissions permissions)
+        public SharedLink(Access access, DateTime? unsharedAt = null, Permissions permissions = null) : this()
         {
             Access = access;
-            UnsharedAt = new DateTime(unsharedAt.Year, unsharedAt.Month, unsharedAt.Day, unsharedAt.Hour, unsharedAt.Minute, unsharedAt.Second);
-            Permissions = permissions;
+            Permissions = permissions ?? new Permissions() {CanDownload = true, CanPreview = true};
+            if (unsharedAt.HasValue)
+            {
+                UnsharedAt = unsharedAt.Value;
+            }
         }
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace BoxApi.V2.Model
         ///     The day that this link should be disabled at. Timestamps are rounded off to the given day.
         /// </summary>
         [JsonProperty(PropertyName = "unshared_at")]
-        public DateTime UnsharedAt { get; set; }
+        public DateTime? UnsharedAt { get; set; }
 
         /// <summary>
         ///     The set of permissions that apply to this shared item

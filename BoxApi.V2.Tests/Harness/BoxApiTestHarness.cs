@@ -80,10 +80,14 @@ namespace BoxApi.V2.Tests.Harness
             }
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.Access, Is.EqualTo(sharedLink.Access));
-            Assert.That(actual.UnsharedAt, Is.GreaterThan(DateTime.MinValue));
-            Assert.That(actual.UnsharedAt, Is.LessThan(DateTime.MaxValue));
-            Assert.That(actual.Permissions.CanDownload, Is.True);
-            Assert.That(actual.Permissions.CanPreview, Is.True);
+            Assert.That(actual.UnsharedAt.HasValue, Is.EqualTo(sharedLink.UnsharedAt.HasValue));
+            if (actual.UnsharedAt.HasValue)
+            {
+                Assert.That(actual.UnsharedAt, Is.GreaterThan(DateTime.MinValue));
+                Assert.That(actual.UnsharedAt, Is.LessThan(DateTime.MaxValue));
+            }
+            Assert.That(actual.Permissions.CanDownload, Is.EqualTo(sharedLink.Permissions.CanDownload));
+            Assert.That(actual.Permissions.CanPreview, Is.EqualTo(sharedLink.Permissions.CanPreview));
         }
 
         protected File PostImageFile(string fileName)
