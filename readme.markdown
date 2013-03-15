@@ -36,7 +36,7 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Known Issues
 
-+ Support for several features is planned but not yet available, including removing a user from an enterprise.
++ Support for several features is planned but not yet available, including Trash and OnBehalfOf.
 + Long-polling of events is not currently supported due to limitations in the underlying request model.
 
 ## Usage Example
