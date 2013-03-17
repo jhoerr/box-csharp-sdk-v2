@@ -277,6 +277,84 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void GetFolderItemsAsyncLimitOffset()
+        {
+            var callbackHit = false;
+
+            var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
+            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
+            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
+
+            Client.GetItems(contents =>
+            {
+                callbackHit = true;
+                Assert.That(contents, Is.Not.Null);
+                Assert.That(contents.TotalCount, Is.EqualTo(1));
+                Assert.That(contents.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+                Client.DeleteFolder(testFolder.Id, true);
+            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 0);
+
+            Client.GetItems(contents =>
+            {
+                callbackHit = true;
+                Assert.That(contents, Is.Not.Null);
+                Assert.That(contents.TotalCount, Is.EqualTo(1));
+                Assert.That(contents.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
+                Client.DeleteFolder(testFolder.Id, true);
+            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 1);
+
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
+        public void GetFolderAsyncLimitOffset()
+        {
+            var callbackHit = false;
+
+            var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
+            var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
+            var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
+
+            Client.GetFolder(contents =>
+                {
+                    callbackHit = true;
+                    Assert.That(contents, Is.Not.Null);
+                    Assert.That(contents.ItemCollection.TotalCount, Is.EqualTo(1));
+                    Assert.That(contents.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+                    Client.DeleteFolder(testFolder.Id, true);
+                }, AbortOnFailure, testFolder.Id, new[] {FolderField.Name,}, limit: 1, offset: 0);
+
+            Client.GetFolder(contents =>
+            {
+                callbackHit = true;
+                Assert.That(contents, Is.Not.Null);
+                Assert.That(contents.ItemCollection.TotalCount, Is.EqualTo(1));
+                Assert.That(contents.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
+                Client.DeleteFolder(testFolder.Id, true);
+            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, limit: 1, offset: 1);
+
+
+            do
+            {
+                Thread.Sleep(1000);
+            } while (!callbackHit && --MaxWaitInSeconds > 0);
+
+            if (MaxWaitInSeconds.Equals(0))
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
+            }
+        }
+
+        [Test]
         public void UpdateDescriptionAsync()
         {
             // Arrange
@@ -307,7 +385,6 @@ namespace BoxApi.V2.Tests.Client
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
-
 
         [Test]
         public void UpdateEverythingAsync()
