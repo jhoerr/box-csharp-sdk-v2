@@ -68,23 +68,31 @@ namespace BoxApi.V2
             Error error;
             if (!Successful(restResponse, out error))
             {
-                switch (error.Status)
+                try
                 {
-                    case 202: // not ready
-                        throw new BoxDownloadNotReadyException(error);
-                    case 304: // precondition (If-None-Match) failed
-                        throw new BoxItemNotModifiedException(error);
-                    case 412: // precondition (If-Match) failed
-                        throw new BoxItemModifiedException(error);
-                    case 500: // internal server error
-                        if (lastResponse.Equals(HttpStatusCode.OK) && Options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
-                        {
-                            Thread.Sleep(1000); // wait a second before retrying.
-                            return Try(request, HttpStatusCode.InternalServerError);
-                        }
-                        throw new BoxException(error);
-                    default:
-                        throw new BoxException(error);
+                    switch (error.Status)
+                    {
+                        case 202: // not ready
+                            throw new BoxDownloadNotReadyException(error);
+                        case 304: // precondition (If-None-Match) failed
+                            throw new BoxItemNotModifiedException(error);
+                        case 412: // precondition (If-Match) failed
+                            throw new BoxItemModifiedException(error);
+                        case 500: // internal server error
+                            if (lastResponse.Equals(HttpStatusCode.OK) && Options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
+                            {
+                                Thread.Sleep(1000); // wait a second before retrying.
+                                return Try(request, HttpStatusCode.InternalServerError);
+                            }
+                            throw new BoxException(error);
+                        default:
+                            throw new BoxException(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    CleanUp();
+                    throw e;
                 }
             }
             return restResponse;
@@ -151,9 +159,10 @@ namespace BoxApi.V2
             AssertUsableFailureAction(onFailure);
         }
 
-        private static void HandleFailure(Action<Error> onFailure, RestRequestAsyncHandle handle, Error error)
+        private void HandleFailure(Action<Error> onFailure, RestRequestAsyncHandle handle, Error error)
         {
             handle.Abort();
+            CleanUp();
             onFailure(error);
         }
 
@@ -178,7 +187,6 @@ namespace BoxApi.V2
         public bool Successful(IRestResponse restResponse, out Error error)
         {
             error = null;
-            TryClearSharedLink();
 
             if (restResponse == null)
             {
@@ -251,11 +259,13 @@ namespace BoxApi.V2
             return (deserialized.Entries != null) ? deserialized.Entries.First() : null;
         }
 
-        private void TryClearSharedLink()
+        private void CleanUp()
         {
             if (Authenticator != null)
             {
-                ((IRequestAuthenticator) Authenticator).ClearSharedLink();
+                var requestAuthenticator = ((IRequestAuthenticator) Authenticator);
+                requestAuthenticator.ClearSharedLink();
+                requestAuthenticator.ClearOnBehalfOf();
             }
         }
     }
