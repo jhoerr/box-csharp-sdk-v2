@@ -15,7 +15,6 @@ namespace BoxApi.V2
     public partial class BoxManager
     {
         private const int MaxFileGetAttempts = 4;
-        private const string PngExtension = "png";
 
         /// <summary>
         ///     Creates a new empty file in the specified folder
@@ -1178,13 +1177,13 @@ namespace BoxApi.V2
             }
         }
 
-        public byte[] GetThumbnail(File file, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = PngExtension)
+        public byte[] GetThumbnail(File file, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = "png")
         {
             GuardFromNull(file, "file");
             return GetThumbnail(file.Id, minHeight, minWidth, maxHeight, maxWidth, extension);
         }
 
-        private byte[] GetThumbnail(string fileId, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = PngExtension)
+        private byte[] GetThumbnail(string fileId, ThumbnailSize? minHeight = null, ThumbnailSize? minWidth = null, ThumbnailSize? maxHeight = null, ThumbnailSize? maxWidth = null, string extension = "png")
         {
             GuardFromNull(fileId, "fileId");
             GuardFromNull(extension, "extension");
