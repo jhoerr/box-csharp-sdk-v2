@@ -12,11 +12,12 @@ namespace BoxApi.V2
     /// <summary>
     ///     Provides methods for using the Box v2 API.  This class is not designed to be thread-safe.
     /// </summary>
-    public partial class BoxManager
+    public partial class BoxManager : IEnterpriseManager
     {
         private readonly RequestHelper _requestHelper;
-        private BoxRestClient _restClient;
-        private BoxUploadClient _uploadClient;
+        private readonly BoxRestClient _restClient;
+        private readonly BoxUploadClient _uploadClient;
+        private readonly IRequestAuthenticator _requestAuthenticator;
 
         /// <summary>
         ///     Creates a BoxManager client using the v2 authentication scheme
@@ -44,8 +45,9 @@ namespace BoxApi.V2
 
         private BoxManager(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options) : this()
         {
-            _restClient = new BoxRestClient(requestAuthenticator, proxy, options);
-            _uploadClient = new BoxUploadClient(requestAuthenticator, proxy, options);
+            _requestAuthenticator = requestAuthenticator;
+            _restClient = new BoxRestClient(_requestAuthenticator, proxy, options);
+            _uploadClient = new BoxUploadClient(_requestAuthenticator, proxy, options);
         }
 
         private BoxManager()
@@ -65,6 +67,12 @@ namespace BoxApi.V2
         {
             GuardFromNull(onSuccess, "onSuccess");
             GuardFromNull(onFailure, "onFailure");
+        }
+
+        public IUserManager OnBehalfOf(string userLogin)
+        {
+            _requestAuthenticator.SetOnBehalfOf(userLogin);
+            return this;
         }
 
         /// <summary>

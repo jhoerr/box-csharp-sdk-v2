@@ -25,7 +25,7 @@ namespace BoxApi.V2.Authentication.Legacy
         {
             var sb = new StringBuilder(string.Format("BoxAuth api_key={0}", _applicationApiKey));
             TryAddParameter(sb, "auth_token", AccessToken);
-            if (HasSharedLink())
+            if (Has(SharedLink))
             {
                 TryAddParameter(sb, "shared_link", SharedLink);
             }

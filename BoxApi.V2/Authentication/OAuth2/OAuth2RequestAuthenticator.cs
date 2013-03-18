@@ -20,9 +20,13 @@ namespace BoxApi.V2.Authentication.OAuth2
         public void Authenticate(IRestClient client, IRestRequest request)
         {
             request.AddHeader("Authorization", string.Format("Bearer {0}", AccessToken));
-            if (HasSharedLink())
+            if (Has(SharedLink))
             {
                 request.AddHeader("BoxApi", string.Format("shared_link={0}", SharedLink));
+            }
+            if (Has(OnBehalfOf))
+            {
+                request.AddHeader("On-Behalf-Of", OnBehalfOf);
             }
         }
     }
