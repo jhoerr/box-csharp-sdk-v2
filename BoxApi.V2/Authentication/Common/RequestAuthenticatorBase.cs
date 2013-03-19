@@ -28,11 +28,6 @@ namespace BoxApi.V2.Authentication.Common
             OnBehalfOf = userLogin;
         }
 
-        public void ClearOnBehalfOf()
-        {
-            OnBehalfOf = null;
-        }
-
         protected static void TryAddParameter(StringBuilder sb, string label, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))

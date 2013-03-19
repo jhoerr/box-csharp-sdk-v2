@@ -265,7 +265,6 @@ namespace BoxApi.V2
             {
                 var requestAuthenticator = ((IRequestAuthenticator) Authenticator);
                 requestAuthenticator.ClearSharedLink();
-                requestAuthenticator.ClearOnBehalfOf();
             }
         }
     }

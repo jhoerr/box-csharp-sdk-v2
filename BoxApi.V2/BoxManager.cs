@@ -17,7 +17,6 @@ namespace BoxApi.V2
         private readonly RequestHelper _requestHelper;
         private readonly BoxRestClient _restClient;
         private readonly BoxUploadClient _uploadClient;
-        private readonly IRequestAuthenticator _requestAuthenticator;
 
         /// <summary>
         ///     Creates a BoxManager client using the v2 authentication scheme
@@ -25,8 +24,9 @@ namespace BoxApi.V2
         /// <param name="oauth2AccessToken">The OAuth 2.0 access token for this user</param>
         /// <param name="proxy">HTTP proxy configuration information</param>
         /// <param name="options">Options to customize the behavior of the BoxManager</param>
-        public BoxManager(string oauth2AccessToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
-            : this(new OAuth2RequestAuthenticator(oauth2AccessToken), proxy, options)
+        /// <param name="onBehalfOf">All operations will be performed on behalf of the user with this login.</param>
+        public BoxManager(string oauth2AccessToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None, string onBehalfOf = null)
+            : this(new OAuth2RequestAuthenticator(oauth2AccessToken), proxy, options, onBehalfOf)
         {
         }
 
@@ -37,17 +37,19 @@ namespace BoxApi.V2
         /// <param name="v1AuthToken">The Box user's v1 auth token</param>
         /// <param name="proxy">HTTP proxy configuration information</param>
         /// <param name="options">Options to customize the behavior of the BoxManager</param>
+        /// <param name="onBehalfOf">All operations will be performed on behalf of the user with this login.</param>
         [Obsolete("Please transition to the v2 authentication scheme and use BoxManager(oauth2AccessToken)")]
-        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
-            : this(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options)
+        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None, string onBehalfOf = null)
+            : this(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options, onBehalfOf)
         {
         }
 
-        private BoxManager(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options) : this()
+        private BoxManager(IRequestAuthenticator requestAuthenticator, IWebProxy proxy, BoxManagerOptions options, string onBehalfOf = null)
+            : this()
         {
-            _requestAuthenticator = requestAuthenticator;
-            _restClient = new BoxRestClient(_requestAuthenticator, proxy, options);
-            _uploadClient = new BoxUploadClient(_requestAuthenticator, proxy, options);
+            requestAuthenticator.SetOnBehalfOf(onBehalfOf);
+            _restClient = new BoxRestClient(requestAuthenticator, proxy, options);
+            _uploadClient = new BoxUploadClient(requestAuthenticator, proxy, options);
         }
 
         private BoxManager()
@@ -67,12 +69,6 @@ namespace BoxApi.V2
         {
             GuardFromNull(onSuccess, "onSuccess");
             GuardFromNull(onFailure, "onFailure");
-        }
-
-        public IUserManager OnBehalfOf(string userLogin)
-        {
-            _requestAuthenticator.SetOnBehalfOf(userLogin);
-            return this;
         }
 
         /// <summary>

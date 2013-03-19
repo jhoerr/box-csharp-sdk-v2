@@ -338,7 +338,5 @@ namespace BoxApi.V2
         /// <param name="eventTypes">A list of event types to filter by.  Only events of these types will be returned.</param>
         void GetEnterpriseEvents(Action<EnterpriseEventCollection> onSuccess, Action<Error> onFailure, int offset = 0, int limit = 100, DateTime? createdAfter = null,
                                  DateTime? createdBefore = null, EnterpriseEventType[] eventTypes = null);
-
-        IUserManager OnBehalfOf(string userLogin);
     }
 }
