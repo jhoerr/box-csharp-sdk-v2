@@ -1,4 +1,5 @@
 using System.Text;
+using RestSharp;
 
 namespace BoxApi.V2.Authentication.Common
 {
@@ -39,6 +40,14 @@ namespace BoxApi.V2.Authentication.Common
         protected bool Has(string header)
         {
             return !string.IsNullOrWhiteSpace(header);
+        }
+
+        protected void TryAddOnBehalfOfHeader(IRestRequest request)
+        {
+            if (Has(OnBehalfOf))
+            {
+                request.AddHeader("On-Behalf-Of", OnBehalfOf);
+            }
         }
     }
 }

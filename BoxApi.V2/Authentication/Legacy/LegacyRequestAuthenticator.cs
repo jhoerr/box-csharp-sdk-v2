@@ -30,6 +30,7 @@ namespace BoxApi.V2.Authentication.Legacy
                 TryAddParameter(sb, "shared_link", SharedLink);
             }
             request.AddHeader("Authorization", sb.ToString());
+            TryAddOnBehalfOfHeader(request);
         }
     }
 }

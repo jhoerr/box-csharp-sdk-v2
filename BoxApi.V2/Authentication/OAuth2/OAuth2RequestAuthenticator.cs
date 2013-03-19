@@ -24,10 +24,7 @@ namespace BoxApi.V2.Authentication.OAuth2
             {
                 request.AddHeader("BoxApi", string.Format("shared_link={0}", SharedLink));
             }
-            if (Has(OnBehalfOf))
-            {
-                request.AddHeader("On-Behalf-Of", OnBehalfOf);
-            }
+            TryAddOnBehalfOfHeader(request);
         }
     }
 }
