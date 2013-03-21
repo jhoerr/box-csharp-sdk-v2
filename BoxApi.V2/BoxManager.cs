@@ -37,10 +37,9 @@ namespace BoxApi.V2
         /// <param name="v1AuthToken">The Box user's v1 auth token</param>
         /// <param name="proxy">HTTP proxy configuration information</param>
         /// <param name="options">Options to customize the behavior of the BoxManager</param>
-        /// <param name="onBehalfOf">All operations will be performed on behalf of the user with this login.</param>
         [Obsolete("Please transition to the v2 authentication scheme and use BoxManager(oauth2AccessToken)")]
-        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None, string onBehalfOf = null)
-            : this(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options, onBehalfOf)
+        public BoxManager(string v1ApiKey, string v1AuthToken, IWebProxy proxy = null, BoxManagerOptions options = BoxManagerOptions.None)
+            : this(new LegacyRequestAuthenticator(v1ApiKey, v1AuthToken), proxy, options)
         {
         }
 

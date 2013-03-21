@@ -41,13 +41,5 @@ namespace BoxApi.V2.Authentication.Common
         {
             return !string.IsNullOrWhiteSpace(header);
         }
-
-        protected void TryAddOnBehalfOfHeader(IRestRequest request)
-        {
-            if (Has(OnBehalfOf))
-            {
-                request.AddHeader("On-Behalf-Of", OnBehalfOf);
-            }
-        }
     }
 }
