@@ -12,24 +12,35 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 
 ## Release Notes
 
+###2.0 (21 Mar 2013)
+ + [On-Behalf-Of](http://developers.blog.box.com/2013/03/08/announcing-on-behalf-of-the-simplest-most-powerful-admin-api-youll-ever-use/)
+ + Pagination of folder item collections
+ + Improved error handling, including optional one-time retry of failed (500) requests.
+ + Ability to disable shared links
+ + Ability to convert enterprise users to standalone users
+ + Folder sync state
+ + File uploads are now directed to https://upload.box.com
+ + [Bug](https://github.com/jhoerr/box-csharp-sdk-v2/issues/35): Misbehavior when creating shared link with default values. (h/t to everettevola)
+ + *Breaking Change*: All `fields` have been reimplemented as enumerations specific to their type.  That is, folder operations take `FolderField`s.  This was done to more accurately specify which properties could be returned for the operation.
+
 ###1.3 (30 Jan 2013)
- + Feature: Search
- + Feature: File thumbnails
- + Feature: File/Folder path collections now provided
- + Improvement: Strings are now trimmed, which prevents request problems in certain circumstances
+ + Search
+ + File thumbnails
+ + File/Folder path collections now provided
+ + Bug: Strings are now trimmed, which prevents request problems in certain circumstances
  + Bug: File/Folder size would fail to deserialize when very large
  + Bug: Boolean values in query strings were improperly serialized
- + Breaking Change: File/Folder Path and PathId have been removed from the API
- + Breaking Change: File/Folder Size is now a double (was an int)
+ + *Breaking Change*: File/Folder Path and PathId have been removed from the API
+ + *Breaking Change*: File/Folder Size is now a double (was an int)
  
 ###1.2 (15 Jan 2013)
- + Improvement: Now honoring the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
- + Improvement: Faster performance when uploading files.
+ + Now honoring the HTTP 202 <em>Retry-After</em> header when attempting to download file contents.
+ + Faster performance when uploading files.
 
 ###1.1 (11 Jan 2013)
- + Breaking Change: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
- + Breaking Change: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
  + Bug: BoxException information is now properly saved.
+ + *Breaking Change*: The BoxManager constructor signatures have changed to resolve ambigious method call errors in Visual Studio.
+ + *Breaking Change*: The enterprise-level User methods have all changed to resolve an issue that could potentially lead to data loss.
 
 ###1.0 (25 Dec 2012)
  + Initial release 
@@ -89,6 +100,17 @@ using (var stream = new MemoryStream())
 
 // Delete the folder and its contents
 boxManager.Delete(subfolder, recursive: true);
+```
+
+As an enterprise administrator you can create a client and perform Box operations [on behalf of](http://developers.blog.box.com/2013/03/08/announcing-on-behalf-of-the-simplest-most-powerful-admin-api-youll-ever-use/) another user.
+
+```csharp
+// Instantiate a BoxManager client.
+var boxManager = new BoxManager("AccessToken", onBehalfOf: "user@domain.com");
+
+// ... do stuff as that user
+// ... use your power only for awesome!
+```
 
 ## Copyright
 
