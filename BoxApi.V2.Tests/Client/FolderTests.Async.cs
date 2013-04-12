@@ -6,6 +6,7 @@ using BoxApi.V2.Model.Enum;
 using BoxApi.V2.Model.Fields;
 using BoxApi.V2.Tests.Harness;
 using NUnit.Framework;
+using RestSharp;
 
 namespace BoxApi.V2.Tests.Client
 {
@@ -13,389 +14,233 @@ namespace BoxApi.V2.Tests.Client
     public class FolderTestsAsync : BoxApiTestHarness
     {
         [Test]
-        public void GetFolderAsync()
+        public void GetRootFolderAsync()
         {
-            var callbackHit = false;
+            Folder actual = null;
 
-            Client.GetFolder(folder =>
-                {
-                    callbackHit = true;
-                    AssertFolderConstraints(folder, "All Files", null, RootId);
-                }, AbortOnFailure, RootId);
+            Client.GetFolder(folder => { actual = folder; }, AbortOnFailure, RootId);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            AssertFolderConstraints(actual, "All Files", null, RootId);
         }
 
         [Test]
         public void GetNonExistentFolderAsync()
         {
-            var failureOccured = false;
-            Client.GetFolder(folder => { }, (error) => { failureOccured = true; }, "abc");
-
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            object failureToken = null;
+            
+            Client.GetFolder(folder => { }, (error) => failureToken = new object(), "invalid idS");
+            
+            AssertActionComplete(ref failureToken);
         }
 
         [Test]
         public void CreateFolderAsync()
         {
+            Folder actual = null;
             var folderName = TestItemName();
-            var callbackHit = false;
 
-            Client.CreateFolder(folder =>
-                {
-                    callbackHit = true;
-                    AssertFolderConstraints(folder, folderName, RootId);
-                    // clean up 
-                    Client.DeleteFolder(folder.Id, true);
-                }, AbortOnFailure, RootId, folderName, null);
+            Client.CreateFolder(folder => { actual = folder; }, AbortOnFailure, RootId, folderName, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(actual, true);
+            AssertFolderConstraints(actual, folderName, RootId);
         }
 
         [Test]
         public void CreateFolderWithIllegalNameAsync()
         {
-            var failureOccured = false;
+            object failureToken = null;
+            
+            Client.CreateFolder(folder => { }, (error) => failureToken = new object(), RootId, "\\bad name:", null);
 
-            Client.CreateFolder(folder => { }, (error) => failureOccured = true, RootId, "\\bad name:", null);
-
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref failureToken);
         }
 
-        [Test]
+        [Test, ExpectedException(typeof(BoxException))]
         public void DeleteFolderAsync()
         {
-            var callbackHit = false;
-            var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
-            Client.DeleteFolder(response => callbackHit = true, AbortOnFailure, folder.Id, true);
+            IRestResponse actual = null;
+            var folder = Client.CreateFolder(RootId, TestItemName(), null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
+            Client.Delete(response => actual = response, AbortOnFailure, folder, true);
 
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
-
-            try
-            {
-                Client.Get(folder, null);
-                Assert.Fail("Should not be able to fetch the deleted folder.");
-            }
-            catch
-            {
-            }
+            AssertActionComplete(ref actual);
+            Client.Get(folder, null);
+            Assert.Fail("Should not be able to fetch the deleted folder.");
         }
 
         [Test]
         public void DeleteNonExistentFolderAsync()
         {
-            var failureOccured = false;
-            Client.DeleteFolder(response => { }, (error) => { failureOccured = true; }, "abc", true);
+            object failureToken = null;
+            
+            Client.DeleteFolder(response => { }, (error) => failureToken = new object(), "abc", true);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref failureToken);
         }
 
         [Test]
         public void CopyFolderAsync()
         {
-            var callbackHit = false;
-            var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
-            var subfolder = Client.CreateFolder(folder.Id, "subfolder", null);
-            var copyName = TestItemName();
-            Client.CopyFolder(copiedFolder =>
-                {
-                    callbackHit = true;
-                    Assert.That(copiedFolder.ItemCollection.TotalCount, Is.EqualTo(1));
-                    Client.DeleteFolder(folder.Id, true);
-                    Client.DeleteFolder(copiedFolder.Id, true);
-                }, AbortOnFailure, folder.Id, RootId, copyName, null);
+            Folder actual = null;
+            Folder folder = Client.CreateFolder(RootId, TestItemName(), null);
+            string copyName = TestItemName();
+            
+            Client.CopyFolder(copiedFolder => actual = copiedFolder, AbortOnFailure, folder.Id, RootId, copyName, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(folder, true);
+            Client.Delete(actual, true);
+            AssertFolderConstraints(actual, copyName, RootId);
+            Assert.That(actual.Id, Is.Not.EqualTo(folder.Id));
         }
 
         [Test]
         public void ShareFolderLinkAsync()
         {
-            var callbackHit = false;
+            Folder actual = null;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanPreview = true, CanDownload = true});
 
-            Client.ShareFolderLink(copiedFolder =>
-                {
-                    callbackHit = true;
-                    AssertFolderConstraints(folder, folderName, RootId);
-                    AssertSharedLink(folder.SharedLink, sharedLink);
-                    Client.DeleteFolder(folder.Id, true);
-                }, AbortOnFailure, folder.Id, sharedLink, null);
+            Client.ShareFolderLink(copiedFolder => actual = copiedFolder, AbortOnFailure, folder.Id, sharedLink, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(folder, true);
+            AssertFolderConstraints(actual, folderName, RootId);
+            AssertSharedLink(actual.SharedLink, sharedLink);
         }
 
         [Test]
         public void MoveFolderAsync()
         {
-            var callbackHit = false;
-            var folderName = TestItemName();
-            var folder = Client.CreateFolder(RootId, folderName, null);
-            var targetFolderName = TestItemName();
-            var targetFolder = Client.CreateFolder(RootId, targetFolderName, null);
+            Folder actual = null;
+            string folderName = TestItemName();
+            Folder folder = Client.CreateFolder(RootId, folderName, null);
+            Folder targetFolder = Client.CreateFolder(RootId, TestItemName(), null);
 
-            Client.MoveFolder(movedFolder =>
-                {
-                    callbackHit = true;
-                    AssertFolderConstraints(movedFolder, folderName, targetFolder.Id, folder.Id);
-                    Client.DeleteFolder(targetFolder.Id, true);
-                }, AbortOnFailure, folder.Id, targetFolder.Id, null);
+            Client.MoveFolder(movedFolder => actual = movedFolder, AbortOnFailure, folder.Id, targetFolder.Id, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(targetFolder, true);
+            AssertFolderConstraints(actual, folderName, targetFolder.Id, folder.Id);
         }
 
         [Test]
         public void RenameFolderAsync()
         {
-            var callbackHit = false;
+            Folder actual = null;
             var folderName = TestItemName();
             var folder = Client.CreateFolder(RootId, folderName, null);
             var newName = TestItemName();
 
-            Client.Rename(renamedFolder =>
-                {
-                    callbackHit = true;
-                    AssertFolderConstraints(renamedFolder, newName, RootId, folder.Id);
-                    Client.DeleteFolder(renamedFolder.Id, true);
-                }, AbortOnFailure, folder, newName, null);
+            Client.Rename(renamedFolder => actual = renamedFolder, AbortOnFailure, folder, newName, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            AssertFolderConstraints(actual, newName, RootId, folder.Id);
+            Client.Delete(actual, true);
         }
 
         [Test]
         public void GetFolderItemsAsync()
         {
-            var callbackHit = false;
-
+            ItemCollection actual = null;
             var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
 
-            Client.GetItems(contents =>
-                {
-                    callbackHit = true;
-                    Assert.That(contents, Is.Not.Null);
-                    Assert.That(contents.TotalCount, Is.EqualTo(2));
-                    Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
-                    Assert.That(contents.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-                    Client.DeleteFolder(testFolder.Id, true);
-                }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name,});
+            Client.GetItems(contents => actual = contents, AbortOnFailure, testFolder.Id, new[] {FolderField.Name,});
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(testFolder, true);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.Entries.SingleOrDefault(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
+            Assert.That(actual.Entries.SingleOrDefault(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
         }
 
         [Test]
         public void GetFolderItemsAsyncLimitOffset()
         {
-            var callbackHit = false;
-
+            ItemCollection actual = null;
             var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
 
-            Client.GetItems(contents =>
-            {
-                callbackHit = true;
-                Assert.That(contents, Is.Not.Null);
-                Assert.That(contents.TotalCount, Is.EqualTo(1));
-                Assert.That(contents.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
-                Client.DeleteFolder(testFolder.Id, true);
-            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 0);
+            // Get foirst item
+            Client.GetItems(contents => actual = contents, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 0);
 
-            Client.GetItems(contents =>
-            {
-                callbackHit = true;
-                Assert.That(contents, Is.Not.Null);
-                Assert.That(contents.TotalCount, Is.EqualTo(1));
-                Assert.That(contents.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-                Client.DeleteFolder(testFolder.Id, true);
-            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 1);
+            AssertActionComplete(ref actual);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.Entries.Count(), Is.EqualTo(1));
+            Assert.That(actual.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
 
+            // Get second item
+            Client.GetItems(contents => actual = contents, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, 1, 1);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(testFolder, true);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.Entries.Count(), Is.EqualTo(1));
+            Assert.That(actual.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
         }
 
         [Test]
         public void GetFolderAsyncLimitOffset()
         {
-            var callbackHit = false;
+            Folder actual = null;
 
             var testFolder = Client.CreateFolder(RootId, TestItemName(), null);
             var subfolder1 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
             var subfolder2 = Client.CreateFolder(testFolder.Id, TestItemName(), null);
 
-            Client.GetFolder(contents =>
-                {
-                    callbackHit = true;
-                    Assert.That(contents, Is.Not.Null);
-                    Assert.That(contents.ItemCollection.TotalCount, Is.EqualTo(1));
-                    Assert.That(contents.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
-                    Client.DeleteFolder(testFolder.Id, true);
-                }, AbortOnFailure, testFolder.Id, new[] {FolderField.Name,}, limit: 1, offset: 0);
+            Client.GetFolder(contents => actual = contents, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, limit: 1, offset: 0);
 
-            Client.GetFolder(contents =>
-            {
-                callbackHit = true;
-                Assert.That(contents, Is.Not.Null);
-                Assert.That(contents.ItemCollection.TotalCount, Is.EqualTo(1));
-                Assert.That(contents.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
-                Client.DeleteFolder(testFolder.Id, true);
-            }, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, limit: 1, offset: 1);
+            AssertActionComplete(ref actual);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.ItemCollection.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.ItemCollection.Entries.Count(), Is.EqualTo(1));
+            Assert.That(actual.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder1.Name)), Is.Not.Null);
 
+            Client.GetFolder(contents => actual = contents, AbortOnFailure, testFolder.Id, new[] { FolderField.Name, }, limit: 1, offset: 1);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(testFolder, true);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.ItemCollection.TotalCount, Is.EqualTo(2));
+            Assert.That(actual.ItemCollection.Entries.Count(), Is.EqualTo(1));
+            Assert.That(actual.ItemCollection.Entries.Single(e => e.Name.Equals(subfolder2.Name)), Is.Not.Null);
         }
 
         [Test]
         public void UpdateDescriptionAsync()
         {
             // Arrange
-            var callbackHit = false;
+            Folder actual = null;
             var folder = Client.CreateFolder(RootId, TestItemName(), null);
-            var newDescription = "new description";
+            const string newDescription = "new description";
 
             // Act
             folder.Description = newDescription;
-            Client.UpdateDescription(updatedFolder =>
-                {
-                    // Assert
-                    AssertFolderConstraints(updatedFolder, folder.Name, folder.Parent.Id, folder.Id);
-                    Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
-                    callbackHit = true;
-                }, AbortOnFailure, folder, newDescription, null);
+            Client.UpdateDescription(updatedFolder => actual = updatedFolder, AbortOnFailure, folder, newDescription, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
-
-            // Cleanup
-            Client.Delete(folder, true);
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
+            AssertActionComplete(ref actual);
+            Client.Delete(actual, true);
+            AssertFolderConstraints(actual, folder.Name, folder.Parent.Id, folder.Id);
+            Assert.That(actual.Description, Is.EqualTo(newDescription));
         }
 
         [Test]
         public void UpdateEverythingAsync()
         {
             // Arrange
-            var callbackHit = false;
-            var fileName = TestItemName();
-            var folder = Client.CreateFolder(RootId, fileName, null);
-            var newDescription = "new description";
-            var newFolder = TestItemName();
-            var newParent = Client.CreateFolder(RootId, newFolder, null);
+            Folder actual = null;
+            const string newDescription = "new description";
+            var folder = Client.CreateFolder(RootId, TestItemName(), null);
+            var newParent = Client.CreateFolder(RootId, TestItemName(), null);
             var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions {CanDownload = true, CanPreview = true});
             var newName = TestItemName();
 
@@ -404,27 +249,15 @@ namespace BoxApi.V2.Tests.Client
             folder.Description = newDescription;
             folder.Parent.Id = newParent.Id;
             folder.SharedLink = sharedLink;
-            Client.Update(updatedFolder =>
-                {
-                    // Assert
-                    Client.Delete(updatedFolder, true);
-                    AssertFolderConstraints(updatedFolder, newName, newParent.Id, folder.Id);
-                    AssertSharedLink(sharedLink, updatedFolder.SharedLink);
-                    Assert.That(updatedFolder.Description, Is.EqualTo(newDescription));
-                    callbackHit = true;
-                }, AbortOnFailure, folder, null);
+            Client.Update(updatedFolder => actual = updatedFolder, AbortOnFailure, folder, null);
 
-            do
-            {
-                Thread.Sleep(1000);
-            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
+            AssertActionComplete(ref actual);
+            Client.Delete(folder, true);
+            Client.Delete(newParent, true);
+            AssertFolderConstraints(actual, newName, newParent.Id, folder.Id);
+            AssertSharedLink(sharedLink, actual.SharedLink);
+            Assert.That(actual.Description, Is.EqualTo(newDescription));
 
-            // Cleanup
-
-            if (MaxQuarterSecondIterations.Equals(0))
-            {
-                Assert.Fail("Async operation did not complete in alloted time.");
-            }
         }
     }
 }
