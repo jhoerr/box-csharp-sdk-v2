@@ -8,6 +8,11 @@ namespace BoxApi.V2.Model.Enum
     public enum CollaborationRole
     {
         /// <summary>
+        /// Undefined role.
+        /// </summary>
+        Undefined,
+
+        /// <summary>
         ///     An Editor has full read/ write access to a folder. They can view and download
         ///     the contents of the folder, as well as upload new content into the folder. They
         ///     have permission to delete items, edit items, comment of files, generate a shared
@@ -15,7 +20,7 @@ namespace BoxApi.V2.Model.Enum
         ///     to invite new collaborators to a folder, however an editor cannot manage users
         ///     currently existing in the folder.
         /// </summary>
-        [Description("Editor")] Editor,
+        [Description("editor")] Editor,
 
         /// <summary>
         ///     A Viewer has full read access to a folder. So they will be able to preview any
@@ -24,7 +29,7 @@ namespace BoxApi.V2.Model.Enum
         ///     as make comments on items. A viewer will not be able to add tags, invite new
         ///     collaborators, upload, or edit items in the folder.
         /// </summary>
-        [Description("Viewer")] Viewer,
+        [Description("viewer")] Viewer,
 
         /// <summary>
         ///     A Previewer only has limited read access. This permission level allows a user to view
@@ -35,7 +40,8 @@ namespace BoxApi.V2.Model.Enum
         /// <remarks>
         ///     Limited to Business and Enterprise accounts
         /// </remarks>
-        [Description("Previewer")] Previewer,
+        [Description("previewer")] 
+        Previewer,
 
         /// <summary>
         ///     An Uploader is the most limited access that a user can have in a folder and provides
@@ -48,7 +54,7 @@ namespace BoxApi.V2.Model.Enum
         /// <remarks>
         ///     Limited to Business and Enterprise accounts
         /// </remarks>
-        [Description("Uploader")] Uploader,
+        [Description("uploader")] Uploader,
 
         /// <summary>
         ///     This access level is a combination of Previewer and Uploader. A user with this access
@@ -62,7 +68,7 @@ namespace BoxApi.V2.Model.Enum
         /// <remarks>
         ///     Limited to Business and Enterprise accounts
         /// </remarks>
-        [Description("Previewer-Uploader")] PreviewerUploader,
+        [Description("previewer uploader")] PreviewerUploader,
 
         /// <summary>
         ///     This access level is a combination of Viewer and Uploader. A Viewer-Uploader has full
@@ -77,7 +83,7 @@ namespace BoxApi.V2.Model.Enum
         /// <remarks>
         ///     Limited to Business and Enterprise accounts
         /// </remarks>
-        [Description("Viewer-Uploader")] ViewerUploader,
+        [Description("viewer uploader")] ViewerUploader,
 
         /// <summary>
         ///     A Co-Owner has all of the functional read/ write access that an Editor does. This
@@ -89,6 +95,6 @@ namespace BoxApi.V2.Model.Enum
         /// <remarks>
         ///     Limited to Business and Enterprise accounts
         /// </remarks>
-        [Description("Co-Owner")] CoOwner,
+        [Description("co-owner")] CoOwner,
     }
 }
