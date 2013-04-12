@@ -19,6 +19,13 @@ namespace BoxApi.V2.Model
         public string Message { get; set; }
 
         /// <summary>
+        ///     The string representing the comment text with @mentions included. @mention format is @[id:username]. Field is not included by default.
+        /// </summary>
+        [JsonProperty(PropertyName = "tagged_message")]
+        public string TaggedMessage { get; set; }
+
+
+        /// <summary>
         ///     The object this comment was placed on
         /// </summary>
         public Entity Item { get; set; }

@@ -4,6 +4,7 @@
     {
         public static CommentField IsReplyComment = new CommentField("is_reply_comment");
         public static CommentField Message = new CommentField("message");
+        public static CommentField TaggedMessage = new CommentField("tagged_message");
         public static CommentField Item = new CommentField("item");
         public static CommentField CreatedAt = new CommentField("created_at");
         public static CommentField ModifiedAt = new CommentField("modified_at");
