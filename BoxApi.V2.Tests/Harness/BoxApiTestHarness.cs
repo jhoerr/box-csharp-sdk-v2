@@ -12,7 +12,7 @@ namespace BoxApi.V2.Tests.Harness
     public class BoxApiTestHarness
     {
         protected const string RootId = "0";
-        protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
+        protected readonly Action<Error> AbortOnFailure = (error) => { };
         protected readonly BoxManager Client;
         protected readonly string CollaboratingUser;
         protected readonly string CollaboratingUserEmail;
@@ -24,7 +24,7 @@ namespace BoxApi.V2.Tests.Harness
             Client = GetClient(testInfo.AccessToken, null);
             CollaboratingUser = testInfo.CollaboratingUserId;
             CollaboratingUserEmail = testInfo.CollaboratingUserEmail;
-            MaxWaitInSeconds = 20;
+            MaxQuarterSecondIterations = 80;
         }
 
         protected static BoxManager GetClient(string onBehalfOf)
@@ -46,7 +46,7 @@ namespace BoxApi.V2.Tests.Harness
             TestConfigInfo.Update(refreshAccessToken);
         }
 
-        protected int MaxWaitInSeconds { get; set; }
+        protected int MaxQuarterSecondIterations { get; set; }
 
         protected static string TestItemName()
         {

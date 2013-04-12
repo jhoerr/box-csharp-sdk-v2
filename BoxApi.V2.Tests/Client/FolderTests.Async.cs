@@ -26,9 +26,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -43,9 +43,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!failureOccured && --MaxWaitInSeconds > 0);
+            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -68,9 +68,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -86,9 +86,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!failureOccured && --MaxWaitInSeconds > 0);
+            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -105,9 +105,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -131,9 +131,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!failureOccured && --MaxWaitInSeconds > 0);
+            } while (!failureOccured && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -158,9 +158,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -185,9 +185,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -212,9 +212,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -238,9 +238,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -268,9 +268,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -307,9 +307,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -346,9 +346,9 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -375,12 +375,12 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
             // Cleanup
             Client.Delete(folder, true);
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
@@ -417,11 +417,11 @@ namespace BoxApi.V2.Tests.Client
             do
             {
                 Thread.Sleep(1000);
-            } while (!callbackHit && --MaxWaitInSeconds > 0);
+            } while (!callbackHit && --MaxQuarterSecondIterations > 0);
 
             // Cleanup
 
-            if (MaxWaitInSeconds.Equals(0))
+            if (MaxQuarterSecondIterations.Equals(0))
             {
                 Assert.Fail("Async operation did not complete in alloted time.");
             }
