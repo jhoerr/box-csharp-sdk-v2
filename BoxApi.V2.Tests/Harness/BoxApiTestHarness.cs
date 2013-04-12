@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -109,6 +110,19 @@ namespace BoxApi.V2.Tests.Harness
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
             {
                 return Client.CreateFile(Folder.Root, fileName, stream);
+            }
+        }
+
+        protected void AssertActionComplete<T>(ref T actual) where T: class
+        {
+            do
+            {
+                Thread.Sleep(250);
+            } while (actual == null && --MaxQuarterSecondIterations > 0);
+
+            if (actual == null)
+            {
+                Assert.Fail("Async operation did not complete in alloted time.");
             }
         }
     }
