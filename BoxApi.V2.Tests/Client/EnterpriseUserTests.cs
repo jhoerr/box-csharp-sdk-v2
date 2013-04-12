@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -93,10 +94,22 @@ namespace BoxApi.V2.Tests.Client
 
         [Test]
         //You'll need to change the filter term to something meaningful.
-        public void FilterUsers()
+        public void FilterUsersByName()
         {
-            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers("john hoerr");
+            var name = "john hoerr";
+            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers(name);
             Assert.That(enterpriseUserCollection.TotalCount, Is.EqualTo(1));
+            Assert.That(enterpriseUserCollection.Entries.Single().Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        [Test]
+        //You'll need to change the filter term to something meaningful.
+        public void FilterUsersByEmail()
+        {
+            var login = "jhoerr@gmail.com"; 
+            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers(login);
+            Assert.That(enterpriseUserCollection.TotalCount, Is.EqualTo(1));
+            Assert.That(enterpriseUserCollection.Entries.Single().Login.Equals(login,StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Test]
