@@ -10,7 +10,7 @@ namespace BoxApi.V2.Tests.Client
     public class CollaborationTests : BoxApiTestHarness
     {
         [Test]
-        public void Create()
+        public void CreateById()
         {
             var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
             try
@@ -19,7 +19,27 @@ namespace BoxApi.V2.Tests.Client
                 Assert.That(collaboration, Is.Not.Null);
                 Assert.That(collaboration.Item.Id, Is.EqualTo(folder.Id));
                 Assert.That(collaboration.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
+                Assert.That(collaboration.AccessibleBy.Login, Is.EqualTo(CollaboratingUserEmail));
                 Assert.That(collaboration.Role, Is.EqualTo(CollaborationRole.Viewer));
+            }
+            finally
+            {
+                Client.Delete(folder);
+            }
+        }
+
+        [Test]
+        public void CreateByEmail()
+        {
+            var folder = Client.CreateFolder(Folder.Root, TestItemName(), null);
+            try
+            {
+                var collaboration = Client.CreateCollaborationByEmail(folder, CollaboratingUserEmail,CollaborationRole.Previewer);
+                Assert.That(collaboration, Is.Not.Null);
+                Assert.That(collaboration.Item.Id, Is.EqualTo(folder.Id));
+                Assert.That(collaboration.AccessibleBy.Id, Is.EqualTo(CollaboratingUser));
+                Assert.That(collaboration.AccessibleBy.Login, Is.EqualTo(CollaboratingUserEmail));
+                Assert.That(collaboration.Role, Is.EqualTo(CollaborationRole.Previewer));
             }
             finally
             {

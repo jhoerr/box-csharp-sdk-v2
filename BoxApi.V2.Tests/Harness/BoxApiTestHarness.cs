@@ -15,6 +15,7 @@ namespace BoxApi.V2.Tests.Harness
         protected readonly Action<Error> AbortOnFailure = (error) => { throw new BoxException(error); };
         protected readonly BoxManager Client;
         protected readonly string CollaboratingUser;
+        protected readonly string CollaboratingUserEmail;
 
         protected BoxApiTestHarness()
         {
@@ -22,6 +23,7 @@ namespace BoxApi.V2.Tests.Harness
             TestConfigInfo testInfo = TestConfigInfo.Get();
             Client = GetClient(testInfo.AccessToken, null);
             CollaboratingUser = testInfo.CollaboratingUserId;
+            CollaboratingUserEmail = testInfo.CollaboratingUserEmail;
             MaxWaitInSeconds = 20;
         }
 

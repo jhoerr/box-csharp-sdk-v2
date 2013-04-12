@@ -233,6 +233,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest CreateCollaborationByEmail(string folderId, string emailAddress, string role, IEnumerable<CollaborationField> fields)
+        {
+            IRestRequest request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
+            request.AddBody(new { item = new { type = "folder", id = folderId.Trim() }, accessible_by = new { login = emailAddress.Trim() }, role });
+            return request;
+        }
+
         public IRestRequest GetCollaboration(string collaborationId, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET, fields);

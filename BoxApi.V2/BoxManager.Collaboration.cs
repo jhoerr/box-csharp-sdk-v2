@@ -43,6 +43,37 @@ namespace BoxApi.V2
         /// <summary>
         ///     Add a collaboration for a single user to a folder.
         /// </summary>
+        /// <param name="folder">The folder in which to collaborate</param>
+        /// <param name="emailAddress">The email address of the collaborator (does not need to be a Box user)</param>
+        /// <param name="role">The role of the collaborating user</param>
+        /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new collaboration</returns>
+        public Collaboration CreateCollaborationByEmail(Folder folder, string emailAddress, CollaborationRole role, IEnumerable<CollaborationField> fields = null)
+        {
+            GuardFromNull(folder, "folder");
+            return CreateCollaborationByEmail(folder.Id, emailAddress, role, fields);
+        }
+
+        /// <summary>
+        ///     Add a collaboration for a single user to a folder.
+        /// </summary>
+        /// <param name="folderId">The ID of the folder in which to collaborate</param>
+        /// <param name="emailAddress">The email address of the collaborator (does not need to be a Box user)</param>
+        /// <param name="role">The role of the collaborating user</param>
+        /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <returns>The new collaboration</returns>
+        public Collaboration CreateCollaborationByEmail(string folderId, string emailAddress, CollaborationRole role, IEnumerable<CollaborationField> fields = null)
+        {
+            GuardFromNull(folderId, "folderId");
+            GuardFromNull(emailAddress, "emailAddress");
+            GuardFromNull(role, "role");
+            var request = _requestHelper.CreateCollaborationByEmail(folderId, emailAddress, role.Description(), fields);
+            return _restClient.ExecuteAndDeserialize<Collaboration>(request);
+        }
+
+        /// <summary>
+        ///     Add a collaboration for a single user to a folder.
+        /// </summary>
         /// <param name="onSuccess">Action to perform with the new collaboration</param>
         /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
         /// <param name="folder">The folder in which to collaborate</param>
@@ -70,6 +101,39 @@ namespace BoxApi.V2
             GuardFromNull(userId, "userId");
             GuardFromNull(role, "role");
             var request = _requestHelper.CreateCollaboration(folderId, userId, role.Description(), fields);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        ///     Add a collaboration for a single user to a folder.
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the new collaboration</param>
+        /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
+        /// <param name="folder">The folder in which to collaborate</param>
+        /// <param name="emailAddress">The email address of the collaborator (does not need to be a Box user)</param>
+        /// <param name="role">The role of the collaborating user</param>
+        /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateCollaborationByEmail(Action<Collaboration> onSuccess, Action<Error> onFailure, Folder folder, string emailAddress, CollaborationRole role, IEnumerable<CollaborationField> fields = null)
+        {
+            GuardFromNull(folder, "folder");
+            CreateCollaborationByEmail(onSuccess, onFailure, folder.Id, emailAddress, role, fields);
+        }
+
+        /// <summary>
+        ///     Add a collaboration for a single user to a folder.
+        /// </summary>
+        /// <param name="onSuccess">Action to perform with the new collaboration</param>
+        /// <param name="onFailure">Action to perform after a failed Collaboration operation </param>
+        /// <param name="folderId">The ID of the folder in which to collaborate</param>
+        /// <param name="emailAddress">The email address of the collaborator (does not need to be a Box user)</param>
+        /// <param name="role">The role of the collaborating user</param>
+        /// <param name="fields">The properties that should be set on the returned Collaboration object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        public void CreateCollaborationByEmail(Action<Collaboration> onSuccess, Action<Error> onFailure, string folderId, string emailAddress, CollaborationRole role, IEnumerable<CollaborationField> fields = null)
+        {
+            GuardFromNull(folderId, "folderId");
+            GuardFromNull(emailAddress, "emailAddress");
+            GuardFromNull(role, "role");
+            var request = _requestHelper.CreateCollaborationByEmail(folderId, emailAddress, role.Description(), fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
