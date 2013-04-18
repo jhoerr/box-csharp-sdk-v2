@@ -48,7 +48,7 @@ namespace BoxApi.V2.Model
 
         private IEnumerable<T> FromEntriesGetAll<T>(ResourceType value)
         {
-            return ItemCollection.Entries.Where(i => i.Type.Equals(value)).Cast<T>();
+            return ItemCollection != null ? ItemCollection.Entries.Where(i => i.Type.Equals(value)).Cast<T>() : new T[0];
         }
 
         public override string ToString()
