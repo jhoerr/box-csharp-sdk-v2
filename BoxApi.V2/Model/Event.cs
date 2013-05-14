@@ -1,5 +1,6 @@
 using System;
 using BoxApi.V2.Model.Enum;
+using Newtonsoft.Json;
 
 namespace BoxApi.V2.Model
 {
@@ -11,21 +12,25 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The id of the event, used for de-duplication purposes
         /// </summary>
+        [JsonProperty(PropertyName = "event_id")]
         public string EventId { get; set; }
 
         /// <summary>
         ///     The user that performed the action
         /// </summary>
+        [JsonProperty(PropertyName = "created_by")]
         public UserEntity CreatedBy { get; set; }
 
         /// <summary>
         ///     The time this item was created
         /// </summary>
+        [JsonProperty(PropertyName = "created_at")]
         public DateTime? CreatedAt { get; set; }
 
         /// <summary>
         ///     The session of the user that performed the action
         /// </summary>
+        [JsonProperty(PropertyName = "session_id")]
         public string SessionId { get; set; }
 
         /// <summary>
@@ -42,6 +47,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The nature of the event
         /// </summary>
+        [JsonProperty(PropertyName = "event_type")]
         public StandardEventType EventType { get; set; }
     }
 
@@ -53,6 +59,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The nature of the event
         /// </summary>
+        [JsonProperty(PropertyName = "event_type")]
         public EnterpriseEventType EventType { get; set; }
     }
 }

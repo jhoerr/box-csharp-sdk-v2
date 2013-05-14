@@ -27,6 +27,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The files contained within this folder
         /// </summary>
+        [JsonIgnore]
         public IEnumerable<File> Files
         {
             get { return FromEntriesGetAll<File>(ResourceType.File); }
@@ -41,6 +42,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     The subfolders contained within this folder
         /// </summary>
+        [JsonIgnore]
         public IEnumerable<Folder> Folders
         {
             get { return FromEntriesGetAll<Folder>(ResourceType.Folder); }
