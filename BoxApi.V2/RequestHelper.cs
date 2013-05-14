@@ -512,6 +512,7 @@ namespace BoxApi.V2
                 CanSeeManagedUsers = user.CanSeeManagedUsers;
                 IsExemptFromDeviceLimits = user.IsExemptFromDeviceLimits;
                 IsExemptFromLoginVerification = user.IsExemptFromLoginVerification;
+                IsPasswordResetRequired = user.IsPasswordResetRequired;
                 IsSyncEnabled = user.IsSyncEnabled;
                 JobTitle = user.JobTitle;
                 Language = user.Language;

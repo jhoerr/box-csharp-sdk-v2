@@ -258,5 +258,40 @@ namespace BoxApi.V2.Tests.Client
                 }
             }
         }
+
+
+        [Test]
+        public void RequirePasswordReset()
+        {
+            var enterpriseUser = new EnterpriseUser
+            {
+                Role = UserRole.User,
+                Login = "nobody_3ijfie2joefi2joefij2e@gmail.com",
+                Name = "No Body",
+            };
+
+            EnterpriseUser entUser = null;
+            try
+            {
+                entUser = Client.CreateUser(enterpriseUser);
+                Assert.That(entUser.IsPasswordResetRequired, Is.False);
+
+                entUser.IsPasswordResetRequired = true;
+                var updated = Client.UpdateUser(entUser);
+                Assert.That(updated.IsPasswordResetRequired, Is.True);
+
+                // Once set, this can't be unset.
+                updated.IsPasswordResetRequired = false;
+                updated = Client.UpdateUser(updated);
+                Assert.That(updated.IsPasswordResetRequired, Is.True);
+            }
+            finally
+            {
+                if (entUser != null)
+                {
+                    Client.Delete(entUser);
+                }
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@
         public static EnterpriseUserField IsSyncEnabled = new EnterpriseUserField("is_sync_enabled");
         public static EnterpriseUserField IsExemptFromDeviceLimits = new EnterpriseUserField("is_exempt_from_device_limits");
         public static EnterpriseUserField IsExemptFromLoginVerification = new EnterpriseUserField("is_exempt_from_login_verification");
+        public static EnterpriseUserField IsPasswordResetRequired = new EnterpriseUserField("is_password_reset_required");
 
         public static EnterpriseUserField[] All = new[]
             {
@@ -43,6 +44,7 @@
                 IsSyncEnabled, 
                 IsExemptFromDeviceLimits, 
                 IsExemptFromLoginVerification, 
+                IsPasswordResetRequired, 
             };
 
         private EnterpriseUserField(string value) : base(value)
