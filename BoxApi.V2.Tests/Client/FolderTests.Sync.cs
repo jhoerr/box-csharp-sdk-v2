@@ -46,7 +46,6 @@ namespace BoxApi.V2.Tests.Client
             }
         }
 
-
         [Test]
         public void GetFolderItemCollectionWithFields()
         {
@@ -175,12 +174,13 @@ namespace BoxApi.V2.Tests.Client
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             Client.CreateFolder(testFolder.Id, TestItemName());
             Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
 
             try
             {
                 var items = Client.GetItems(testFolder, new[] { FolderField.CreatedAt, FolderField.PathCollection });
                 Assert.That(items, Is.Not.Null);
-                Assert.That(items.TotalCount, Is.EqualTo(2));
+                Assert.That(items.TotalCount, Is.EqualTo(3));
                 // expected present
                 Assert.That(items.Entries.All(e => e.Id != null));
                 Assert.That(items.Entries.All(e => e.Type != ResourceType.Unknown));

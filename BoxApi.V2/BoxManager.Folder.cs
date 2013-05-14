@@ -137,13 +137,15 @@ namespace BoxApi.V2
             var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, paginate ? limit : MaxItems, paginate ? offset : 0);
             var folder = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
 
-            if (!paginate && folder.ItemCollection != null)
+            if (!paginate)
             {
+                offset = MaxItems;
                 while (folder.ItemCollection.Entries.Count < folder.ItemCollection.TotalCount)
                 {
-                    request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, MaxItems, folder.ItemCollection.Entries.Count);
+                    request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, MaxItems, offset);
                     var next = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
                     folder.ItemCollection.Entries.AddRange(next.ItemCollection.Entries);
+                    offset += MaxItems;
                 }
             }
             return folder;
