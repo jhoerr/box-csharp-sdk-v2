@@ -299,7 +299,7 @@ namespace BoxApi.V2
             {
                 request.AddParameter("created_after", createdAfter);
             }
-            if (createdAfter.HasValue)
+            if (createdBefore.HasValue)
             {
                 request.AddParameter("created_before", createdBefore);
             }
