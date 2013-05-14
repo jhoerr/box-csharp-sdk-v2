@@ -7,6 +7,11 @@ namespace BoxApi.V2.Model
     /// </summary>
     public abstract class EventCollection<T> where T : Event
     {
+        protected EventCollection()
+        {
+            Entries = new List<T>();
+        }
+
         /// <summary>
         ///     The number of event records returned
         /// </summary>

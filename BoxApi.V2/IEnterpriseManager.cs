@@ -338,5 +338,14 @@ namespace BoxApi.V2
         /// <param name="eventTypes">A list of event types to filter by.  Only events of these types will be returned.</param>
         void GetEnterpriseEvents(Action<EnterpriseEventCollection> onSuccess, Action<Error> onFailure, int offset = 0, int limit = 100, DateTime? createdAfter = null,
                                  DateTime? createdBefore = null, EnterpriseEventType[] eventTypes = null);
+
+        /// <summary>
+        ///     Retrieves the events that have occurred in an enterprise.  Events will occasionally arrive out of order.  You may need to buffer events and apply them in a logical order.
+        /// </summary>
+        /// <param name="createdAfter">A lower bound on the timestamp of the events returned</param>
+        /// <param name="createdBefore">An upper bound on the timestamp of the events returned</param>
+        /// <param name="eventTypes">A list of event types to filter by.  Only events of these types will be returned.</param>
+        /// <returns>A collection of EnterpriseEvents.</returns>
+        EnterpriseEventCollection GetEnterpriseEvents(DateTime? createdAfter = null, DateTime? createdBefore = null, EnterpriseEventType[] eventTypes = null);
     }
 }

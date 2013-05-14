@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -75,6 +76,31 @@ namespace BoxApi.V2
         {
             var request = _requestHelper.GetEnterpriseEvents(offset, limit, createdAfter, createdBefore, eventTypes);
             return _restClient.ExecuteAndDeserialize<EnterpriseEventCollection>(request);
+        }
+
+        /// <summary>
+        ///     Retrieves the events that have occurred in an enterprise.  Events will occasionally arrive out of order.  You may need to buffer events and apply them in a logical order.
+        /// </summary>
+        /// <param name="createdAfter">A lower bound on the timestamp of the events returned</param>
+        /// <param name="createdBefore">An upper bound on the timestamp of the events returned</param>
+        /// <param name="eventTypes">A list of event types to filter by.  Only events of these types will be returned.</param>
+        /// <returns>A collection of EnterpriseEvents.</returns>
+        public EnterpriseEventCollection GetEnterpriseEvents(DateTime? createdAfter = null, DateTime? createdBefore = null, EnterpriseEventType[] eventTypes = null)
+        {
+            const int pageSize = 500;
+            int offset = 0;
+            var collection = new EnterpriseEventCollection();
+
+            EnterpriseEventCollection page;
+            do
+            {
+                page = GetEnterpriseEvents(offset, pageSize, createdAfter, createdBefore, eventTypes);
+                collection.Entries.AddRange(page.Entries);
+                collection.ChunkSize += page.ChunkSize;
+                offset += pageSize;
+            } while (page.ChunkSize == pageSize);
+
+            return collection;
         }
 
         /// <summary>

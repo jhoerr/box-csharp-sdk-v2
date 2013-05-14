@@ -68,29 +68,17 @@ namespace BoxApi.V2.Tests.Client
             var events = Client.GetEnterpriseEvents(0, 100, DateTime.Now.AddDays(-1), DateTime.Now);
         }
 
-        [Test, Ignore("Requires Box enterprise admin account.")]
+        [Test]
         public void GetEventsOfTypeForEnterprise()
         {
-            Console.Out.WriteLine("** Invited **");
-            PrintUsersDoingAction(EnterpriseEventType.CollaborationInvite);
-            Console.Out.WriteLine("");
-            Console.Out.WriteLine("** Accepted **");
-            PrintUsersDoingAction(EnterpriseEventType.CollaborationAccept);
+            Console.Out.WriteLine("Created Collaboration Invitation: {0}", GetCountOfUsersDoing(EnterpriseEventType.CollaborationInvite));
+            Console.Out.WriteLine("Accepted Collaboration Invitation: {0}", GetCountOfUsersDoing(EnterpriseEventType.CollaborationAccept));
         }
 
-        private void PrintUsersDoingAction(EnterpriseEventType enterpriseEventType)
+        private int GetCountOfUsersDoing(EnterpriseEventType enterpriseEventType)
         {
-            const int pageSize = 500;
-            var events = new List<EnterpriseEvent>();
-
-            EnterpriseEventCollection page;
-            do
-            {
-                page = Client.GetEnterpriseEvents(0, pageSize, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, new[] {enterpriseEventType,});
-                events.AddRange(page.Entries);
-            } while (page.ChunkSize == pageSize);
-            var count = events.Select(e => e.CreatedBy.Login).Distinct().OrderBy(l => l).Count();
-            Console.Out.WriteLine(string.Join("\n", count));
+            var collection = Client.GetEnterpriseEvents(DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, new[] {enterpriseEventType,});
+            return collection.Entries.Select(e => e.CreatedBy.Login).Distinct().OrderBy(l => l).Count();
         }
     }
 }
