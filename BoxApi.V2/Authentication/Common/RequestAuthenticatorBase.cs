@@ -1,4 +1,5 @@
 using System.Text;
+using RestSharp;
 
 namespace BoxApi.V2.Authentication.Common
 {
@@ -6,6 +7,7 @@ namespace BoxApi.V2.Authentication.Common
     {
         protected readonly string AccessToken;
         protected string SharedLink;
+        protected string OnBehalfOf;
 
         protected RequestAuthenticatorBase(string accessToken)
         {
@@ -22,6 +24,11 @@ namespace BoxApi.V2.Authentication.Common
             SharedLink = null;
         }
 
+        public void SetOnBehalfOf(string userLogin)
+        {
+            OnBehalfOf = userLogin;
+        }
+
         protected static void TryAddParameter(StringBuilder sb, string label, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -30,9 +37,9 @@ namespace BoxApi.V2.Authentication.Common
             }
         }
 
-        protected bool HasSharedLink()
+        protected bool Has(string header)
         {
-            return !string.IsNullOrWhiteSpace(SharedLink);
+            return !string.IsNullOrWhiteSpace(header);
         }
     }
 }

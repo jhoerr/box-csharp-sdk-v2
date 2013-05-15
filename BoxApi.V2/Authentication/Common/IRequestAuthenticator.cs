@@ -6,5 +6,6 @@ namespace BoxApi.V2.Authentication.Common
     {
         void SetSharedLink(string sharedLink);
         void ClearSharedLink();
+        void SetOnBehalfOf(string userLogin);
     }
 }

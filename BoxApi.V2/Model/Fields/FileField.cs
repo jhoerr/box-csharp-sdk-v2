@@ -17,6 +17,8 @@ namespace BoxApi.V2.Model.Fields
         public static FileField CreatedAt = new FileField("created_at");
         public static FileField ModifiedAt = new FileField("modified_at");
         public static FileField CreatedBy = new FileField("created_by");
+        public static FileField ContentCreatedAt = new FileField("content_created_at");
+        public static FileField ContentModifiedAt = new FileField("content_modified_at");
 
         private FileField(string value) : base(value)
         {

@@ -10,18 +10,41 @@ using RestSharp.Deserializers;
 
 namespace BoxApi.V2
 {
-    internal class BoxRestClient : RestClient
+    internal class BoxRestClient : BoxRestClientBase
     {
         private const string ServiceUrl = "https://api.box.com/";
+
+        public BoxRestClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) : base(ServiceUrl, authenticator, proxy, options)
+        {
+        }
+
+        public BoxRestClient WithSharedLink(string sharedLink)
+        {
+            ((IRequestAuthenticator) Authenticator).SetSharedLink(sharedLink);
+            return this;
+        }
+    }
+
+    internal class BoxUploadClient : BoxRestClientBase
+    {
+        private const string ServiceUrl = "https://upload.box.com/api";
+
+        public BoxUploadClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options)
+            : base(ServiceUrl, authenticator, proxy, options)
+        {
+        }
+    }
+
+    internal class BoxRestClientBase : RestClient
+    {
         public const string JsonMimeType = "application/json";
         public const string XmlMimeType = "application/xml";
         public const string XmlAltMimeType = "text/xml";
-        private readonly BoxManagerOptions _options;
 
-        public BoxRestClient(IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
-            base(ServiceUrl)
+        public BoxRestClientBase(string serviceUrlBase, IRequestAuthenticator authenticator, IWebProxy proxy, BoxManagerOptions options) :
+            base(serviceUrlBase)
         {
-            _options = options;
+            Options = options;
             Authenticator = authenticator;
             Proxy = proxy;
             ClearHandlers();
@@ -31,6 +54,8 @@ namespace BoxApi.V2
             AddHandler(XmlAltMimeType, xmlDeserializer);
             AddHandler(JsonMimeType, jsonDeserializer);
         }
+
+        public BoxManagerOptions Options { get; private set; }
 
         public override IRestResponse Execute(IRestRequest request)
         {
@@ -43,23 +68,31 @@ namespace BoxApi.V2
             Error error;
             if (!Successful(restResponse, out error))
             {
-                switch (error.Status)
+                try
                 {
-                    case 202: // not ready
-                        throw new BoxDownloadNotReadyException(error);
-                    case 304: // precondition (If-None-Match) failed
-                        throw new BoxItemNotModifiedException(error);
-                    case 412: // precondition (If-Match) failed
-                        throw new BoxItemModifiedException(error);
-                    case 500: // internal server error
-                        if (lastResponse.Equals(HttpStatusCode.OK) && _options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
-                        {
-                            Thread.Sleep(1000); // wait a second before retrying.
-                            return Try(request, HttpStatusCode.InternalServerError);
-                        }
-                        throw new BoxException(error);
-                    default:
-                        throw new BoxException(error);
+                    switch (error.Status)
+                    {
+                        case 202: // not ready
+                            throw new BoxDownloadNotReadyException(error);
+                        case 304: // precondition (If-None-Match) failed
+                            throw new BoxItemNotModifiedException(error);
+                        case 412: // precondition (If-Match) failed
+                            throw new BoxItemModifiedException(error);
+                        case 500: // internal server error
+                            if (lastResponse.Equals(HttpStatusCode.OK) && Options.HasFlag(BoxManagerOptions.RetryRequestOnceWhenHttp500Received))
+                            {
+                                Thread.Sleep(1000); // wait a second before retrying.
+                                return Try(request, HttpStatusCode.InternalServerError);
+                            }
+                            throw new BoxException(error);
+                        default:
+                            throw new BoxException(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    CleanUp();
+                    throw e;
                 }
             }
             return restResponse;
@@ -126,9 +159,10 @@ namespace BoxApi.V2
             AssertUsableFailureAction(onFailure);
         }
 
-        private static void HandleFailure(Action<Error> onFailure, RestRequestAsyncHandle handle, Error error)
+        private void HandleFailure(Action<Error> onFailure, RestRequestAsyncHandle handle, Error error)
         {
             handle.Abort();
+            CleanUp();
             onFailure(error);
         }
 
@@ -153,7 +187,6 @@ namespace BoxApi.V2
         public bool Successful(IRestResponse restResponse, out Error error)
         {
             error = null;
-            TryClearSharedLink();
 
             if (restResponse == null)
             {
@@ -169,15 +202,15 @@ namespace BoxApi.V2
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.BadGateway))
             {
-                error = new Error { Code = "Bad Gateway", Status = 502 };
+                error = new Error {Code = "Bad Gateway", Status = 502};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                error = new Error { Code = "Unauthorized", Status = 401 };
+                error = new Error {Code = "Unauthorized", Status = 401};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
-                error = new Error { Code = "Forbidden", Status = 403};
+                error = new Error {Code = "Forbidden", Status = 403};
             }
             else if (restResponse.StatusCode.Equals(HttpStatusCode.NotModified))
             {
@@ -226,18 +259,13 @@ namespace BoxApi.V2
             return (deserialized.Entries != null) ? deserialized.Entries.First() : null;
         }
 
-        private void TryClearSharedLink()
+        private void CleanUp()
         {
             if (Authenticator != null)
             {
-                ((IRequestAuthenticator) Authenticator).ClearSharedLink();
+                var requestAuthenticator = ((IRequestAuthenticator) Authenticator);
+                requestAuthenticator.ClearSharedLink();
             }
-        }
-
-        public BoxRestClient WithSharedLink(string sharedLink)
-        {
-            ((IRequestAuthenticator) Authenticator).SetSharedLink(sharedLink);
-            return this;
         }
     }
 }

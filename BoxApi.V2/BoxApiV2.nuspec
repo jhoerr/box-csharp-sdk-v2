@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Box.v2.SDK</id>
+    <title>Box.com SDK (API v2)</title>
+    <version>2.0</version>
+    <authors>John Hoerr, Carson Gross</authors>
+    <owners>John Hoerr</owners>
+    <licenseUrl>http://creativecommons.org/licenses/by/3.0/</licenseUrl>
+    <projectUrl>https://github.com/jhoerr/box-csharp-sdk-v2</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A client implementation of the Box v2 REST API.  API documentation can be found at http://developers.box.com.</description>
+    <releaseNotes>For release notes please visit the project on GitHub</releaseNotes>
+    <copyright>Copyright 2012-2013 John Hoerr, Carson Gross, The Trustees of Indiana University</copyright>
+    <tags>Box Box.com</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="4.5.9" />
+      <dependency id="RestSharp" version="104.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\BoxApi.V2.dll" target="lib\net40"/>
+    <file src="bin\Release\BoxApi.V2.xml" target="lib\net40"/>
+  </files>
+</package>

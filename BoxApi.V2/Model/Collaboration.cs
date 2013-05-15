@@ -16,9 +16,19 @@ namespace BoxApi.V2.Model
         public DateTime? ExpiresAt { get; set; }
 
         /// <summary>
+        ///     This value is for serialization only.  Use RoleValue for the proper enumeration.
+        /// </summary>
+        public string Role
+        {
+            get { return RoleValue.Equals(CollaborationRole.Undefined) ? null : RoleValue.Description(); }
+            set { RoleValue = string.IsNullOrWhiteSpace(value) ? CollaborationRole.Undefined : EnumExtensions.GetValueFromDescription<CollaborationRole>(value); } 
+        }
+
+        /// <summary>
         ///     The level of access this user has to the folder.
         /// </summary>
-        public CollaborationRole Role { get; set; }
+        [JsonIgnore]
+        public CollaborationRole RoleValue { get; set; }
 
         /// <summary>
         ///     The folder in which this collaboration is taking place

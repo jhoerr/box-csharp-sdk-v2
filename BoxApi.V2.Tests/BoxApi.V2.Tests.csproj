@@ -67,6 +67,7 @@
     <Compile Include="Client\FileTests.Sync.cs" />
     <Compile Include="Client\FolderTests.Async.cs" />
     <Compile Include="Client\FolderTests.Sync.cs" />
+    <Compile Include="Client\OnBehalfOfTests.cs" />
     <Compile Include="Client\SearchTests.cs" />
     <Compile Include="Client\SharedItemTests.cs" />
     <Compile Include="Client\SingleUserTests.cs" />

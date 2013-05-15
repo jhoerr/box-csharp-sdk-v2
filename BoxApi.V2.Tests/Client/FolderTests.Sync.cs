@@ -47,7 +47,159 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
-        public void GetFolderItems()
+        public void GetFolderItemCollectionWithFields()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFile(testFolder.Id, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder, new[] { FolderField.CreatedAt, FolderField.PathCollection });
+                var items = folder.ItemCollection;
+                Assert.That(items, Is.Not.Null);
+                Assert.That(items.TotalCount, Is.EqualTo(2));
+                // expected present
+                Assert.That(folder.Id, Is.Not.Null);
+                Assert.That(folder.Type, Is.Not.Null);
+                Assert.That(folder.Etag, Is.Not.Null);
+                Assert.That(folder.CreatedAt, Is.Not.Null);
+                Assert.That(folder.PathCollection, Is.Not.Null);
+                Assert.That(items.Entries.All(e => e.Id != null));
+                Assert.That(items.Entries.All(e => e.Type != ResourceType.Unknown));
+                Assert.That(items.Entries.All(e => e.Etag != null));
+                Assert.That(items.Entries.All(e => e.CreatedAt != null));
+                Assert.That(items.Entries.All(e => e.PathCollection != null));
+                // expected empty
+                Assert.That(folder.Name, Is.Null);
+                Assert.That(folder.CreatedBy, Is.Null);
+                Assert.That(folder.OwnedBy, Is.Null);
+                Assert.That(items.Entries.All(e => e.Name == null));
+                Assert.That(items.Entries.All(e => e.CreatedBy == null));
+                Assert.That(items.Entries.All(e => e.OwnedBy == null));
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        [Test]
+        public void GetFolderItemCollectionWithDefaultMiniItems()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFile(testFolder.Id, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder);
+                var items = folder.ItemCollection;
+                Assert.That(items, Is.Not.Null);
+                Assert.That(items.TotalCount, Is.EqualTo(2));
+                // expected present
+                Assert.That(folder.Id, Is.Not.Null);
+                Assert.That(folder.Type, Is.Not.Null);
+                Assert.That(folder.Name, Is.Not.Null);
+                Assert.That(folder.CreatedAt, Is.Not.Null);
+                Assert.That(folder.PathCollection, Is.Not.Null);
+                Assert.That(folder.Etag, Is.Not.Null);
+                Assert.That(items.Entries.All(e => e.Id != null));
+                Assert.That(items.Entries.All(e => e.Type != ResourceType.Unknown));
+                Assert.That(items.Entries.All(e => e.Name != null));
+                Assert.That(items.Entries.All(e => e.Etag != null));
+                // expected empty
+                Assert.That(items.Entries.All(e => e.CreatedAt == null));
+                Assert.That(items.Entries.All(e => e.PathCollection == null));
+                Assert.That(items.Entries.All(e => e.CreatedBy == null));
+                Assert.That(items.Entries.All(e => e.OwnedBy == null));
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        [Test]
+        public void GetFolderWithItemCollectionPagination()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subfolder = Client.CreateFolder(testFolder.Id, TestItemName());
+            var file = Client.CreateFile(testFolder.Id, TestItemName());
+
+            try
+            {
+                var folder = Client.Get(testFolder, limit:1, offset:0);
+                AssertPaginatedItemIs(folder.ItemCollection, subfolder.Id);
+                folder = Client.Get(testFolder, limit: 1, offset: 1);
+                AssertPaginatedItemIs(folder.ItemCollection, file.Id);
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        [Test]
+        public void GetItemsWithPagination()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            var subfolder = Client.CreateFolder(testFolder.Id, TestItemName());
+            var file = Client.CreateFile(testFolder.Id, TestItemName());
+
+            try
+            {
+                var items = Client.GetItems(testFolder, limit: 1, offset: 0);
+                AssertPaginatedItemIs(items, subfolder.Id);
+                items = Client.GetItems(testFolder, limit: 1, offset: 1);
+                AssertPaginatedItemIs(items, file.Id);
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        private static void AssertPaginatedItemIs(ItemCollection itemCollection, string expected)
+        {
+            Assert.That(itemCollection, Is.Not.Null);
+            Assert.That(itemCollection.TotalCount, Is.EqualTo(2));
+            Assert.That(itemCollection.Entries.Count, Is.EqualTo(1));
+            Assert.That(itemCollection.Entries.Single().Id, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetItems()
+        {
+            var testFolder = Client.CreateFolder(RootId, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+            Client.CreateFolder(testFolder.Id, TestItemName());
+
+            try
+            {
+                var items = Client.GetItems(testFolder, new[] { FolderField.CreatedAt, FolderField.PathCollection });
+                Assert.That(items, Is.Not.Null);
+                Assert.That(items.TotalCount, Is.EqualTo(3));
+                // expected present
+                Assert.That(items.Entries.All(e => e.Id != null));
+                Assert.That(items.Entries.All(e => e.Type != ResourceType.Unknown));
+                Assert.That(items.Entries.All(e => e.Etag != null));
+                Assert.That(items.Entries.All(e => e.CreatedAt != null));
+                Assert.That(items.Entries.All(e => e.PathCollection != null));
+                // expected empty
+                Assert.That(items.Entries.All(e => e.Name == null));
+                Assert.That(items.Entries.All(e => e.CreatedBy == null));
+                Assert.That(items.Entries.All(e => e.OwnedBy == null));
+            }
+            finally
+            {
+                Client.Delete(testFolder, true);
+            }
+        }
+
+        [Test]
+        public void GetItemsWithDefaultProperties()
         {
             var testFolder = Client.CreateFolder(RootId, TestItemName());
             Client.CreateFolder(testFolder.Id, TestItemName());
@@ -55,14 +207,16 @@ namespace BoxApi.V2.Tests.Client
 
             try
             {
-                var items = Client.GetItems(testFolder, new[] { FolderField.CreatedAt, FolderField.Name, });
+                var items = Client.GetItems(testFolder);
                 Assert.That(items, Is.Not.Null);
                 Assert.That(items.TotalCount, Is.EqualTo(2));
                 // expected present
                 Assert.That(items.Entries.All(e => e.Id != null));
+                Assert.That(items.Entries.All(e => e.Type != ResourceType.Unknown));
                 Assert.That(items.Entries.All(e => e.Name != null));
-                Assert.That(items.Entries.All(e => e.CreatedAt != null));
+                Assert.That(items.Entries.All(e => e.Etag != null));
                 // expected empty
+                Assert.That(items.Entries.All(e => e.CreatedAt == null));
                 Assert.That(items.Entries.All(e => e.CreatedBy == null));
                 Assert.That(items.Entries.All(e => e.OwnedBy == null));
             }
@@ -364,6 +518,29 @@ namespace BoxApi.V2.Tests.Client
             AssertFolderConstraints(update, folderName, RootId, folder.Id);
             AssertSharedLink(update.SharedLink, sharedLink);
             Client.Delete(update, true);
+        }
+
+        [Test]
+        public void DisableSharedLink()
+        {
+            var folderName = TestItemName();
+            var folder = Client.CreateFolder(RootId, folderName, null);
+            Folder actual = null;
+            try
+            {
+                var sharedLink = new SharedLink(Access.Open, DateTime.UtcNow.AddDays(3), new Permissions { CanPreview = true, CanDownload = true });
+                var update = Client.ShareLink(folder, sharedLink);
+                AssertSharedLink(update.SharedLink, sharedLink);
+                actual = Client.DisableSharedLink(update);
+                AssertSharedLink(actual.SharedLink, null);
+            }
+            finally
+            {
+                if (actual != null)
+                {
+                    Client.Delete(actual, true);
+                }
+            }
         }
 
         [Test]

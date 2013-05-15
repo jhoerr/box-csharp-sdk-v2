@@ -89,6 +89,17 @@
     <Compile Include="BoxManager.Token.cs" />
     <Compile Include="BoxManager.User.cs" />
     <Compile Include="BoxRestClient.cs" />
+    <Compile Include="ICollaboration.cs" />
+    <Compile Include="IComment.cs" />
+    <Compile Include="IDiscussion.cs" />
+    <Compile Include="IEnterpriseManager.cs" />
+    <Compile Include="IFile.cs" />
+    <Compile Include="IFolder.cs" />
+    <Compile Include="ISharedFile.cs" />
+    <Compile Include="ISharedFolder.cs" />
+    <Compile Include="ISharedItems.cs" />
+    <Compile Include="IStandaloneUser.cs" />
+    <Compile Include="IUserManager.cs" />
     <Compile Include="Model\Collaboration.cs" />
     <Compile Include="Model\CollaborationCollection.cs" />
     <Compile Include="Model\Collection.cs" />

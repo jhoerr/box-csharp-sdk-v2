@@ -9,6 +9,8 @@ namespace BoxApi.V2
 {
     public partial class BoxManager
     {
+        private const int MaxItems = 1000;
+
         /// <summary>
         ///     Creates a new folder in the specified folder
         /// </summary>
@@ -74,11 +76,13 @@ namespace BoxApi.V2
         /// <param name="folder">The folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder Get(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder Get(Folder folder, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            return GetFolder(folder.Id, fields, etag);
+            return GetFolder(folder.Id, fields, etag, limit, offset);
         }
 
         /// <summary>
@@ -87,12 +91,14 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder to get</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        public void Get(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            GetFolder(onSuccess, onFailure, folder.Id, fields, etag);
+            GetFolder(onSuccess, onFailure, folder.Id, fields, etag, limit, offset);
         }
 
         /// <summary>
@@ -101,12 +107,12 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder GetFolder(string id, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
-            GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
-            return _restClient.ExecuteAndDeserialize<Folder>(request);
+            return DoGetFolderSync(id, fields, etag, limit, offset, client => client);
         }
 
         /// <summary>
@@ -116,12 +122,33 @@ namespace BoxApi.V2
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>The fetched folder.</returns>
-        public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null)
+        public Folder GetFolder(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
+        {
+            return DoGetFolderSync(id, fields, etag, limit, offset, client => client.WithSharedLink(sharedLinkUrl));
+        }
+
+        private Folder DoGetFolderSync(string id, IEnumerable<FolderField> fields, string etag, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> prepareClient)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
-            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<Folder>(request);
+            var paginate = limit.HasValue || offset.HasValue;
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, paginate ? limit : MaxItems, paginate ? offset : 0);
+            var folder = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+
+            if (!paginate)
+            {
+                offset = MaxItems;
+                while (folder.ItemCollection.Entries.Count < folder.ItemCollection.TotalCount)
+                {
+                    request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, MaxItems, offset);
+                    var next = prepareClient(_restClient).ExecuteAndDeserialize<Folder>(request);
+                    folder.ItemCollection.Entries.AddRange(next.ItemCollection.Entries);
+                    offset += MaxItems;
+                }
+            }
+            return folder;
         }
 
         /// <summary>
@@ -130,13 +157,15 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the retrieved Folder</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to get</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, string etag = null)
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, limit, offset);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -147,13 +176,15 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder to get</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request.</param>
         /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <param name="etag">Include the item's etag to prevent unnecessary response data if you already have the latest version of the item.  A BoxItemNotModifiedException will be thrown if the item is up to date.</param>
-        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null)
+        public void GetFolder(Action<Folder> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(id, "id");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag);
+            var request = _requestHelper.Get(ResourceType.Folder, id, fields, etag, limit, offset);
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(request, onSuccess, onFailure);
         }
 
@@ -162,11 +193,13 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="folder">The folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(Folder folder, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(Folder folder, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            return GetItems(folder.Id, fields);
+            return GetItems(folder.Id, fields, limit, offset);
         }
 
         /// <summary>
@@ -174,14 +207,13 @@ namespace BoxApi.V2
         /// </summary>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(string id, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
-            GuardFromNull(id, "id");
-            var request = _requestHelper.GetItems(id, fields);
-            return _restClient.ExecuteAndDeserialize<ItemCollection>(request);
+            return DoGetItemsSync(id, fields, limit, offset, client => client);
         }
-
 
         /// <summary>
         ///     Retrieve a shared folder's items
@@ -189,12 +221,31 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="limit">The maximum number of items to return in this request (max: 1000).  If limit and offset are both left null, all items will be fetched.</param>
+        /// <param name="offset">The first item to fetch in this request. If limit and offset are both left null, all items will be fetched.</param>
         /// <returns>A collection of items representing the folder's contents.</returns>
-        public ItemCollection GetItems(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null)
+        public ItemCollection GetItems(string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
+        {
+            return DoGetItemsSync(id, fields, limit, offset, client => client.WithSharedLink(sharedLinkUrl));
+        }
+
+        private ItemCollection DoGetItemsSync(string id, IEnumerable<FolderField> fields, int? limit, int? offset, Func<BoxRestClient, BoxRestClient> prepareClient)
         {
             GuardFromNull(id, "id");
-            var request = _requestHelper.GetItems(id, fields);
-            return _restClient.WithSharedLink(sharedLinkUrl).ExecuteAndDeserialize<ItemCollection>(request);
+            var paginate = limit.HasValue || offset.HasValue;
+            var request = _requestHelper.GetItems(id, fields, paginate ? limit : MaxItems, paginate ? offset : 0);
+            var items = prepareClient(_restClient).ExecuteAndDeserialize<ItemCollection>(request);
+
+            if (!paginate)
+            {
+                while (items.Entries.Count < items.TotalCount)
+                {
+                    request = _requestHelper.GetItems(id, fields, MaxItems, items.Entries.Count);
+                    var next = prepareClient(_restClient).ExecuteAndDeserialize<ItemCollection>(request);
+                    items.Entries.AddRange(next.Entries);
+                }
+            }
+            return items;
         }
 
         /// <summary>
@@ -203,11 +254,13 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="folder">The folder containing the items to retrieve</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (default: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request (default: 0).</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(folder, "folder");
-            GetItems(onSuccess, onFailure, folder.Id, fields);
+            GetItems(onSuccess, onFailure, folder.Id, fields, limit, offset);
         }
 
         /// <summary>
@@ -216,13 +269,15 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform with the folder's items</param>
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request.</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(fields, "fields");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var folderItems = _requestHelper.GetItems(id, fields);
+            var folderItems = _requestHelper.GetItems(id, fields, limit, offset);
             _restClient.ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
@@ -233,13 +288,15 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed operation</param>
         /// <param name="id">The ID of the folder containing the items to retrieve</param>
         /// <param name="sharedLinkUrl">The shared link for the folder</param>
+        /// <param name="limit">The maximum number of items to return with the folder's ItemCollection in this request (max: 1000).</param>
+        /// <param name="offset">The item at which to start fetching the folder's ItemCollection in this request.</param>
         /// <param name="fields">The properties that should be set on the returned items.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
-        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null)
+        public void GetItems(Action<ItemCollection> onSuccess, Action<Error> onFailure, string id, string sharedLinkUrl, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             GuardFromNull(id, "id");
             GuardFromNull(fields, "fields");
             GuardFromNullCallbacks(onSuccess, onFailure);
-            var folderItems = _requestHelper.GetItems(id, fields);
+            var folderItems = _requestHelper.GetItems(id, fields, limit, offset);
             _restClient.WithSharedLink(sharedLinkUrl).ExecuteAsync(folderItems, onSuccess, onFailure);
         }
 
@@ -494,6 +551,62 @@ namespace BoxApi.V2
             GuardFromNull(sharedLink, "sharedLink");
             GuardFromNullCallbacks(onSuccess, onFailure);
             var request = _requestHelper.Update(ResourceType.Folder, id, etag, fields, sharedLink: sharedLink);
+            _restClient.ExecuteAsync(request, onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="folder">The folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        /// <returns>The folder with the disabled shared link</returns>
+        public Folder DisableSharedLink(Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(folder, "folder");
+            return DisableSharedLink(folder.Id, fields, etag);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="id">The id of the folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        /// <returns>The folder with the disabled shared link</returns>
+        public Folder DisableSharedLink(string id, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DisableSharedLink(ResourceType.Folder, id, etag, fields);
+            return _restClient.ExecuteAndDeserialize<Folder>(request);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to take with the returned folder</param>
+        /// <param name="onFailure">Actino to take following a failed folder operation</param>
+        /// <param name="folder">The folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        public void DisableSharedLink(Action<Folder> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(folder, "folder");
+            DisableSharedLink(onSuccess, onFailure, folder.Id, fields, etag);
+        }
+
+        /// <summary>
+        /// Disables the shared link for a folder
+        /// </summary>
+        /// <param name="onSuccess">Action to take with the returned folder</param>
+        /// <param name="onFailure">Actino to take following a failed folder operation</param>
+        /// <param name="id">The id of the folder whose shared link should be disabled.</param>
+        /// <param name="fields">The properties that should be set on the returned Folder object.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        /// <param name="etag">Include the item's etag to prevent the completion of this operation if you don't have the must current version of the item.  A BoxItemModifiedException will be thrown if the item is stale.</param>
+        public void DisableSharedLink(Action<Folder> onSuccess, Action<Error> onFailure, string id, IEnumerable<FolderField> fields = null, string etag = null)
+        {
+            GuardFromNull(id, "id");
+            IRestRequest request = _requestHelper.DisableSharedLink(ResourceType.Folder, id, etag, fields);
             _restClient.ExecuteAsync(request, onSuccess, onFailure);
         }
 

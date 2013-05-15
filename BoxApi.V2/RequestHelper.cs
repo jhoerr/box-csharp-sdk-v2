@@ -19,19 +19,30 @@ namespace BoxApi.V2
             return request;
         }
 
-        public IRestRequest Get(ResourceType resourceResourceType, string id, IEnumerable<IField> fields = null, string etag = null)
+        public IRestRequest Get(ResourceType resourceResourceType, string id, IEnumerable<IField> fields = null, string etag = null, int? limit = null, int? offset = null)
         {
             IRestRequest request = JsonRequest(resourceResourceType, "{id}", Method.GET, fields);
             TryAddIfNoneMatchHeader(request, etag);
             request.AddUrlSegment("id", id.Trim());
+            TryAddParameter(request, "limit", limit);
+            TryAddParameter(request, "offset", offset);
             return request;
         }
 
-        public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null)
+        private void TryAddParameter(IRestRequest request, string name, int? value)
+        {
+            if (value.HasValue)
+            {
+                request.AddParameter(name, value.Value);
+            }
+        }
+
+        public IRestRequest GetItems(string id, IEnumerable<FolderField> fields = null, int? limit = null, int? offset = null)
         {
             IRestRequest request = JsonRequest(ResourceType.Folder, "{id}/items", Method.GET, fields);
             request.AddUrlSegment("id", id.Trim());
-
+            TryAddParameter(request, "limit", limit);
+            TryAddParameter(request, "offset", offset);
             return request;
         }
 
@@ -129,6 +140,17 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest DisableSharedLink(ResourceType resourceType, string id, string etag, IEnumerable<FolderField> fields)
+        {
+            IRestRequest request = JsonRequest(resourceType, "{id}", Method.PUT, fields);
+            request.AddUrlSegment("id", id.Trim());
+
+            TryAddIfMatchHeader(request, etag);
+
+            request.AddBody(new {shared_link = (object) null});
+            return request;
+        }
+
         private static string Massage(string name)
         {
             return name == null ? null : name.Trim();
@@ -211,6 +233,13 @@ namespace BoxApi.V2
             return request;
         }
 
+        public IRestRequest CreateCollaborationByEmail(string folderId, string emailAddress, string role, IEnumerable<CollaborationField> fields)
+        {
+            IRestRequest request = JsonRequest(ResourceType.Collaboration, null, Method.POST, fields);
+            request.AddBody(new { item = new { type = "folder", id = folderId.Trim() }, accessible_by = new { login = emailAddress.Trim() }, role });
+            return request;
+        }
+
         public IRestRequest GetCollaboration(string collaborationId, IEnumerable<CollaborationField> fields)
         {
             IRestRequest request = JsonRequest(ResourceType.Collaboration, "{id}", Method.GET, fields);
@@ -270,7 +299,7 @@ namespace BoxApi.V2
             {
                 request.AddParameter("created_after", createdAfter);
             }
-            if (createdAfter.HasValue)
+            if (createdBefore.HasValue)
             {
                 request.AddParameter("created_before", createdBefore);
             }
@@ -483,6 +512,7 @@ namespace BoxApi.V2
                 CanSeeManagedUsers = user.CanSeeManagedUsers;
                 IsExemptFromDeviceLimits = user.IsExemptFromDeviceLimits;
                 IsExemptFromLoginVerification = user.IsExemptFromLoginVerification;
+                IsPasswordResetRequired = user.IsPasswordResetRequired;
                 IsSyncEnabled = user.IsSyncEnabled;
                 JobTitle = user.JobTitle;
                 Language = user.Language;

@@ -297,6 +297,49 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void ShareLinkAccessOnly()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            var expectedLink = new SharedLink(Access.Open);
+            File linkedFile = Client.ShareLink(file, expectedLink);
+            Client.Delete(linkedFile);
+            // Assert
+            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+            AssertSharedLink(linkedFile.SharedLink, expectedLink);
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void ShareLinkCanHaveLimitedPermissions(bool canDownload, bool canPreview)
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            var expectedLink = new SharedLink(Access.Open, permissions: new Permissions() { CanDownload = canDownload, CanPreview = canPreview });
+            File linkedFile = Client.ShareLink(file, expectedLink);
+            Client.Delete(linkedFile);
+            // Assert
+            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+            AssertSharedLink(linkedFile.SharedLink, expectedLink);
+        }
+
+        [Test, ExpectedException(typeof(BoxException))]
+        public void ShareLinkMustHaveSomePermissions()
+        {
+            string fileName = TestItemName();
+            File file = Client.CreateFile(RootId, fileName);
+            // Act
+            var expectedLink = new SharedLink(Access.Open, permissions:new Permissions(){CanDownload = false, CanPreview = false});
+            File linkedFile = Client.ShareLink(file, expectedLink);
+            Client.Delete(linkedFile);
+            // Assert
+            AssertFileConstraints(linkedFile, file.Name, RootId, file.Id);
+            AssertSharedLink(linkedFile.SharedLink, expectedLink);
+        }
+
+        [Test]
         public void ShareLink()
         {
             string fileName = TestItemName();
@@ -443,6 +486,12 @@ namespace BoxApi.V2.Tests.Client
             // Cleanup
             file = Client.GetFile(file.Id);
             Client.Delete(file);
+        }
+
+        [Test]
+        public void ContentCreatedAtModifiedAt()
+        {
+            
         }
     }
 }

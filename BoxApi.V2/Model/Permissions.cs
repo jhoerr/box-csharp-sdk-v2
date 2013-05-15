@@ -10,7 +10,7 @@ namespace BoxApi.V2.Model
         /// <summary>
         ///     Whether this link allows downloads
         /// </summary>
-        [JsonProperty(PropertyName = "item_collection")]
+        [JsonProperty(PropertyName = "can_download")]
         public bool CanDownload { get; set; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using BoxApi.V2.Model;
 using BoxApi.V2.Model.Enum;
@@ -93,10 +94,22 @@ namespace BoxApi.V2.Tests.Client
 
         [Test]
         //You'll need to change the filter term to something meaningful.
-        public void FilterUsers()
+        public void FilterUsersByName()
         {
-            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers("john hoerr");
+            var name = "john hoerr";
+            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers(name);
             Assert.That(enterpriseUserCollection.TotalCount, Is.EqualTo(1));
+            Assert.That(enterpriseUserCollection.Entries.Single().Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        [Test]
+        //You'll need to change the filter term to something meaningful.
+        public void FilterUsersByEmail()
+        {
+            var login = "jhoerr@gmail.com"; 
+            EnterpriseUserCollection enterpriseUserCollection = Client.GetUsers(login);
+            Assert.That(enterpriseUserCollection.TotalCount, Is.EqualTo(1));
+            Assert.That(enterpriseUserCollection.Entries.Single().Login.Equals(login,StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Test]
@@ -236,6 +249,41 @@ namespace BoxApi.V2.Tests.Client
                 Assert.That(standaloneUser, Is.Not.Null);
                 Assert.That(standaloneUser.Name, Is.EqualTo(entUser.Name));
                 Assert.That(standaloneUser.Login, Is.EqualTo(entUser.Login));
+            }
+            finally
+            {
+                if (entUser != null)
+                {
+                    Client.Delete(entUser);
+                }
+            }
+        }
+
+
+        [Test]
+        public void RequirePasswordReset()
+        {
+            var enterpriseUser = new EnterpriseUser
+            {
+                Role = UserRole.User,
+                Login = "nobody_3ijfie2joefi2joefij2e@gmail.com",
+                Name = "No Body",
+            };
+
+            EnterpriseUser entUser = null;
+            try
+            {
+                entUser = Client.CreateUser(enterpriseUser);
+                Assert.That(entUser.IsPasswordResetRequired, Is.False);
+
+                entUser.IsPasswordResetRequired = true;
+                var updated = Client.UpdateUser(entUser);
+                Assert.That(updated.IsPasswordResetRequired, Is.True);
+
+                // Once set, this can't be unset.
+                updated.IsPasswordResetRequired = false;
+                updated = Client.UpdateUser(updated);
+                Assert.That(updated.IsPasswordResetRequired, Is.True);
             }
             finally
             {

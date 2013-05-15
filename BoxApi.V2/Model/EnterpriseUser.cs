@@ -43,5 +43,11 @@ namespace BoxApi.V2.Model
         /// </summary>
         [JsonProperty(PropertyName = "is_exempt_from_login_verification")]
         public bool IsExemptFromLoginVerification { get; set; }
+
+        /// <summary>
+        ///     Whether or not the user is required to reset password
+        /// </summary>
+        [JsonProperty(PropertyName = "is_password_reset_required")]
+        public bool IsPasswordResetRequired { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace BoxApi.V2.Model
         public DateTime? CreatedAt { get; set; }
 
         /// <summary>
-        ///     The this this item (or its contents) were last modified
+        ///     The time this item (or its contents) were last modified
         /// </summary>
         public UserEntity ModifedBy { get; set; }
 
