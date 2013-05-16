@@ -17,6 +17,7 @@ namespace BoxApi.V2
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new discussion</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public Discussion CreateDiscussion(Folder folder, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -31,6 +32,7 @@ namespace BoxApi.V2
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The new discussion</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public Discussion CreateDiscussion(string folderId, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -48,6 +50,7 @@ namespace BoxApi.V2
         /// <param name="name">The name of the discussion</param>
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Folder folder, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -63,6 +66,7 @@ namespace BoxApi.V2
         /// <param name="name">The name of the discussion</param>
         /// <param name="description">An optional discription of the discussion</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void CreateDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string folderId, string name, string description = null, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -78,6 +82,7 @@ namespace BoxApi.V2
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public Discussion GetDiscussion(Discussion discussion, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(discussion, "discussion");
@@ -91,6 +96,7 @@ namespace BoxApi.V2
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The retrieved discussion</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public Discussion GetDiscussion(string id, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(id, "id");
@@ -105,6 +111,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="discussion">The discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, Discussion discussion, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(discussion, "discussion");
@@ -120,6 +127,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="id">The ID of the discussion to retrieve</param>
         /// <param name="fields">The properties that should be set on the returned Discussion.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void GetDiscussion(Action<Discussion> onSuccess, Action<Error> onFailure, string id, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(id, "id");
@@ -134,6 +142,7 @@ namespace BoxApi.V2
         /// <param name="folder">The folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's dicussions</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public DiscussionCollection GetDiscussions(Folder folder, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -146,6 +155,7 @@ namespace BoxApi.V2
         /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
         /// <returns>The folder's dicussions</returns>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public DiscussionCollection GetDiscussions(string folderId, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -160,6 +170,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="folder">The folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, Folder folder, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folder, "folder");
@@ -173,6 +184,7 @@ namespace BoxApi.V2
         /// <param name="onFailure">Action to perform following a failed retrieval</param>
         /// <param name="folderId">The ID of the folder whose dicussions should be retrieved</param>
         /// <param name="fields">The properties that should be set on the Entries of the returned DiscussionCollection.  Type and Id are always set.  If left null, all properties will be set, which can increase response time.</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void GetDiscussions(Action<DiscussionCollection> onSuccess, Action<Error> onFailure, string folderId, IEnumerable<DiscussionField> fields = null)
         {
             GuardFromNull(folderId, "folderId");
@@ -185,6 +197,7 @@ namespace BoxApi.V2
         ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="discussion">The discussion to delete</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void Delete(Discussion discussion)
         {
             GuardFromNull(discussion, "discussion");
@@ -195,6 +208,7 @@ namespace BoxApi.V2
         ///     Deletes a discussion from a folder
         /// </summary>
         /// <param name="id">The ID of the discussion to delete</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void DeleteDiscussion(string id)
         {
             GuardFromNull(id, "id");
@@ -208,6 +222,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed delete</param>
         /// <param name="discussion">The discussion to delete</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void Delete(Action<IRestResponse> onSuccess, Action<Error> onFailure, Discussion discussion)
         {
             GuardFromNull(discussion, "discussion");
@@ -220,6 +235,7 @@ namespace BoxApi.V2
         /// <param name="onSuccess">Action to perform following a successful delete</param>
         /// <param name="onFailure">Action to perform following a failed delete</param>
         /// <param name="id">The ID of the discussion to delete</param>
+        [Obsolete("Discussions have been deprecated from the v2 API.  This method will be removed in a future version.")]
         public void DeleteDiscussion(Action<IRestResponse> onSuccess, Action<Error> onFailure, string id)
         {
             GuardFromNull(id, "id");
