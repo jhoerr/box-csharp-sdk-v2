@@ -40,5 +40,14 @@ namespace BoxApi.V2.Authentication.OAuth2
             restRequest.AddParameter("client_secret", clientSecret);
             return restRequest;
         }
+
+        public IRestRequest DestroyTokens(string clientId, string clientSecret, string token)
+        {
+            var restRequest = new RestRequest("oauth2/revoke", Method.POST);
+            restRequest.AddParameter("client_id", clientId);
+            restRequest.AddParameter("client_secret", clientSecret);
+            restRequest.AddParameter("token", token);
+            return restRequest;
+        }
     }
 }
