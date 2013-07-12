@@ -266,6 +266,19 @@ namespace BoxApi.V2.Tests.Client
         }
 
         [Test]
+        public void ReadFileInChunks()
+        {
+            var expected = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+            string testItemName = TestItemName();
+            File file = Client.CreateFile(RootId, testItemName, expected);
+            byte[] actual = Client.Read(file, 0, 4);
+            Assert.That(actual, Is.EqualTo(expected.Take(5)));
+            actual = Client.Read(file, 5, 10);
+            Assert.That(actual, Is.EqualTo(expected.Skip(5)));
+            Client.Delete(file);
+        }
+
+        [Test]
         public void RenameFile()
         {
             string fileName = TestItemName();

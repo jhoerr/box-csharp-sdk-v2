@@ -6,6 +6,7 @@ using BoxApi.V2.Authentication.Common;
 using BoxApi.V2.Authentication.Legacy;
 using BoxApi.V2.Authentication.OAuth2;
 using BoxApi.V2.Model.Enum;
+using RestSharp;
 
 namespace BoxApi.V2
 {
@@ -17,6 +18,7 @@ namespace BoxApi.V2
         private readonly RequestHelper _requestHelper;
         private readonly BoxRestClient _restClient;
         private readonly BoxUploadClient _uploadClient;
+        private readonly RestClient _downloadClient;
 
         /// <summary>
         ///     Creates a BoxManager client using the v2 authentication scheme
@@ -49,6 +51,7 @@ namespace BoxApi.V2
             requestAuthenticator.SetOnBehalfOf(onBehalfOf);
             _restClient = new BoxRestClient(requestAuthenticator, proxy, options);
             _uploadClient = new BoxUploadClient(requestAuthenticator, proxy, options);
+            _downloadClient = new RestClient() { Authenticator = requestAuthenticator };
         }
 
         private BoxManager()

@@ -317,6 +317,64 @@ namespace BoxApi.V2
         }
 
         /// <summary>
+        ///     Retrieve a range of the specified file content
+        /// </summary>
+        /// <param name="file">The file to read</param>
+        /// <param name="firstByte">The first byte to of the range</param>
+        /// <param name="lastByte">The last byte of the range</param>
+        /// <returns>The raw file content range</returns>
+        public byte[] Read(File file, int firstByte, int lastByte)
+        {
+            return Read(file.Id, firstByte, lastByte);
+        }
+
+
+        /// <summary>
+        ///     Retrieve a range of the specified file content
+        /// </summary>
+        /// <param name="id">The ID of the file to read</param>
+        /// <param name="firstByte">The first byte to of the range</param>
+        /// <param name="lastByte">The last byte of the range</param>
+        /// <returns>The raw file content range</returns>
+        public byte[] Read(string id, long firstByte, long lastByte)
+        {
+            GuardFromNull(id, "id");
+            try
+            {
+                var downloadUrl = GetDownloadUrl(id);
+                var restRequest = new RestRequest((string)downloadUrl.Value);
+                restRequest.AddHeader("Range", string.Format("bytes={0}-{1}", firstByte, lastByte));
+                return _downloadClient.Execute(restRequest).RawBytes;
+            }
+            catch (BoxDownloadNotReadyException e)
+            {
+                Thread.Sleep(e.RetryAfter*1000);
+                return Read(id, firstByte, lastByte);
+            }
+        }
+
+        private Parameter GetDownloadUrl(string id)
+        {
+            try
+            {
+                _restClient.FollowRedirects = false;
+                IRestRequest request = _requestHelper.Read(id);
+                var restResponse = _restClient.Execute(request);
+                var downloadUrl = restResponse.Headers.SingleOrDefault(h => h.Name.Equals("Location", StringComparison.InvariantCultureIgnoreCase));
+                if (!restResponse.StatusCode.Equals(HttpStatusCode.Found) || downloadUrl == null)
+                {
+                    throw new Exception("Did not receive a redirect URL for the content request");
+                }
+                return downloadUrl;
+            }
+            finally
+            {
+                _restClient.FollowRedirects = true;
+            }
+        }
+
+
+        /// <summary>
         ///     Retrieve the contents of a shared file
         /// </summary>
         /// <param name="id">The ID of the file to read</param>
@@ -1208,5 +1266,6 @@ namespace BoxApi.V2
             var restRequest = new RestRequest(redirectUri.AbsolutePath);
             return restClient.Execute(restRequest).RawBytes;
         }
+
     }
 }
