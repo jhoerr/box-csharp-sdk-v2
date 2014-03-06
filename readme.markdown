@@ -57,12 +57,13 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 ## Usage Example
 
 ```csharp
-// Instantiate a BoxManager client.
-var boxManager = new BoxManager("AccessToken");
-
-// Optionally refresh the access token (they are only good for an hour!)
+// Optionally refresh the access/refresh token pair.
 // You may want to persist these new values for later use.
-var refreshedAccessToken = boxManager.RefreshAccessToken();
+var tokenProvider = new TokenProvider("apiKey", "apiSecret");
+var newTokenPair = tokenProvider.RefreshAccessToken("refreshToken");
+
+// Instantiate a BoxManager client.
+var boxManager = new BoxManager(newTokenPair.AccessToken);
 
 // Create a new file in the root folder
 boxManager.CreateFile(Folder.Root, "a new file.txt", Encoding.UTF8.GetBytes("hello, world!"));
