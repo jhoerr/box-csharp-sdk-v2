@@ -57,10 +57,24 @@ This client is [available on Nuget](http://nuget.org/packages/Box.v2.SDK).  Ther
 ## Usage Example
 
 ```csharp
-// Optionally refresh the access/refresh token pair.
-// You may want to persist these new values for later use.
+/*******************/
+/** Authorization **/
+/*******************/
+
+// Create a OAuth2 access/refresh token provider using your API key/secret.
 var tokenProvider = new TokenProvider("apiKey", "apiSecret");
+
+// Fetch the initial token pair using the OAuth2 authorization code...
+// You will want to persist these new values for later use.
+var initialTokenPair = tokenProvider.GetAccessToken("code");
+
+// You can also refresh the token pair.
+// You will want to persist these new values for later use.
 var newTokenPair = tokenProvider.RefreshAccessToken("refreshToken");
+
+/*********************/
+/** Box Interaction **/
+/*********************/
 
 // Instantiate a BoxManager client.
 var boxManager = new BoxManager(newTokenPair.AccessToken);
