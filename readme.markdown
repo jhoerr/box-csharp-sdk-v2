@@ -1,8 +1,8 @@
-# Notice of Supersedence
+# Hey! Don't Use This!
 
 Box has released an [official .Net SDK](https://github.com/box/box-windows-sdk-v2).  As such I (jhoerr) will no longer be actively developing this SDK.  Please consider migrating your application as appropriate.
 
-# Box C# SDK (API v2)
+## Box C# SDK (API v2)
 
 This is a C# client implementation of the [Box v2 REST API](http://developers.box.com/docs/).  Please feel free to open an issue if you find a bug or would like to request a feature.
 
