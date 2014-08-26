@@ -1,6 +1,6 @@
 # Hey! Don't Use This!
 
-Box has released an [official .Net SDK](https://github.com/box/box-windows-sdk-v2).  As such I (jhoerr) will no longer be actively developing this SDK.  Please consider migrating your application as appropriate.
+Box has released an [official .Net SDK](https://github.com/box/box-windows-sdk-v2).  As such I (jhoerr) will no longer be actively developing this SDK.  Please migrate your application as appropriate.
 
 ## Box C# SDK (API v2)
 
